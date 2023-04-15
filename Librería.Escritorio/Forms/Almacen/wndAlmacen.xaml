@@ -1,0 +1,9 @@
+﻿<mah:MetroWindow x:Class="Librería.Escritorio.Forms.Almacen.wndAlmacen"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 Title="wndAlmacen" Height="450" Width="800">
+    <Grid>
+        <Frame Name="MainFrame" Source="/Librería.Escritorio;component/UserControls/Almacen/pgListaAlmacen.xaml"/>
+    </Grid>
+</mah:MetroWindow>
