@@ -1,0 +1,24 @@
+﻿<Window x:Class="Librería.Escritorio.UserControls.Compras.wndSeleccionarArticulo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Artículos del proveedor seleccionado" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Label Content="Proveedor:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Margin="82,10,10,383"/>
+        <DataGrid Name="dg" Margin="10,78,10,65" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False"/>
+        <TextBlock HorizontalAlignment="Left" Margin="434,359,0,0" TextWrapping="Wrap" Text="Si no encuentras productos, \n los puedes agregar aquí" VerticalAlignment="Top" Height="50"/>
+        <Button Name="btnArticulo" HorizontalAlignment="Left" Margin="732,359,0,0" VerticalAlignment="Top" Width="50" Height="50" Click="BtnArticulo_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/ruler_pencil.png" Width="32"/>
+            </StackPanel>
+        </Button>
+        <TextBox Name="txtBuscar" Height="23" Margin="10,41,84,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Name="btnBuscar" HorizontalAlignment="Left" Margin="713,36,0,0" VerticalAlignment="Top" Click="BtnBuscar_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/search.png" Width="16"/>
+                <Label Content="Buscar" VerticalContentAlignment="Center"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Window>

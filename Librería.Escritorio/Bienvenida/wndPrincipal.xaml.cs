@@ -1,4 +1,5 @@
-﻿using System;
+﻿//using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,19 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.Bienvenida
 {
-    /// <summary>
-    /// Interaction logic for wndPrincipal.xaml
-    /// </summary>
     public partial class wndPrincipal : Window
     {
+        Window oWindow;
+
         public wndPrincipal()
         {
             InitializeComponent();
+        }
+
+        private void BtnCompras_Click(object sender, RoutedEventArgs e)
+        {
+            oWindow = new Forms.Compras.wndCompra();
+            oWindow.Show();
         }
     }
 }

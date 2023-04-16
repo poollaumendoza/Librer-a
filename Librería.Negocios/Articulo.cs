@@ -20,9 +20,9 @@ namespace Librería.Negocios
             return dArticulo.ListaArticulo();
         }
 
-        public List<Entidades.Articulo> ListaArticulo(int IdArticulo)
+        public List<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
         {
-            return dArticulo.ListaArticulo(IdArticulo);
+            return dArticulo.ListaArticulo(eArticulo);
         }
 
         public bool EditarArticulo(Entidades.Articulo eArticulo)

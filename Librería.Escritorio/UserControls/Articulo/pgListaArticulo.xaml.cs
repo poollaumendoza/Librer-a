@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.UserControls.Articulo
 {
-    /// <summary>
-    /// Interaction logic for pgListaArticulo.xaml
-    /// </summary>
     public partial class pgListaArticulo : Page
     {
         public pgListaArticulo()

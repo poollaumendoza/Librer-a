@@ -1,0 +1,82 @@
+﻿<Page x:Class="Librería.Escritorio.UserControls.Compras.pgCompra"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Librería.Escritorio.UserControls.Compras"
+      xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="pgCompra">
+
+    <Grid>
+        <Button Name="btnCrearCompra" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="BtnCrearCompra_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/package.png" Width="32"/>
+                <Label Content="Crear Nueva Compra" VerticalContentAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button Name="btnCancelar" HorizontalAlignment="Left" Margin="167,10,0,0" VerticalAlignment="Top" Click="BtnCancelar_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/delete.png" Width="32"/>
+                <Label Content="Cancelar / Salir" VerticalContentAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Label Content="Proveedor:" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="cboProveedor" DisplayMemberPath="RazonSocial" SelectedValuePath="IdEntidad" HorizontalAlignment="Left" Margin="120,80,0,0" VerticalAlignment="Top" Width="375"/>
+        <Button Name="btnProveedor" HorizontalAlignment="Left" Margin="500,80,0,0" VerticalAlignment="Top" Width="30" Padding="1" Height="26" Click="BtnProveedor_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/businessman_woman.png" Width="24"/>
+            </StackPanel>
+        </Button>
+        <Label Content="T. Documento:" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="cboTipoDocumento" DisplayMemberPath="NombreTipoDocumento" SelectedValuePath="IdTipoDocumento" HorizontalAlignment="Left" Margin="120,111,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Nro. Documento:" HorizontalAlignment="Left" Margin="245,111,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="380,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextAlignment="Right"/>
+        <Label Content="Fecha Compra:" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top"/>
+        <DatePicker HorizontalAlignment="Left" Margin="120,142,0,0" VerticalAlignment="Top" Width="120"/>
+        <DataGrid Name="dg" Margin="10,173,10,41" AutoGenerateColumns="False" CanUserAddRows="False" BorderThickness="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Cantidad" Binding="{Binding Path=Cantidad}" Width="auto"/>
+                <DataGridTextColumn Header="Descripción" Binding="{Binding Path=Descripcion}" Width="auto"/>
+                <DataGridTextColumn Header="Precio" Binding="{Binding Path=Precio}" Width="auto"/>
+                <DataGridTextColumn Header="Importe" Binding="{Binding Path=Importe}" Width="auto"/>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnEditar" CommandParameter="{Binding IdArticulo}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/edit.png" Width="16"/>
+                                    <Label Content="Editar" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnEliminar" CommandParameter="{Binding IdArticulo}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/delete.png" Width="16"/>
+                                    <Label Content="Eliminar" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="SubTotal:" Margin="0,0,495,10" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="58"/>
+        <TextBox Height="23" Margin="0,0,370,10" TextWrapping="Wrap" TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120"/>
+        <Label Content="Impuesto:" Margin="0,0,303,10" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="62"/>
+        <TextBox Height="23" Margin="0,0,178,10" TextWrapping="Wrap" TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120"/>
+        <Label Content="Total:" Margin="0,0,135,10" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="38"/>
+        <TextBox Height="23" Margin="0,0,10,10" TextWrapping="Wrap" TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120"/>
+        <Button Name="btnSeleccionarArticulo" Margin="0,118,10,0" HorizontalAlignment="Right" Width="50" Height="50" VerticalAlignment="Top" Click="BtnSeleccionarArticulo_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/add_to_shopping_cart.png" Width="32"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>

@@ -16,8 +16,8 @@ namespace Librería.Entidades
         public string Direccion { get; set; }
         public string Telefono { get; set; }
         public string Email { get; set; }
-        public bool EsCliente { get; set; }
-        public bool EsProveedor { get; set; }
+        public int EsCliente { get; set; }
+        public int EsProveedor { get; set; }
         public int IdEstado { get; set; }
     }
 }

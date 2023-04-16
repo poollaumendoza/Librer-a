@@ -61,15 +61,15 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Entidad()
                         {
                             IdEntidad = int.Parse(Dr["IdEntidad"].ToString()),
-                            IdEmpresa = int.Parse(Dr["NombreEntidad"].ToString()),
-                            IdTipoDocumento = int.Parse(Dr["Direccion"].ToString()),
-                            NroDocumento = Dr["Direccion"].ToString(),
-                            RazonSocial = Dr["Direccion"].ToString(),
+                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
+                            IdTipoDocumento = int.Parse(Dr["IdTipoDocumento"].ToString()),
+                            NroDocumento = Dr["NroDocumento"].ToString(),
+                            RazonSocial = Dr["RazonSocial"].ToString(),
                             Direccion = Dr["Direccion"].ToString(),
-                            Telefono = Dr["Direccion"].ToString(),
-                            Email = Dr["IdEstado"].ToString(),
-                            EsCliente = bool.Parse(Dr["IdEstado"].ToString()),
-                            EsProveedor = bool.Parse(Dr["IdEstado"].ToString()),
+                            Telefono = Dr["Telefono"].ToString(),
+                            Email = Dr["Email"].ToString(),
+                            EsCliente = int.Parse(Dr["EsCliente"].ToString()),
+                            EsProveedor = int.Parse(Dr["EsProveedor"].ToString()),
                             IdEstado = int.Parse(Dr["IdEstado"].ToString())
                         });
                     }
@@ -99,15 +99,15 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Entidad()
                         {
                             IdEntidad = int.Parse(Dr["IdEntidad"].ToString()),
-                            IdEmpresa = int.Parse(Dr["NombreEntidad"].ToString()),
-                            IdTipoDocumento = int.Parse(Dr["Direccion"].ToString()),
-                            NroDocumento = Dr["Direccion"].ToString(),
-                            RazonSocial = Dr["Direccion"].ToString(),
+                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
+                            IdTipoDocumento = int.Parse(Dr["IdTipoDocumento"].ToString()),
+                            NroDocumento = Dr["NroDocumento"].ToString(),
+                            RazonSocial = Dr["RazonSocial"].ToString(),
                             Direccion = Dr["Direccion"].ToString(),
-                            Telefono = Dr["Direccion"].ToString(),
-                            Email = Dr["IdEstado"].ToString(),
-                            EsCliente = bool.Parse(Dr["IdEstado"].ToString()),
-                            EsProveedor = bool.Parse(Dr["IdEstado"].ToString()),
+                            Telefono = Dr["Telefono"].ToString(),
+                            Email = Dr["Email"].ToString(),
+                            EsCliente = int.Parse(Dr["EsCliente"].ToString()),
+                            EsProveedor = int.Parse(Dr["EsProveedor"].ToString()),
                             IdEstado = int.Parse(Dr["IdEstado"].ToString())
                         });
                     }

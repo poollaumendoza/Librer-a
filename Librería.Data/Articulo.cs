@@ -70,33 +70,63 @@ namespace Librería.Data
             return oLista;
         }
 
-        public List<Entidades.Articulo> ListaArticulo(int IdArticulo)
+        public List<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
         {
             List<Entidades.Articulo> oLista = new List<Entidades.Articulo>();
 
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where IdArticulo = @IdArticulo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdArticulo", IdArticulo);
-                Cmd.CommandType = System.Data.CommandType.Text;
 
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
+                if(eArticulo.IdArticulo !=0)
                 {
-                    while (Dr.Read())
+                    string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where IdArticulo = @IdArticulo";
+                    SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                    Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
+                    Cmd.CommandType = System.Data.CommandType.Text;
+
+                    using (SQLiteDataReader Dr = Cmd.ExecuteReader())
                     {
-                        oLista.Add(new Entidades.Articulo()
+                        while (Dr.Read())
                         {
-                            IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
-                            IdProveedor = int.Parse(Dr["NombreArticulo"].ToString()),
-                            CodigoArticulo = Dr["Direccion"].ToString(),
-                            DescripcionArticulo = Dr["Direccion"].ToString(),
-                            Cantidad = int.Parse(Dr["Direccion"].ToString()),
-                            PrecioCompra = decimal.Parse(Dr["Direccion"].ToString()),
-                            PrecioVenta = decimal.Parse(Dr["Direccion"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
+                            oLista.Add(new Entidades.Articulo()
+                            {
+                                IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
+                                IdProveedor = int.Parse(Dr["NombreArticulo"].ToString()),
+                                CodigoArticulo = Dr["Direccion"].ToString(),
+                                DescripcionArticulo = Dr["Direccion"].ToString(),
+                                Cantidad = int.Parse(Dr["Direccion"].ToString()),
+                                PrecioCompra = decimal.Parse(Dr["Direccion"].ToString()),
+                                PrecioVenta = decimal.Parse(Dr["Direccion"].ToString()),
+                                IdEstado = int.Parse(Dr["IdEstado"].ToString())
+                            });
+                        }
+                    }
+                }
+
+                if(eArticulo.IdProveedor != 0)
+                {
+                    string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where IdArticulo = @IdArticulo";
+                    SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                    Cmd.Parameters.AddWithValue("@IdProveedor", eArticulo.IdProveedor);
+                    Cmd.CommandType = System.Data.CommandType.Text;
+
+                    using (SQLiteDataReader Dr = Cmd.ExecuteReader())
+                    {
+                        while (Dr.Read())
+                        {
+                            oLista.Add(new Entidades.Articulo()
+                            {
+                                IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
+                                IdProveedor = int.Parse(Dr["NombreArticulo"].ToString()),
+                                CodigoArticulo = Dr["Direccion"].ToString(),
+                                DescripcionArticulo = Dr["Direccion"].ToString(),
+                                Cantidad = int.Parse(Dr["Direccion"].ToString()),
+                                PrecioCompra = decimal.Parse(Dr["Direccion"].ToString()),
+                                PrecioVenta = decimal.Parse(Dr["Direccion"].ToString()),
+                                IdEstado = int.Parse(Dr["IdEstado"].ToString())
+                            });
+                        }
                     }
                 }
             }

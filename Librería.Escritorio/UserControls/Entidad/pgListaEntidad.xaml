@@ -9,10 +9,10 @@
       Title="pgListaEntidad">
 
     <Grid>
-        <Button Name="btnAgregar" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto">
+        <Button Name="btnAgregar" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto" Click="BtnAgregar_Click">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/add.png" Width="32"/>
-                <Label Content="Almacen" VerticalContentAlignment="Center"/>
+                <Label Content="Entidades" VerticalContentAlignment="Center"/>
             </StackPanel>
         </Button>
         <DataGrid Name="dg" Margin="10,61,10,10" AutoGenerateColumns="False" CanUserAddRows="False">
@@ -22,7 +22,7 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnEditar" CommandParameter="{Binding IdEntidad}">
+                            <Button Name="btnEditar" CommandParameter="{Binding IdEntidad}" Click="BtnEditar_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/edit.png" Width="16"/>
                                     <Label Content="Editar" VerticalContentAlignment="Center"/>
@@ -34,7 +34,7 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnEliminar" CommandParameter="{Binding IdEntidad}">
+                            <Button Name="btnEliminar" CommandParameter="{Binding IdEntidad}" Click="BtnEliminar_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/delete.png" Width="16"/>
                                     <Label Content="Eliminar" VerticalContentAlignment="Center"/>

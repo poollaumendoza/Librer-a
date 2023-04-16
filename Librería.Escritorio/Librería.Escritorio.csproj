@@ -32,6 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,8 +54,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.4.4.0\lib\net462\ControlzEx.dll</HintPath>
+    <Reference Include="ControlzEx, Version=5.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.5.0.2\lib\net462\ControlzEx.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -66,7 +67,7 @@
       <HintPath>..\packages\MahApps.Metro.2.4.9\lib\net47\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -113,6 +114,15 @@
     <Compile Include="Forms\Almacen\wndAlmacen.xaml.cs">
       <DependentUpon>wndAlmacen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Articulo\wndArticulo.xaml.cs">
+      <DependentUpon>wndArticulo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compras\wndCompra.xaml.cs">
+      <DependentUpon>wndCompra.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Entidad\wndEntidad.xaml.cs">
+      <DependentUpon>wndEntidad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Almacen\pgAlmacen.xaml.cs">
       <DependentUpon>pgAlmacen.xaml</DependentUpon>
     </Compile>
@@ -125,11 +135,26 @@
     <Compile Include="UserControls\Articulo\pgListaArticulo.xaml.cs">
       <DependentUpon>pgListaArticulo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Compras\pgCompra.xaml.cs">
+      <DependentUpon>pgCompra.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Compras\pgListaCompra.xaml.cs">
+      <DependentUpon>pgListaCompra.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Compras\wndSeleccionarArticulo.xaml.cs">
+      <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Entidad\pgEntidad.xaml.cs">
       <DependentUpon>pgEntidad.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Entidad\pgListaEntidad.xaml.cs">
       <DependentUpon>pgListaEntidad.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Ventas\pgListaVenta.xaml.cs">
+      <DependentUpon>pgListaVenta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Ventas\pgVenta.xaml.cs">
+      <DependentUpon>pgVenta.xaml</DependentUpon>
     </Compile>
     <Page Include="Bienvenida\wndLogin.xaml">
       <SubType>Designer</SubType>
@@ -147,6 +172,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Forms\Articulo\wndArticulo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\Compras\wndCompra.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\Entidad\wndEntidad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\Almacen\pgAlmacen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -163,11 +200,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\Compras\pgCompra.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Compras\pgListaCompra.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Compras\wndSeleccionarArticulo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\Entidad\pgEntidad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Entidad\pgListaEntidad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Ventas\pgListaVenta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Ventas\pgVenta.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -286,6 +343,111 @@
       <Project>{89072008-ca48-48bb-9dd8-5848ca308910}</Project>
       <Name>Librería.Negocios</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\barcode.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chart_pie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ruler_pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\shopping_cart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_female_users.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\accept_male_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add_male_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\edit_male_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_user_comment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_user_help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_user_info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_user_warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_users_comments.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\remove_male_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search_male_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\businessman_woman.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\businessman_woman_comments.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\business_male_female_users.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\accept_business_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add_business_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\business_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\business_user_comment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\business_user_help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\business_user_info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\business_user_warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\edit_business_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\remove_business_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search_business_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\calculator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\mail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\note.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add_to_shopping_cart.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
