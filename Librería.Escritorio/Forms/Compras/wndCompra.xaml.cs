@@ -1,4 +1,4 @@
-﻿//using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.Forms.Compras
 {
-    public partial class wndCompra : Window
+    public partial class wndCompra : MetroWindow
     {
         public static Frame StaticMainFrame;
 

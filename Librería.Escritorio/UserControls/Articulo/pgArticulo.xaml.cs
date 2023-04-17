@@ -9,6 +9,8 @@ namespace Librería.Escritorio.UserControls.Articulo
     public partial class pgArticulo : Page
     {
         Entidades.Articulo eArticulo;
+        Entidades.Correlativo eCorrelativo;
+        Negocios.Correlativo nCorrelativo = new Negocios.Correlativo();
         Negocios.Articulo nArticulo = new Negocios.Articulo();
         Negocios.Entidad nEntidad = new Negocios.Entidad();
         Negocios.Estado nEstado = new Negocios.Estado();
@@ -53,9 +55,38 @@ namespace Librería.Escritorio.UserControls.Articulo
         {
             if (Id == 0)
             {
+                string abreviatura = txtCodigo.Text;
+                if (nCorrelativo.ListaCorrelativo(abreviatura).ToList().Count().Equals(0))
+                {
+                    eCorrelativo = new Entidades.Correlativo()
+                    {
+                        IdEmpresa = App.IdEmpresa,
+                        NombreTabla = "ARTICULO",
+                        Abreviatura = abreviatura,
+                        Serie = "-",
+                        NroCorrelativo = 1,
+                        IdEstado = 1
+                    };
+                    nCorrelativo.AgregarCorrelativo(eCorrelativo);
+                }
+                else
+                {
+                    var correlativo = nCorrelativo.ListaCorrelativo(abreviatura).FirstOrDefault();
+                    eCorrelativo = new Entidades.Correlativo()
+                    {
+                        IdEmpresa = correlativo.IdEmpresa,
+                        NombreTabla = correlativo.NombreTabla,
+                        Abreviatura = correlativo.Abreviatura,
+                        Serie = correlativo.Serie,
+                        NroCorrelativo = correlativo.NroCorrelativo + 1,
+                        IdEstado = correlativo.IdEstado
+                    };
+                    nCorrelativo.EditarCorrelativo(eCorrelativo);
+                }
+
                 eArticulo = new Entidades.Articulo()
                 {
-                    CodigoArticulo = txtCodigo.Text,
+                    CodigoArticulo = nCorrelativo.ConstruirCorrelativo(txtCodigo.Text),
                     DescripcionArticulo = txtDescripcion.Text,
                     IdProveedor = Convert.ToInt32(cboProveedor.SelectedValue),
                     Cantidad = Convert.ToInt32(nupCantidad.Value),
@@ -64,6 +95,7 @@ namespace Librería.Escritorio.UserControls.Articulo
                     IdEstado = Convert.ToInt32(cboEstado.SelectedValue)
                 };
                 nArticulo.AgregarArticulo(eArticulo);
+                App.Resultado = true;
             }
             else
             {

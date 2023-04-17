@@ -1,4 +1,4 @@
-﻿//using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.Forms.Entidad
 {
-    public partial class wndEntidad : Window
+    public partial class wndEntidad : MetroWindow
     {
         public static Frame StaticMainFrame;
 

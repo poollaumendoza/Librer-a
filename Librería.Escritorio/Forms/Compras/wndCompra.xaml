@@ -1,8 +1,9 @@
-﻿<Window x:Class="Librería.Escritorio.Forms.Compras.wndCompra"
+﻿<mah:MetroWindow x:Class="Librería.Escritorio.Forms.Compras.wndCompra"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  Title="" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Frame Name="MainFrame" Source="/Librería.Escritorio;component/UserControls/Compras/pgListaCompra.xaml"/>
     </Grid>
-</Window>
+</mah:MetroWindow>

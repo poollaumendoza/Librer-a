@@ -12,6 +12,7 @@ namespace Librería.Entidades
         public int IdEmpresa { get; set; }
         public string NombreTabla { get; set; }
         public string Abreviatura { get; set; }
+        public string Serie { get; set; }
         public int NroCorrelativo { get; set; }
         public int IdEstado { get; set; }
     }

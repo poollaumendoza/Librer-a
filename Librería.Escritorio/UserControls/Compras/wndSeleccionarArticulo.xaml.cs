@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,15 +15,27 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.UserControls.Compras
 {
-    public partial class wndSeleccionarArticulo : Window
+    public partial class wndSeleccionarArticulo : MetroWindow
     {
         Negocios.Articulo nArticulo = new Negocios.Articulo();
         Entidades.Articulo eArticulo;
+        Window oWindow;
 
-        public wndSeleccionarArticulo(int IdProveedor = 0, string criterio = "")
+        public wndSeleccionarArticulo(int IdProveedor = 0)
         {
             InitializeComponent();
-            CargarArticulos(IdProveedor, criterio);
+            CargarArticulos(IdProveedor);
+        }
+
+        void CargarArticulos(int IdProveedor)
+        {
+            eArticulo = new Entidades.Articulo()
+            {
+                IdProveedor = IdProveedor
+            };
+
+            dg.ItemsSource = null;
+            dg.ItemsSource = nArticulo.ListaArticulo(eArticulo);
         }
 
         void CargarArticulos(int IdProveedor, string criterio)
@@ -43,7 +56,13 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnArticulo_Click(object sender, RoutedEventArgs e)
         {
+            int idproveedor = App.IdProveedor;
+            string criterio = string.Empty;
 
+            oWindow = new Forms.Articulo.wndArticulo();
+            if (oWindow.ShowDialog() == false)
+                if (App.Resultado == true)
+                    CargarArticulos(idproveedor, criterio);
         }
     }
 }

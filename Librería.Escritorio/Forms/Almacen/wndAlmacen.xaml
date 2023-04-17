@@ -1,8 +1,10 @@
-﻿<Window x:Class="Librería.Escritorio.Forms.Almacen.wndAlmacen"
+﻿<mah:MetroWindow x:Class="Librería.Escritorio.Forms.Almacen.wndAlmacen"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 Title="wndAlmacen" Height="450" Width="800">
+                 Title="wndAlmacen" Height="450" Width="800"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 WindowStartupLocation="CenterScreen">
     <Grid>
         <Frame Name="MainFrame" Source="/Librería.Escritorio;component/UserControls/Almacen/pgListaAlmacen.xaml"/>
     </Grid>
-</Window>
+</mah:MetroWindow>

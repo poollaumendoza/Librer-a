@@ -1,4 +1,4 @@
-﻿//using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 using Librería.Escritorio.Forms.Compras;
 using System;
 using System.Collections.Generic;
@@ -103,14 +103,12 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnSeleccionarArticulo_Click(object sender, RoutedEventArgs e)
         {
-            oWindow = new UserControls.Compras.wndSeleccionarArticulo();
+            App.IdProveedor = Convert.ToInt32(cboProveedor.SelectedValue);
+
+            oWindow = new wndSeleccionarArticulo(App.IdProveedor);
             if(oWindow.ShowDialog() == false)
-            {
                 if(App.Resultado == true)
-                {
                     CargarArticuloAlaCompra(App.IdArticulo);
-                }
-            }
         }
     }
 }

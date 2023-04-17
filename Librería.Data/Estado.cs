@@ -113,7 +113,7 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Delete Estado where IdEstado = @IdEstado";
+                string query = "Delete from Estado where IdEstado = @IdEstado";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
                 Cmd.CommandType = System.Data.CommandType.Text;

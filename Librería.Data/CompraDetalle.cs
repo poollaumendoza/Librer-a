@@ -134,7 +134,7 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Delete CompraDetalle where IdCompraDetalle = @IdCompraDetalle";
+                string query = "Delete from CompraDetalle where IdCompraDetalle = @IdCompraDetalle";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdCompraDetalle", eCompraDetalle.IdCompraDetalle);
                 Cmd.CommandType = System.Data.CommandType.Text;

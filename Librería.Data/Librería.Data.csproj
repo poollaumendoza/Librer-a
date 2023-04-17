@@ -72,6 +72,7 @@
     <Compile Include="Articulo.cs" />
     <Compile Include="Compra.cs" />
     <Compile Include="CompraDetalle.cs" />
+    <Compile Include="Correlativo.cs" />
     <Compile Include="Entidad.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
