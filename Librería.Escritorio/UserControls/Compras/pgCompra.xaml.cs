@@ -20,6 +20,7 @@ namespace Librería.Escritorio.UserControls.Compras
     public partial class pgCompra : Page
     {
         Window oWindow;
+        Negocios.Compra nCompra = new Negocios.Compra();
         Negocios.Entidad nEntidad = new Negocios.Entidad();
         Negocios.TipoDocumento nTipoDocumento = new Negocios.TipoDocumento();
         Negocios.Articulo nArticulo = new Negocios.Articulo();
@@ -73,11 +74,35 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnCrearCompra_Click(object sender, RoutedEventArgs e)
         {
+            Entidades.Compra eCompra = new Entidades.Compra()
+            {
+                IdEmpresa = App.IdEmpresa,
+                IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue),
+                IdUsuario = 0,
+                NroDocumento = txtNroDocumento.Text,
+                FechaCompra = Convert.ToDateTime(dtpFechaCompra.Text),
+                FechaRegistro = DateTime.Now,
+                SubTotal = Convert.ToDecimal(txtSubTotal.Text),
+                Impuesto = Convert.ToDecimal(txtImpuesto.Text),
+                Total = Convert.ToDecimal(txtTotal.Text),
+                IdEstado = 1
 
+            };
+            nCompra.AgregarCompra(eCompra);
+
+            foreach (var item in App.oCompra)
+            {
+                Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
+                {
+
+                };
+
+            }
         }
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)
         {
+            App.oCompra.Clear();
             wndCompra.StaticMainFrame.Content = new pgListaCompra();
         }
 
