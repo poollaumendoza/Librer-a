@@ -1,17 +1,9 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Librería.Escritorio.UserControls.Compras
 {
@@ -63,6 +55,30 @@ namespace Librería.Escritorio.UserControls.Compras
             if (oWindow.ShowDialog() == false)
                 if (App.Resultado == true)
                     CargarArticulos(idproveedor, criterio);
+        }
+
+        private async void Dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            object fila = dg.Items.CurrentItem;
+
+            var message = 
+                await this.ShowInputAsync(
+                "Título",
+                "Ingrese cantidad de producto:",
+                new MetroDialogSettings()
+                {
+                    AffirmativeButtonText = "Ok",
+                    NegativeButtonText = "No"
+                });
+
+            App.oCompra.Add(new App.CompraTemporal()
+            {
+                Cantidad = Convert.ToInt32(message),
+                Descripcion = ((Entidades.Articulo)fila).DescripcionArticulo,
+                Precio = ((Entidades.Articulo)fila).PrecioVenta,
+                Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioVenta)
+            });
+            App.Resultado = true;
         }
     }
 }

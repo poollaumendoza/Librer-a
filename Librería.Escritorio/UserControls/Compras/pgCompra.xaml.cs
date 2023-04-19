@@ -25,7 +25,6 @@ namespace Librería.Escritorio.UserControls.Compras
         Negocios.Articulo nArticulo = new Negocios.Articulo();
         Entidades.Articulo eArticulo = new Entidades.Articulo();
         public int Id = 0;
-        List<CompraTemporal> oCompra = new List<CompraTemporal>();
 
         public pgCompra(int Id = 0)
         {
@@ -58,29 +57,18 @@ namespace Librería.Escritorio.UserControls.Compras
             cboTipoDocumento.ItemsSource = td;
         }
 
-        public class CompraTemporal
+        void CargarArticuloAlaCompra()
         {
-            private decimal _importe;
+            //Entidades.Articulo eArticulo = new Entidades.Articulo()
+            //{
+            //    IdArticulo = IdArticulo
+            //};
+            //var articulo = nArticulo.ListaArticulo(eArticulo).FirstOrDefault();
 
-            public int Cantidad { get; set; }
-            public string Descripcion { get; set; }
-            public decimal Precio { get; set; }
-            public decimal Importe { set { _importe = Cantidad * Precio; } }
-        }
-
-
-        void CargarArticuloAlaCompra(int IdArticulo)
-        {
-            Entidades.Articulo eArticulo = new Entidades.Articulo()
-            {
-                IdArticulo = IdArticulo
-            };
-            var articulo = nArticulo.ListaArticulo(eArticulo).FirstOrDefault();
-
-            oCompra.Add(new CompraTemporal() { Cantidad = 1, Descripcion = articulo.DescripcionArticulo, Precio = articulo.PrecioVenta });
+            //oCompra.Add(new App.CompraTemporal() { Cantidad = 1, Descripcion = articulo.DescripcionArticulo, Precio = articulo.PrecioVenta });
 
             dg.ItemsSource = null;
-            dg.ItemsSource = oCompra;
+            dg.ItemsSource = App.oCompra;
         }
 
         private void BtnCrearCompra_Click(object sender, RoutedEventArgs e)
@@ -108,7 +96,7 @@ namespace Librería.Escritorio.UserControls.Compras
             oWindow = new wndSeleccionarArticulo(App.IdProveedor);
             if(oWindow.ShowDialog() == false)
                 if(App.Resultado == true)
-                    CargarArticuloAlaCompra(App.IdArticulo);
+                    CargarArticuloAlaCompra();
         }
     }
 }
