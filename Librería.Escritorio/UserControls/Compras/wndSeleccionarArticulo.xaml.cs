@@ -79,6 +79,7 @@ namespace Librería.Escritorio.UserControls.Compras
                 Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioVenta)
             });
             App.Resultado = true;
+            this.Close();
         }
     }
 }

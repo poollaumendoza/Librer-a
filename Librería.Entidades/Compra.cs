@@ -9,12 +9,13 @@ namespace Librería.Entidades
     public class Compra
     {
         public int IdCompra { get; set; }
-        public int IdEmpresa { get; set; }
-        public int IdTipoDocumento { get; set; }
-        public int IdUsuario { get; set; }
+        public string IdEmpresa { get; set; }
+        public string IdProveedor { get; set; }
+        public string IdTipoDocumento { get; set; }
+        public string IdUsuario { get; set; }
         public string NroDocumento { get; set; }
-        public DateTime FechaCompra { get; set; }
-        public DateTime FechaRegistro { get; set; }
+        public string FechaCompra { get; set; }
+        public string FechaRegistro { get; set; }
         public decimal SubTotal { get; set; }
         public decimal Impuesto { get; set; }
         public decimal Total { get; set; }

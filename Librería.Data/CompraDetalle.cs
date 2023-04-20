@@ -1,16 +1,14 @@
 ﻿using Librería.Data.Properties;
-using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Librería.Data
 {
     public class CompraDetalle
     {
         Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle();
+        string query = string.Empty;
+        SQLiteCommand Cmd;
 
         public bool AgregarCompraDetalle(Entidades.CompraDetalle eCompraDetalle)
         {
@@ -19,8 +17,8 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "insert into CompraDetalle(IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado) values(@IdCompra, @Cantidad, @Descripcion, @Precio, @Importe, @IdEstado)";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                query = "insert into CompraDetalle(IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado) values(@IdCompra, @Cantidad, @Descripcion, @Precio, @Importe, @IdEstado)";
+                Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdCompra", eCompraDetalle.IdCompra);
                 Cmd.Parameters.AddWithValue("@Cantidad", eCompraDetalle.Cantidad);
                 Cmd.Parameters.AddWithValue("@Descripcion", eCompraDetalle.Descripcion);
@@ -43,8 +41,8 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdCompraDetalle, IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado from CompraDetalle";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                query = "Select IdCompraDetalle, IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado from CompraDetalle";
+                Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.CommandType = System.Data.CommandType.Text;
 
                 using (SQLiteDataReader Dr = Cmd.ExecuteReader())
@@ -63,6 +61,68 @@ namespace Librería.Data
                         });
                     }
                 }
+            }
+
+            return oLista;
+        }
+
+        public List<Entidades.CompraDetalle> ListaCompraDetalle(string nombreObjeto, int valor)
+        {
+            List<Entidades.CompraDetalle> oLista = new List<Entidades.CompraDetalle>();
+
+            switch (nombreObjeto)
+            {
+                case "IdCompraDetalle":
+                    using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
+                    {
+                        Cnx.Open();
+                        query = "Select IdCompraDetalle, IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado from CompraDetalle where IdCompraDetalle = '@IdCompraDetalle'";
+                        Cmd = new SQLiteCommand(query, Cnx);
+                        Cmd.CommandType = System.Data.CommandType.Text;
+                         
+                        using (SQLiteDataReader Dr = Cmd.ExecuteReader())
+                        {
+                            while (Dr.Read())
+                            {
+                                oLista.Add(new Entidades.CompraDetalle()
+                                {
+                                    IdCompraDetalle = int.Parse(Dr["IdCompraDetalle"].ToString()),
+                                    IdCompra = int.Parse(Dr["IdEmpresa"].ToString()),
+                                    Cantidad = int.Parse(Dr["IdTipoDocumento"].ToString()),
+                                    Descripcion = Dr["IdUsuario"].ToString(),
+                                    Precio = decimal.Parse(Dr["NroDocumento"].ToString()),
+                                    Importe = decimal.Parse(Dr["FechaCompraDetalle"].ToString()),
+                                    IdEstado = int.Parse(Dr["IdEstado"].ToString())
+                                });
+                            }
+                        }
+                    }
+                    break;
+                case "IdCompra":
+                    using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
+                    {
+                        query = "Select IdCompraDetalle, IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado from CompraDetalle where IdCompra = '" + valor + "'";
+                        SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                        Cmd.CommandType = System.Data.CommandType.Text;
+
+                        using (SQLiteDataReader Dr = Cmd.ExecuteReader())
+                        {
+                            while (Dr.Read())
+                            {
+                                oLista.Add(new Entidades.CompraDetalle()
+                                {
+                                    IdCompraDetalle = int.Parse(Dr["IdCompraDetalle"].ToString()),
+                                    IdCompra = int.Parse(Dr["IdEmpresa"].ToString()),
+                                    Cantidad = int.Parse(Dr["IdTipoDocumento"].ToString()),
+                                    Descripcion = Dr["IdUsuario"].ToString(),
+                                    Precio = decimal.Parse(Dr["NroDocumento"].ToString()),
+                                    Importe = decimal.Parse(Dr["FechaCompraDetalle"].ToString()),
+                                    IdEstado = int.Parse(Dr["IdEstado"].ToString())
+                                });
+                            }
+                        }
+                        break;
+                    }
             }
 
             return oLista;

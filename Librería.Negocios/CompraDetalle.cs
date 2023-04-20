@@ -20,6 +20,11 @@ namespace Librería.Negocios
             return dCompraDetalle.ListaCompraDetalle();
         }
 
+        public List<Entidades.CompraDetalle> ListaCompraDetalle(string nombreObjeto, int valor)
+        {
+            return dCompraDetalle.ListaCompraDetalle(nombreObjeto, valor);
+        }
+
         public List<Entidades.CompraDetalle> ListaCompraDetalle(int IdCompraDetalle)
         {
             return dCompraDetalle.ListaCompraDetalle(IdCompraDetalle);

@@ -1,47 +1,25 @@
-﻿using MahApps.Metro.Controls;
-using Librería.Escritorio.Forms.Compras;
+﻿using Librería.Escritorio.Forms.Compras;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Librería.Escritorio.UserControls.Compras
 {
     public partial class pgCompra : Page
     {
+        #region Variables
         Window oWindow;
+        Entidades.Compra eCompra = new Entidades.Compra();
         Negocios.Compra nCompra = new Negocios.Compra();
+        Negocios.CompraDetalle nCompraDetalle = new Negocios.CompraDetalle();
         Negocios.Entidad nEntidad = new Negocios.Entidad();
         Negocios.TipoDocumento nTipoDocumento = new Negocios.TipoDocumento();
         Negocios.Articulo nArticulo = new Negocios.Articulo();
         Entidades.Articulo eArticulo = new Entidades.Articulo();
         public int Id = 0;
-
-        public pgCompra(int Id = 0)
-        {
-            InitializeComponent();
-
-            CargarEntidad();
-            CargarTipoDocumento();
-
-            //this.Id = Id;
-
-            //if(Id != 0)
-            //{
-            //    var compra.
-            //}
-        }
-
+        #endregion
+        #region Métodos
         void CargarEntidad()
         {
             cboProveedor.ItemsSource = null;
@@ -60,16 +38,41 @@ namespace Librería.Escritorio.UserControls.Compras
 
         void CargarArticuloAlaCompra()
         {
-            //Entidades.Articulo eArticulo = new Entidades.Articulo()
-            //{
-            //    IdArticulo = IdArticulo
-            //};
-            //var articulo = nArticulo.ListaArticulo(eArticulo).FirstOrDefault();
+            var subt = App.oCompra.Select(x => x.Importe).Sum();
+            var imp = subt * 0.18M;
+            var tot = subt + imp;
 
-            //oCompra.Add(new App.CompraTemporal() { Cantidad = 1, Descripcion = articulo.DescripcionArticulo, Precio = articulo.PrecioVenta });
+            if (cboTipoDocumento.Text == "FACTURA")
+            {
+                txtSubTotal.Text = subt.ToString("#,###.##");
+                txtImpuesto.Text = imp.ToString("#,###.##");
+                txtTotal.Text = tot.ToString("#,###.##");
+            }
 
             dg.ItemsSource = null;
             dg.ItemsSource = App.oCompra;
+        }
+        #endregion
+
+        public pgCompra(int Id = 0)
+        {
+            InitializeComponent();
+
+            CargarEntidad();
+            CargarTipoDocumento();
+
+            this.Id = Id;
+
+            if (Id != 0)
+            {
+                var compra = nCompra.ListaCompra(Id).FirstOrDefault();
+                cboProveedor.SelectedValue = compra.IdProveedor.ToString();
+                cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
+                txtNroDocumento.Text = compra.NroDocumento;
+                dtpFechaCompra.Text = compra.FechaCompra;
+
+                var compradetalle = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra);
+            }
         }
 
         private void BtnCrearCompra_Click(object sender, RoutedEventArgs e)
@@ -77,11 +80,12 @@ namespace Librería.Escritorio.UserControls.Compras
             Entidades.Compra eCompra = new Entidades.Compra()
             {
                 IdEmpresa = App.IdEmpresa,
-                IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue),
-                IdUsuario = 0,
+                IdProveedor = cboProveedor.SelectedValue.ToString(),
+                IdTipoDocumento = cboTipoDocumento.SelectedValue.ToString(),
+                IdUsuario = "0",
                 NroDocumento = txtNroDocumento.Text,
-                FechaCompra = Convert.ToDateTime(dtpFechaCompra.Text),
-                FechaRegistro = DateTime.Now,
+                FechaCompra = dtpFechaCompra.Text,
+                FechaRegistro = DateTime.Now.ToLongDateString(),
                 SubTotal = Convert.ToDecimal(txtSubTotal.Text),
                 Impuesto = Convert.ToDecimal(txtImpuesto.Text),
                 Total = Convert.ToDecimal(txtTotal.Text),
@@ -94,9 +98,14 @@ namespace Librería.Escritorio.UserControls.Compras
             {
                 Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
                 {
-
+                    IdCompra = eCompra.IdCompra,
+                    Cantidad = item.Cantidad,
+                    Descripcion = item.Descripcion,
+                    Precio = item.Precio,
+                    Importe = item.Importe,
+                    IdEstado = 1
                 };
-
+                nCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
             }
         }
 
@@ -119,8 +128,8 @@ namespace Librería.Escritorio.UserControls.Compras
             App.IdProveedor = Convert.ToInt32(cboProveedor.SelectedValue);
 
             oWindow = new wndSeleccionarArticulo(App.IdProveedor);
-            if(oWindow.ShowDialog() == false)
-                if(App.Resultado == true)
+            if (oWindow.ShowDialog() == false)
+                if (App.Resultado == true)
                     CargarArticuloAlaCompra();
         }
     }

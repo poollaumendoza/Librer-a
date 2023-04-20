@@ -19,7 +19,8 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "insert into Articulo(IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado) values(@IdProveedor, @CodigoArticulo, @DescripcionArticulo, @Cantidad, @PrecioCompra, @PrecioVenta, @IdEstado)";
+                string query = "insert into Articulo(IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado) " +
+                    "values(@IdProveedor, @CodigoArticulo, @DescripcionArticulo, @Cantidad, @PrecioCompra, @PrecioVenta, @IdEstado)";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdProveedor", eArticulo.IdProveedor);
                 Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);

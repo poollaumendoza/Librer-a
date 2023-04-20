@@ -17,12 +17,15 @@
         </Button>
         <DataGrid Name="dg" Margin="10,61,10,10" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Codigo del Artículo" Binding="{Binding Path=CodigoArticulo}" Width="auto"/>
-                <DataGridTextColumn Header="Descripción del Artículo" Binding="{Binding Path=DescripcionArticulo}" Width="auto"/>
+                <DataGridTextColumn Header="Nro. Documento" Binding="{Binding Path=NroDocumento}" Width="auto"/>
+                <DataGridTextColumn Header="Fecha de Compra" Binding="{Binding Path=FechaCompra}" Width="auto"/>
+                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal}" Width="auto"/>
+                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto}" Width="auto"/>
+                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total}" Width="auto"/>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnEditar" CommandParameter="{Binding IdArticulo}">
+                            <Button Name="btnEditar" CommandParameter="{Binding IdCompra}" Click="BtnEditar_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/edit.png" Width="16"/>
                                     <Label Content="Editar" VerticalContentAlignment="Center"/>
@@ -34,7 +37,7 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnEliminar" CommandParameter="{Binding IdArticulo}">
+                            <Button Name="btnEliminar" CommandParameter="{Binding IdCompra}" Click="BtnEliminar_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/delete.png" Width="16"/>
                                     <Label Content="Eliminar" VerticalContentAlignment="Center"/>

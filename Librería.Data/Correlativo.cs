@@ -79,7 +79,7 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Correlativo()
                         {
                             IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
+                            IdEmpresa = Dr["IdEmpresa"].ToString(),
                             NombreTabla = Dr["NombreTabla"].ToString(),
                             Abreviatura = Dr["Abreviatura"].ToString(),
                             Serie = Dr["Serie"].ToString(),
@@ -113,7 +113,7 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Correlativo()
                         {
                             IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
+                            IdEmpresa = Dr["IdEmpresa"].ToString(),
                             NombreTabla = Dr["NombreTabla"].ToString(),
                             Abreviatura = Dr["Abreviatura"].ToString(),
                             Serie = Dr["Serie"].ToString(),
@@ -147,7 +147,7 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Correlativo()
                         {
                             IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
+                            IdEmpresa = Dr["IdEmpresa"].ToString(),
                             NombreTabla = Dr["NombreTabla"].ToString(),
                             Abreviatura = Dr["Abreviatura"].ToString(),
                             Serie = Dr["Serie"].ToString(),

@@ -19,9 +19,11 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "insert into Compra(IdEmpresa, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, IdEstado) values(IdEmpresa, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, IdEstado)";
+                string query = "insert into Compra(IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, " +
+                    "IdEstado) values(@IdEmpresa, @IdTipoDocumento, @IdUsuario, @NroDocumento, @FechaCompra, @FechaRegistro, @SubTotal, @Impuesto, @Total, @IdEstado)";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdEmpresa", eCompra.IdEmpresa);
+                Cmd.Parameters.AddWithValue("@IdEntidad", eCompra.IdProveedor);
                 Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCompra.IdTipoDocumento);
                 Cmd.Parameters.AddWithValue("@IdUsuario", eCompra.IdUsuario);
                 Cmd.Parameters.AddWithValue("@NroDocumento", eCompra.NroDocumento);
@@ -47,7 +49,8 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdCompra, IdEmpresa, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, IdEstado from Compra";
+                string query = "Select IdCompra, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, IdEstado " +
+                    "from Compra";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.CommandType = System.Data.CommandType.Text;
 
@@ -58,15 +61,16 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Compra()
                         {
                             IdCompra = int.Parse(Dr["IdCompra"].ToString()),
-                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
-                            IdTipoDocumento = int.Parse(Dr["IdTipoDocumento"].ToString()),
-                            IdUsuario = int.Parse(Dr["IdUsuario"].ToString()),
+                            IdEmpresa = Dr["IdEmpresa"].ToString(),
+                            IdProveedor = Dr["IdEntidad"].ToString(),
+                            IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
+                            IdUsuario = Dr["IdUsuario"].ToString(),
                             NroDocumento = Dr["NroDocumento"].ToString(),
-                            FechaCompra = DateTime.Parse(Dr["FechaCompra"].ToString()),
-                            FechaRegistro = DateTime.Parse(Dr["FechaRegistro"].ToString()),
-                            SubTotal = int.Parse(Dr["SubTotal"].ToString()),
-                            Impuesto = int.Parse(Dr["Impuesto"].ToString()),
-                            Total = int.Parse(Dr["Total"].ToString()),
+                            FechaCompra = Dr["FechaCompra"].ToString(),
+                            FechaRegistro = Dr["FechaRegistro"].ToString(),
+                            SubTotal = decimal.Parse(Dr["SubTotal"].ToString()),
+                            Impuesto = decimal.Parse(Dr["Impuesto"].ToString()),
+                            Total = decimal.Parse(Dr["Total"].ToString()),
                             IdEstado = int.Parse(Dr["IdEstado"].ToString())
                         });
                     }
@@ -83,7 +87,8 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdCompra, IdProveedor, CodigoCompra, DescripcionCompra, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Compra where IdCompra = @IdCompra";
+                string query = "Select IdCompra, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, IdEstado" +
+                    " from Compra where IdCompra = @IdCompra";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdCompra", IdCompra);
                 Cmd.CommandType = System.Data.CommandType.Text;
@@ -95,15 +100,16 @@ namespace Librería.Data
                         oLista.Add(new Entidades.Compra()
                         {
                             IdCompra = int.Parse(Dr["IdCompra"].ToString()),
-                            IdEmpresa = int.Parse(Dr["IdEmpresa"].ToString()),
-                            IdTipoDocumento = int.Parse(Dr["IdTipoDocumento"].ToString()),
-                            IdUsuario = int.Parse(Dr["IdUsuario"].ToString()),
+                            IdEmpresa = Dr["IdEmpresa"].ToString(),
+                            IdProveedor = Dr["IdEntidad"].ToString(),
+                            IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
+                            IdUsuario = Dr["IdUsuario"].ToString(),
                             NroDocumento = Dr["NroDocumento"].ToString(),
-                            FechaCompra = DateTime.Parse(Dr["FechaCompra"].ToString()),
-                            FechaRegistro = DateTime.Parse(Dr["FechaRegistro"].ToString()),
-                            SubTotal = int.Parse(Dr["SubTotal"].ToString()),
-                            Impuesto = int.Parse(Dr["Impuesto"].ToString()),
-                            Total = int.Parse(Dr["Total"].ToString()),
+                            FechaCompra = Dr["FechaCompra"].ToString(),
+                            FechaRegistro = Dr["FechaRegistro"].ToString(),
+                            SubTotal = decimal.Parse(Dr["SubTotal"].ToString()),
+                            Impuesto = decimal.Parse(Dr["Impuesto"].ToString()),
+                            Total = decimal.Parse(Dr["Total"].ToString()),
                             IdEstado = int.Parse(Dr["IdEstado"].ToString())
                         });
                     }
@@ -120,12 +126,13 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "update Compra set IdCompra = @IdCompra, IdEmpresa = @IdEmpresa, IdTipoDocumento = @IdTipoDocumento, IdUsuario = @IdUsuario, " +
+                string query = "update Compra set IdCompra = @IdCompra, IdEmpresa = @IdEmpresa, IdEntidad = @IdEntidad, IdTipoDocumento = @IdTipoDocumento, IdUsuario = @IdUsuario, " +
                     "NroDocumento = @NroDocumento, FechaCompra = @FechaCompra, FechaRegistro = @FechaRegistro, SubTotal = @SubTotal, Impuesto = @Impuesto, " +
                     "Total = @Total, IdEstado = @IdEstado where IdCompra = @IdCompra";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdCompra", eCompra.IdCompra);
                 Cmd.Parameters.AddWithValue("@IdEmpresa", eCompra.IdEmpresa);
+                Cmd.Parameters.AddWithValue("@IdEntidad", eCompra.IdProveedor);
                 Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCompra.IdTipoDocumento);
                 Cmd.Parameters.AddWithValue("@IdUsuario", eCompra.IdUsuario);
                 Cmd.Parameters.AddWithValue("@NroDocumento", eCompra.NroDocumento);
