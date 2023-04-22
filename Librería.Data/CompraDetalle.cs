@@ -1,6 +1,9 @@
 ﻿using Librería.Data.Properties;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
+using System.Linq;
 
 namespace Librería.Data
 {
@@ -66,7 +69,7 @@ namespace Librería.Data
             return oLista;
         }
 
-        public List<Entidades.CompraDetalle> ListaCompraDetalle(string nombreObjeto, int valor)
+        public List<Entidades.CompraDetalle> ListaCompraDetalle(string nombreObjeto, string valor)
         {
             List<Entidades.CompraDetalle> oLista = new List<Entidades.CompraDetalle>();
 
@@ -87,11 +90,11 @@ namespace Librería.Data
                                 oLista.Add(new Entidades.CompraDetalle()
                                 {
                                     IdCompraDetalle = int.Parse(Dr["IdCompraDetalle"].ToString()),
-                                    IdCompra = int.Parse(Dr["IdEmpresa"].ToString()),
-                                    Cantidad = int.Parse(Dr["IdTipoDocumento"].ToString()),
-                                    Descripcion = Dr["IdUsuario"].ToString(),
-                                    Precio = decimal.Parse(Dr["NroDocumento"].ToString()),
-                                    Importe = decimal.Parse(Dr["FechaCompraDetalle"].ToString()),
+                                    IdCompra = int.Parse(Dr["IdCompra"].ToString()),
+                                    Cantidad = int.Parse(Dr["Cantidad"].ToString()),
+                                    Descripcion = Dr["Descripcion"].ToString(),
+                                    Precio = decimal.Parse(Dr["Precio"].ToString()),
+                                    Importe = decimal.Parse(Dr["Importe"].ToString()),
                                     IdEstado = int.Parse(Dr["IdEstado"].ToString())
                                 });
                             }
@@ -101,10 +104,10 @@ namespace Librería.Data
                 case "IdCompra":
                     using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
                     {
+                        Cnx.Open();
                         query = "Select IdCompraDetalle, IdCompra, Cantidad, Descripcion, Precio, Importe, IdEstado from CompraDetalle where IdCompra = '" + valor + "'";
                         SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                        Cmd.CommandType = System.Data.CommandType.Text;
-
+                        Cmd.CommandType = CommandType.Text;
                         using (SQLiteDataReader Dr = Cmd.ExecuteReader())
                         {
                             while (Dr.Read())
@@ -112,11 +115,11 @@ namespace Librería.Data
                                 oLista.Add(new Entidades.CompraDetalle()
                                 {
                                     IdCompraDetalle = int.Parse(Dr["IdCompraDetalle"].ToString()),
-                                    IdCompra = int.Parse(Dr["IdEmpresa"].ToString()),
-                                    Cantidad = int.Parse(Dr["IdTipoDocumento"].ToString()),
-                                    Descripcion = Dr["IdUsuario"].ToString(),
-                                    Precio = decimal.Parse(Dr["NroDocumento"].ToString()),
-                                    Importe = decimal.Parse(Dr["FechaCompraDetalle"].ToString()),
+                                    IdCompra = int.Parse(Dr["IdCompra"].ToString()),
+                                    Cantidad = int.Parse(Dr["Cantidad"].ToString()),
+                                    Descripcion = Dr["Descripcion"].ToString(),
+                                    Precio = decimal.Parse(Dr["Precio"].ToString()),
+                                    Importe = decimal.Parse(Dr["Importe"].ToString()),
                                     IdEstado = int.Parse(Dr["IdEstado"].ToString())
                                 });
                             }

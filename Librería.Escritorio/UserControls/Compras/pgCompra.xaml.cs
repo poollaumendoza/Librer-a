@@ -70,8 +70,12 @@ namespace Librería.Escritorio.UserControls.Compras
                 cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
                 txtNroDocumento.Text = compra.NroDocumento;
                 dtpFechaCompra.Text = compra.FechaCompra;
+                txtSubTotal.Text = compra.SubTotal.ToString();
+                txtImpuesto.Text = compra.Impuesto.ToString();
+                txtTotal.Text = compra.Total.ToString();
 
-                var compradetalle = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra);
+                dg.ItemsSource = null;
+                dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString());
             }
         }
 
@@ -131,6 +135,18 @@ namespace Librería.Escritorio.UserControls.Compras
             if (oWindow.ShowDialog() == false)
                 if (App.Resultado == true)
                     CargarArticuloAlaCompra();
+        }
+
+        private void BtnEliminar_Click(object sender, RoutedEventArgs e)
+        {
+            int Id = (int)((Button)sender).CommandParameter;
+
+            var compra = nCompra.ListaCompra(Id).FirstOrDefault();
+            var compradetalle = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString()).FirstOrDefault();
+            nCompraDetalle.EliminarCompraDetalle(compradetalle);
+
+            dg.ItemsSource = null;
+            dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString());
         }
     }
 }

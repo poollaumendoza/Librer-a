@@ -65,22 +65,22 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn>
+                <!--<DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnEditar" CommandParameter="{Binding IdArticulo}">
+                            <Button Name="btnEliminar" CommandParameter="{Binding IdCompraDetalle}" Click="BtnEliminar_Click">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Resources/edit.png" Width="16"/>
-                                    <Label Content="Editar" VerticalContentAlignment="Center"/>
+                                    <Image Source="/Resources/delete.png" Width="16"/>
+                                    <Label Content="Eliminar" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnEliminar" CommandParameter="{Binding IdArticulo}">
+                            <Button Name="btnEliminar" CommandParameter="{Binding IdCompraDetalle}" Click="BtnEliminar_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/delete.png" Width="16"/>
                                     <Label Content="Eliminar" VerticalContentAlignment="Center"/>
