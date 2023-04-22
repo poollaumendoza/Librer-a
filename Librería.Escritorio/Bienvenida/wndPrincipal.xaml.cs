@@ -1,4 +1,4 @@
-﻿//using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.Bienvenida
 {
-    public partial class wndPrincipal : Window
+    public partial class wndPrincipal : MetroWindow
     {
         Window oWindow;
 
@@ -27,6 +27,12 @@ namespace Librería.Escritorio.Bienvenida
         private void BtnCompras_Click(object sender, RoutedEventArgs e)
         {
             oWindow = new Forms.Compras.wndCompra();
+            oWindow.Show();
+        }
+
+        private void BtnVentas_Click(object sender, RoutedEventArgs e)
+        {
+            oWindow = new Forms.Ventas.wndVenta();
             oWindow.Show();
         }
     }

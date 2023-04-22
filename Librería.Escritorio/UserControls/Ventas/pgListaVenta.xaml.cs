@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Librería.Escritorio.Forms.Ventas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,41 @@ using System.Windows.Shapes;
 
 namespace Librería.Escritorio.UserControls.Ventas
 {
-    /// <summary>
-    /// Interaction logic for pgListaVenta.xaml
-    /// </summary>
     public partial class pgListaVenta : Page
     {
+        Negocios.Venta nVenta = new Negocios.Venta();
+
         public pgListaVenta()
         {
             InitializeComponent();
+            CargarVentas();
+        }
+
+        void CargarVentas()
+        {
+            dg.ItemsSource = null;
+            dg.ItemsSource = nVenta.ListaVenta();
+        }
+
+        private void BtnAgregar_Click(object sender, RoutedEventArgs e)
+        {
+            wndVenta.StaticMainFrame.Content = new pgVenta();
+        }
+
+        private void BtnEditar_Click(object sender, RoutedEventArgs e)
+        {
+            int Id = (int)((Button)sender).CommandParameter;
+
+            pgVenta pFormulario = new pgVenta(Id);
+            wndVenta.StaticMainFrame.Content = pFormulario;
+        }
+
+        private void BtnEliminar_Click(object sender, RoutedEventArgs e)
+        {
+            int Id = (int)((Button)sender).CommandParameter;
+
+            var venta = nVenta.ListaVenta(Id).FirstOrDefault();
+            nVenta.EliminarVenta(venta);
         }
     }
 }

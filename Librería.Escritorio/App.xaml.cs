@@ -11,11 +11,17 @@ namespace Librería.Escritorio
 {
     public partial class App : Application
     {
+        #region Variables
         public static string IdEmpresa;
         public static bool Resultado = false;
         public static int IdArticulo = 0;
         public static int IdProveedor = 0;
 
+        public static ObservableCollection<CompraTemporal> oCompra = new ObservableCollection<CompraTemporal>();
+        public static ObservableCollection<VentaTemporal> oVenta = new ObservableCollection<VentaTemporal>();
+        #endregion
+
+        #region Clases
         public class CompraTemporal
         {
             public int id { get; set; }
@@ -25,6 +31,14 @@ namespace Librería.Escritorio
             public decimal Importe { get; set; }
         }
 
-        public static ObservableCollection<CompraTemporal> oCompra = new ObservableCollection<CompraTemporal>();
+        public class VentaTemporal
+        {
+            public int id { get; set; }
+            public int Cantidad { get; set; }
+            public string Descripcion { get; set; }
+            public decimal Precio { get; set; }
+            public decimal Importe { get; set; }
+        }
+        #endregion
     }
 }
