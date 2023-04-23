@@ -107,8 +107,9 @@ namespace Librería.Data
                     using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
                     {
                         Cnx.Open();
-                        query = "Select IdVentaDetalle, IdVenta, Cantidad, Descripcion, Precio, Importe, IdEstado from VentaDetalle where IdVenta = '" + valor + "'";
+                        query = "Select IdVentaDetalle, IdVenta, Cantidad, Descripcion, Precio, Importe, IdEstado from VentaDetalle where IdVenta = @IdVenta";
                         SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                        Cmd.Parameters.AddWithValue("@IdVenta", valor);
                         Cmd.CommandType = CommandType.Text;
                         using (SQLiteDataReader Dr = Cmd.ExecuteReader())
                         {

@@ -50,7 +50,7 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdSerie, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
+                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdCorrelativo, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
                     "IdEstado from Venta";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.CommandType = System.Data.CommandType.Text;
@@ -66,7 +66,7 @@ namespace Librería.Data
                             IdCliente = Dr["IdEntidad"].ToString(),
                             IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
                             IdUsuario = Dr["IdUsuario"].ToString(),
-                            IdCorrelativo = Convert.ToInt32(Dr["IdSerie"].ToString()),
+                            IdCorrelativo = Convert.ToInt32(Dr["IdCorrelativo"].ToString()),
                             Correlativo = Dr["Correlativo"].ToString(),
                             FechaVenta = Dr["FechaVenta"].ToString(),
                             FechaRegistro = Dr["FechaRegistro"].ToString(),
@@ -89,7 +89,7 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdSerie, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
+                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdCorrelativo, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
                     "IdEstado from Venta where IdVenta = @IdVenta";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdVenta", IdVenta);
@@ -106,7 +106,7 @@ namespace Librería.Data
                             IdCliente = Dr["IdEntidad"].ToString(),
                             IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
                             IdUsuario = Dr["IdUsuario"].ToString(),
-                            IdCorrelativo = Convert.ToInt32(Dr["IdSerie"].ToString()),
+                            IdCorrelativo = Convert.ToInt32(Dr["IdCorrelativo"].ToString()),
                             Correlativo = Dr["Correlativo"].ToString(),
                             FechaVenta = Dr["FechaVenta"].ToString(),
                             FechaRegistro = Dr["FechaRegistro"].ToString(),
