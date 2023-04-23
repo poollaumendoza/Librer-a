@@ -37,9 +37,29 @@ namespace Librería.Escritorio.UserControls.Compras
         private void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             int Id = (int)((Button)sender).CommandParameter;
+            var mensaje = MessageBox.Show("¿Desea eliminar este registro?", "Título", MessageBoxButton.YesNoCancel);
 
-            var compra = nCompra.ListaCompra(Id).FirstOrDefault();
-            nCompra.EliminarCompra(compra);
+            switch (mensaje)
+            {
+                case MessageBoxResult.None:
+                    break;
+                case MessageBoxResult.OK:
+                    break;
+                case MessageBoxResult.Cancel:
+                    return;
+                case MessageBoxResult.Yes:
+                    var compra = nCompra.ListaCompra(Id).FirstOrDefault();
+                    nCompra.EliminarCompra(compra);
+
+                    CargarCompras();
+
+                    mensaje = MessageBox.Show("Registro eliminado");
+                    break;
+                case MessageBoxResult.No:
+                    return;
+                default:
+                    break;
+            }
         }
     }
 }
