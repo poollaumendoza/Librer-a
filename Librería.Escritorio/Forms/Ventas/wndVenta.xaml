@@ -1,12 +1,9 @@
-﻿<Window x:Class="Librería.Escritorio.Forms.Ventas.wndVenta"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Librería.Escritorio.Forms.Ventas"
-        mc:Ignorable="d"
-        Title="wndVenta" Height="450" Width="800">
+﻿<mah:MetroWindow x:Class="Librería.Escritorio.Forms.Ventas.wndVenta"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 Title="wndVenta" Height="450" Width="800">
     <Grid>
-        <Frame Name="MainFrame" Source="/Librería.Escritorio;component/UserControls/Ventass/pgListaVenta.xaml"/>
+        <Frame Name="MainFrame" Source="/Librería.Escritorio;component/UserControls/Ventas/pgListaVenta.xaml"/>
     </Grid>
-</Window>
+</mah:MetroWindow>

@@ -86,7 +86,7 @@ namespace Librería.Escritorio.UserControls.Articulo
 
                 eArticulo = new Entidades.Articulo()
                 {
-                    CodigoArticulo = nCorrelativo.ConstruirCorrelativo(txtCodigo.Text),
+                    CodigoArticulo = nCorrelativo.ConstruirCorrelativoArticulo(txtCodigo.Text),
                     DescripcionArticulo = txtDescripcion.Text,
                     IdProveedor = Convert.ToInt32(cboProveedor.SelectedValue),
                     Cantidad = Convert.ToInt32(nupCantidad.Value),

@@ -71,6 +71,40 @@ namespace Librería.Data
             return oLista;
         }
 
+        public List<Entidades.Articulo> ListaArticulo(string criterio)
+        {
+            List<Entidades.Articulo> oLista = new List<Entidades.Articulo>();
+
+            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
+            {
+                Cnx.Open();
+                string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where DescripcionArticulo like '%@Criterio%'";
+                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                Cmd.Parameters.AddWithValue("@Criterio", criterio);
+                Cmd.CommandType = System.Data.CommandType.Text;
+
+                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
+                {
+                    while (Dr.Read())
+                    {
+                        oLista.Add(new Entidades.Articulo()
+                        {
+                            IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
+                            IdProveedor = int.Parse(Dr["IdProveedor"].ToString()),
+                            CodigoArticulo = Dr["CodigoArticulo"].ToString(),
+                            DescripcionArticulo = Dr["DescripcionArticulo"].ToString(),
+                            Cantidad = int.Parse(Dr["Cantidad"].ToString()),
+                            PrecioCompra = decimal.Parse(Dr["PrecioCompra"].ToString()),
+                            PrecioVenta = decimal.Parse(Dr["PrecioVenta"].ToString()),
+                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
+                        });
+                    }
+                }
+            }
+
+            return oLista;
+        }
+
         public List<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
         {
             List<Entidades.Articulo> oLista = new List<Entidades.Articulo>();

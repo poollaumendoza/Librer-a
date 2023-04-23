@@ -29,11 +29,11 @@
             </StackPanel>
         </Button>
         <Label Content="T. Documento:" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="cboTipoDocumento" DisplayMemberPath="NombreTipoDocumento" SelectedValuePath="IdTipoDocumento" HorizontalAlignment="Left" Margin="120,111,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="cboTipoDocumento" DisplayMemberPath="NombreTipoDocumento" SelectedValuePath="IdTipoDocumento" HorizontalAlignment="Left" Margin="120,111,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="CboTipoDocumento_SelectionChanged"/>
         <Label Content="Nro. Documento:" HorizontalAlignment="Left" Margin="245,111,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="txtSerie" HorizontalAlignment="Left" Height="23" Margin="380,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" TextAlignment="Right"/>
-        <Label Content="-" HorizontalAlignment="Left" Margin="430,111,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="txtCorrelativo" HorizontalAlignment="Left" Height="23" Margin="445,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="cboSerie" DisplayMemberPath="Serie" SelectedValuePath="IdCorrelativo" HorizontalAlignment="Left" Height="23" Margin="380,111,0,0" VerticalAlignment="Top" Width="60" SelectionChanged="CboSerie_SelectionChanged"/>
+        <Label Content="-" HorizontalAlignment="Left" Margin="440,111,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="txtCorrelativo" HorizontalAlignment="Left" Height="23" Margin="455,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Fecha Venta:" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top"/>
         <DatePicker Name="dtpFechaVenta" HorizontalAlignment="Left" Margin="120,142,0,0" VerticalAlignment="Top" Width="120"/>
         <DataGrid Name="dg" Margin="10,173,10,41" AutoGenerateColumns="False" CanUserAddRows="False" BorderThickness="1">

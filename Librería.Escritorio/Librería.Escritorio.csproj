@@ -159,6 +159,9 @@
     <Compile Include="UserControls\Ventas\pgVenta.xaml.cs">
       <DependentUpon>pgVenta.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Ventas\wndSeleccionarArticulo.xaml.cs">
+      <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
+    </Compile>
     <Page Include="Bienvenida\wndLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -232,6 +235,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Ventas\pgVenta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Ventas\wndSeleccionarArticulo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -20,6 +20,11 @@ namespace Librería.Negocios
             return dArticulo.ListaArticulo();
         }
 
+        public List<Entidades.Articulo> ListaArticulo(string criterio)
+        {
+            return dArticulo.ListaArticulo(criterio);
+        }
+
         public List<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
         {
             return dArticulo.ListaArticulo(eArticulo);

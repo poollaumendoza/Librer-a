@@ -15,9 +15,14 @@ namespace Librería.Negocios
             return dCorrelativo.AgregarCorrelativo(eCorrelativo);
         }
 
-        public string ConstruirCorrelativo(string codigo)
+        public string ConstruirCorrelativoArticulo(string codigo)
         {
-            return dCorrelativo.ConstruirCorrelativo(codigo);
+            return dCorrelativo.ConstruirCorrelativoArticulo(codigo);
+        }
+
+        public string ConstruirCorrelativoDocumento(int IdCorrelativo)
+        {
+            return dCorrelativo.ConstruirCorrelativoDocumento(IdCorrelativo);
         }
 
         public List<Entidades.Correlativo> ListaCorrelativo()
@@ -43,6 +48,16 @@ namespace Librería.Negocios
         public bool EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
         {
             return dCorrelativo.EliminarCorrelativo(eCorrelativo);
+        }
+
+        public List<Entidades.Correlativo> ObtenerSerie(string NombreTabla, string Abreviatura)
+        {
+            return dCorrelativo.ObtenerSerie(NombreTabla, Abreviatura);
+        }
+
+        public int ObtenerCorrelativo(int IdCorrelativo)
+        {
+            return dCorrelativo.ObtenerCorrelativo(IdCorrelativo);
         }
     }
 }
