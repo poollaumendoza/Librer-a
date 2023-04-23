@@ -69,7 +69,7 @@ namespace Librería.Escritorio.UserControls.Ventas
 
             CargarEntidad();
             CargarTipoDocumento();
-            CargarSeries("VENTA", nCorrelativo.ObtenerAbreviatura(Convert.ToInt32(cboTipoDocumento.SelectedValue)));
+            //CargarSeries("VENTA", nCorrelativo.ObtenerAbreviatura(Convert.ToInt32(cboTipoDocumento.SelectedValue)));
 
             this.Id = Id;
 

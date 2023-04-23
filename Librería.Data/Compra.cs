@@ -20,7 +20,7 @@ namespace Librería.Data
             {
                 Cnx.Open();
                 string query = "insert into Compra(IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaCompra, FechaRegistro, SubTotal, Impuesto, Total, " +
-                    "IdEstado) values(@IdEmpresa, @IdTipoDocumento, @IdUsuario, @NroDocumento, @FechaCompra, @FechaRegistro, @SubTotal, @Impuesto, @Total, @IdEstado)";
+                    "IdEstado) values(@IdEmpresa, @IdEntidad, @IdTipoDocumento, @IdUsuario, @NroDocumento, @FechaCompra, @FechaRegistro, @SubTotal, @Impuesto, @Total, @IdEstado)";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdEmpresa", eCompra.IdEmpresa);
                 Cmd.Parameters.AddWithValue("@IdEntidad", eCompra.IdProveedor);

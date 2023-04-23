@@ -19,9 +19,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nro. Documento" Binding="{Binding Path=NroDocumento}" Width="auto"/>
                 <DataGridTextColumn Header="Fecha de Compra" Binding="{Binding Path=FechaCompra}" Width="auto"/>
-                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal}" Width="auto"/>
-                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto}" Width="auto"/>
-                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total}" Width="auto"/>
+                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal, StringFormat=C2}" Width="auto"/>
+                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto, StringFormat=C2}" Width="auto"/>
+                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total, StringFormat=C2}" Width="auto"/>
                 <DataGridTextColumn Width="5*"/>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
