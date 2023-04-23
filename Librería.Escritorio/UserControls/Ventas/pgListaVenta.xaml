@@ -17,11 +17,41 @@
         </Button>
         <DataGrid Name="dg" Margin="10,61,10,10" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Nro. Documento" Binding="{Binding Path=NroDocumento}" Width="auto"/>
-                <DataGridTextColumn Header="Fecha de Venta" Binding="{Binding Path=FechaVenta}" Width="auto"/>
-                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal}" Width="auto"/>
-                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto}" Width="auto"/>
-                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total}" Width="auto"/>
+                <DataGridTextColumn Header="Nro. Documento" Binding="{Binding Path=NroDocumento}" Width="auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Fecha de Venta" Binding="{Binding Path=FechaVenta, StringFormat=\{0:yyyy-MM-dd\}}" Width="auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal, StringFormat=C2}" Width="auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto, StringFormat=C2}" Width="auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total, StringFormat=C2}" Width="auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Width="5*"/>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>

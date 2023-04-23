@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Librería.Escritorio.UserControls.Ventas
 {
     public partial class wndSeleccionarArticulo : MetroWindow
     {
+        MetroWindow oWindow;
         Negocios.Articulo nArticulo = new Negocios.Articulo();
 
         public wndSeleccionarArticulo()
@@ -31,10 +33,40 @@ namespace Librería.Escritorio.UserControls.Ventas
             dg.ItemsSource = nArticulo.ListaArticulo();
         }
 
-        void CargarArticulos(string criterio)
+        private void BtnArticulo_Click(object sender, RoutedEventArgs e)
         {
-            dg.ItemsSource = null;
-            dg.ItemsSource = nArticulo.ListaArticulo(criterio);
+            //int idproveedor = App.IdProveedor;
+            string criterio = string.Empty;
+
+            oWindow = new Forms.Articulo.wndArticulo();
+            if (oWindow.ShowDialog() == false)
+                if (App.Resultado == true)
+                    CargarArticulos();
+        }
+
+        private async void Dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            object fila = dg.SelectedItem;
+
+            var message =
+                await this.ShowInputAsync(
+                "Título",
+                "Ingrese cantidad de producto:",
+                new MetroDialogSettings()
+                {
+                    AffirmativeButtonText = "Ok",
+                    NegativeButtonText = "No"
+                });
+
+            App.oVenta.Add(new App.VentaTemporal()
+            {
+                Cantidad = Convert.ToInt32(message),
+                Descripcion = ((Entidades.Articulo)fila).DescripcionArticulo,
+                Precio = ((Entidades.Articulo)fila).PrecioVenta,
+                Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioVenta)
+            });
+            App.Resultado = true;
+            this.Close();
         }
     }
 }

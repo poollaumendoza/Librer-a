@@ -52,14 +52,10 @@ namespace Librería.Data
 
             var _correlativo = (from c in ListaCorrelativo()
                                 where c.Abreviatura.Equals(resultado)
-                                select c.NroCorrelativo).ToList();
+                                select c.NroCorrelativo).FirstOrDefault();
 
             string ceros = "00000";
-
-            if (_correlativo.Count() == 0)
-                correlativo = resultado + "00001";
-            else
-                correlativo = resultado + ceros.PadLeft(ceros.Length - _correlativo.ToString().Length) + _correlativo.ToString();
+            correlativo = resultado + ceros.PadLeft(ceros.Length - _correlativo.ToString().Length) + _correlativo.ToString();
 
             return correlativo;
         }

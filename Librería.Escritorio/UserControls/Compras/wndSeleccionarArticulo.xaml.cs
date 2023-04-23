@@ -59,7 +59,7 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private async void Dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            object fila = dg.Items.CurrentItem;
+            object fila = dg.SelectedItem;
 
             var message = 
                 await this.ShowInputAsync(
@@ -75,8 +75,8 @@ namespace Librería.Escritorio.UserControls.Compras
             {
                 Cantidad = Convert.ToInt32(message),
                 Descripcion = ((Entidades.Articulo)fila).DescripcionArticulo,
-                Precio = ((Entidades.Articulo)fila).PrecioVenta,
-                Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioVenta)
+                Precio = ((Entidades.Articulo)fila).PrecioCompra,
+                Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioCompra)
             });
             App.Resultado = true;
             this.Close();

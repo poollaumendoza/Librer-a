@@ -14,6 +14,8 @@ namespace Librería.Entidades
         public string IdTipoDocumento { get; set; }
         public string IdUsuario { get; set; }
         public string NroDocumento { get; set; }
+        public int IdCorrelativo { get; set; }
+        public string Correlativo { get; set; }
         public string FechaVenta { get; set; }
         public string FechaRegistro { get; set; }
         public decimal SubTotal { get; set; }

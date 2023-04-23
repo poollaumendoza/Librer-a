@@ -19,14 +19,15 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "insert into Venta(IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
-                    "IdEstado) values(@IdEmpresa, @IdTipoDocumento, @IdUsuario, @NroDocumento, @FechaVenta, @FechaRegistro, @SubTotal, @Impuesto, @Total, @IdEstado)";
+                string query = "insert into Venta(IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdCorrelativo, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
+                    "IdEstado) values(@IdEmpresa, @IdEntidad, @IdTipoDocumento, @IdUsuario, @IdCorrelativo, @Correlativo, @FechaVenta, @FechaRegistro, @SubTotal, @Impuesto, @Total, @IdEstado)";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
                 Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdCliente);
                 Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
                 Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
-                Cmd.Parameters.AddWithValue("@NroDocumento", eVenta.NroDocumento);
+                Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
+                Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
                 Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
                 Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
                 Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
@@ -49,7 +50,7 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
+                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdSerie, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
                     "IdEstado from Venta";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.CommandType = System.Data.CommandType.Text;
@@ -65,7 +66,8 @@ namespace Librería.Data
                             IdCliente = Dr["IdEntidad"].ToString(),
                             IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
                             IdUsuario = Dr["IdUsuario"].ToString(),
-                            NroDocumento = Dr["NroDocumento"].ToString(),
+                            IdCorrelativo = Convert.ToInt32(Dr["IdSerie"].ToString()),
+                            Correlativo = Dr["Correlativo"].ToString(),
                             FechaVenta = Dr["FechaVenta"].ToString(),
                             FechaRegistro = Dr["FechaRegistro"].ToString(),
                             SubTotal = decimal.Parse(Dr["SubTotal"].ToString()),
@@ -87,7 +89,7 @@ namespace Librería.Data
             using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
             {
                 Cnx.Open();
-                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, NroDocumento, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
+                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdSerie, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
                     "IdEstado from Venta where IdVenta = @IdVenta";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdVenta", IdVenta);
@@ -104,7 +106,8 @@ namespace Librería.Data
                             IdCliente = Dr["IdEntidad"].ToString(),
                             IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
                             IdUsuario = Dr["IdUsuario"].ToString(),
-                            NroDocumento = Dr["NroDocumento"].ToString(),
+                            IdCorrelativo = Convert.ToInt32(Dr["IdSerie"].ToString()),
+                            Correlativo = Dr["Correlativo"].ToString(),
                             FechaVenta = Dr["FechaVenta"].ToString(),
                             FechaRegistro = Dr["FechaRegistro"].ToString(),
                             SubTotal = decimal.Parse(Dr["SubTotal"].ToString()),
@@ -127,15 +130,16 @@ namespace Librería.Data
             {
                 Cnx.Open();
                 string query = "update Venta set IdVenta = @IdVenta, IdEmpresa = @IdEmpresa, IdEntidad = @IdEntidad, IdTipoDocumento = @IdTipoDocumento, IdUsuario = " +
-                    "@IdUsuario, NroDocumento = @NroDocumento, FechaVenta = @FechaVenta, FechaRegistro = @FechaRegistro, SubTotal = @SubTotal, Impuesto = @Impuesto, " +
-                    "Total = @Total, IdEstado = @IdEstado where IdVenta = @IdVenta";
+                    "@IdUsuario, IdCorrelativo = @IdCorrelativo, Correlativo = @Correlativo, FechaVenta = @FechaVenta, FechaRegistro = @FechaRegistro, SubTotal = @SubTotal, " +
+                    "Impuesto = @Impuesto, Total = @Total, IdEstado = @IdEstado where IdVenta = @IdVenta";
                 SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
                 Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
                 Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
                 Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdCliente);
                 Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
                 Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
-                Cmd.Parameters.AddWithValue("@NroDocumento", eVenta.NroDocumento);
+                Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
+                Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
                 Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
                 Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
                 Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);

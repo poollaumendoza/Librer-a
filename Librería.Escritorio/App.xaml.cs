@@ -12,7 +12,7 @@ namespace Librería.Escritorio
     public partial class App : Application
     {
         #region Variables
-        public static string IdEmpresa;
+        public static string IdEmpresa = "1";
         public static bool Resultado = false;
         public static int IdArticulo = 0;
         public static int IdProveedor = 0;

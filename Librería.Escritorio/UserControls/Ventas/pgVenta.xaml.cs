@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls;
+﻿using Librería.Escritorio.Forms.Ventas;
+using MahApps.Metro.Controls;
 using System;
 using System.Linq;
 using System.Windows;
@@ -60,8 +61,6 @@ namespace Librería.Escritorio.UserControls.Ventas
             cboSerie.ItemsSource = nCorrelativo.ObtenerSerie(NombreTabla, Abreviatura);
         }
 
-
-
         #endregion
 
         public pgVenta(int Id = 0)
@@ -71,85 +70,80 @@ namespace Librería.Escritorio.UserControls.Ventas
             CargarEntidad();
             CargarTipoDocumento();
 
-            //this.Id = Id;
+            this.Id = Id;
 
-            //if (Id != 0)
-            //{
-            //    var Venta = nVenta.ListaVenta(Id).FirstOrDefault();
-            //    cboCliente.SelectedValue = Venta.IdCliente.ToString();
-            //    cboTipoDocumento.SelectedValue = Venta.IdTipoDocumento;
-            //    txtNroDocumento.Text = Venta.NroDocumento;
-            //    dtpFechaVenta.Text = Venta.FechaVenta;
-            //    txtSubTotal.Text = Venta.SubTotal.ToString();
-            //    txtImpuesto.Text = Venta.Impuesto.ToString();
-            //    txtTotal.Text = Venta.Total.ToString();
+            if (Id != 0)
+            {
+                var Venta = nVenta.ListaVenta(Id).FirstOrDefault();
+                cboCliente.SelectedValue = Venta.IdCliente.ToString();
+                cboTipoDocumento.SelectedValue = Venta.IdTipoDocumento;
+                //txtNroDocumento.Text = Venta.NroDocumento;
+                cboSerie.SelectedValue = Venta.IdCorrelativo;
+                txtCorrelativo.Text = Venta.Correlativo;
+                dtpFechaVenta.Text = Venta.FechaVenta;
+                txtSubTotal.Text = Venta.SubTotal.ToString();
+                txtImpuesto.Text = Venta.Impuesto.ToString();
+                txtTotal.Text = Venta.Total.ToString();
 
-            //    dg.ItemsSource = null;
-            //    dg.ItemsSource = nVentaDetalle.ListaVentaDetalle("IdVenta", Venta.IdVenta.ToString());
-            //}
+                dg.ItemsSource = null;
+                dg.ItemsSource = nVentaDetalle.ListaVentaDetalle("IdVenta", Venta.IdVenta.ToString());
+            }
         }
 
         private void BtnCrearVenta_Click(object sender, RoutedEventArgs e)
         {
-            //Entidades.Compra eCompra = new Entidades.Compra()
-            //{
-            //    IdEmpresa = App.IdEmpresa,
-            //    IdProveedor = cboProveedor.SelectedValue.ToString(),
-            //    IdTipoDocumento = cboTipoDocumento.SelectedValue.ToString(),
-            //    IdUsuario = "0",
-            //    NroDocumento = txtNroDocumento.Text,
-            //    FechaCompra = dtpFechaCompra.Text,
-            //    FechaRegistro = DateTime.Now.ToLongDateString(),
-            //    SubTotal = Convert.ToDecimal(txtSubTotal.Text),
-            //    Impuesto = Convert.ToDecimal(txtImpuesto.Text),
-            //    Total = Convert.ToDecimal(txtTotal.Text),
-            //    IdEstado = 1
+            Entidades.Venta eVenta = new Entidades.Venta()
+            {
+                IdEmpresa = App.IdEmpresa,
+                IdCliente = cboCliente.SelectedValue.ToString(),
+                IdTipoDocumento = cboTipoDocumento.SelectedValue.ToString(),
+                IdUsuario = "0",
+                NroDocumento = string.Format("{0}-{1}", cboSerie.Text, txtCorrelativo.Text),
+                FechaVenta = dtpFechaVenta.Text,
+                FechaRegistro = string.Format("{0}/{1}/{2}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                SubTotal = Convert.ToDecimal(txtSubTotal.Text),
+                Impuesto = Convert.ToDecimal(txtImpuesto.Text),
+                Total = Convert.ToDecimal(txtTotal.Text),
+                IdEstado = 1
 
-            //};
-            //nCompra.AgregarCompra(eCompra);
+            };
+            nVenta.AgregarVenta(eVenta);
 
-            //foreach (var item in App.oCompra)
-            //{
-            //    Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
-            //    {
-            //        IdCompra = eCompra.IdCompra,
-            //        Cantidad = item.Cantidad,
-            //        Descripcion = item.Descripcion,
-            //        Precio = item.Precio,
-            //        Importe = item.Importe,
-            //        IdEstado = 1
-            //    };
-            //    nCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
-            //}
+            foreach (var item in App.oVenta)
+            {
+                Entidades.VentaDetalle eVentaDetalle = new Entidades.VentaDetalle()
+                {
+                    IdVenta = eVenta.IdVenta,
+                    Cantidad = item.Cantidad,
+                    Descripcion = item.Descripcion,
+                    Precio = item.Precio,
+                    Importe = item.Importe,
+                    IdEstado = 1
+                };
+                nVentaDetalle.AgregarVentaDetalle(eVentaDetalle);
+            }
         }
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)
         {
-            //App.oCompra.Clear();
-            //wndCompra.StaticMainFrame.Content = new pgListaCompra();
+            App.oCompra.Clear();
+            wndVenta.StaticMainFrame.Content = new pgListaVenta();
         }
 
         private void BtnCliente_Click(object sender, RoutedEventArgs e)
         {
-            //oWindow = new Forms.Entidad.wndEntidad();
-            //if (oWindow.ShowDialog() == false)
-            //    if (App.Resultado == true)
-            //        CargarEntidad();
+            oWindow = new Forms.Entidad.wndEntidad();
+            if (oWindow.ShowDialog() == false)
+                if (App.Resultado == true)
+                    CargarEntidad();
         }
 
         private void BtnSeleccionarArticulo_Click(object sender, RoutedEventArgs e)
         {
             oWindow = new wndSeleccionarArticulo();
-            oWindow.ShowDialog();
-
-            //App.IdProveedor = Convert.ToInt32(cboCliente.SelectedValue);
-
-            //oWindow = new wndSeleccionarArticulo(App.IdProveedor);
-            //if (oWindow.ShowDialog() == false)
-            //    if (App.Resultado == true)
-            //        CargarArticuloAlaCompra();
-
-
+            if (oWindow.ShowDialog() == false)
+                if (App.Resultado == true)
+                    CargarArticuloAlaVenta();
         }
 
         private void BtnEliminar_Click(object sender, RoutedEventArgs e)

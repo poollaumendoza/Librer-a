@@ -67,7 +67,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Width="5*"/>
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Name="btnEliminar" CommandParameter="{Binding IdVentaDetalle}" Click="BtnEliminar_Click">
