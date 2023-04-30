@@ -41,18 +41,12 @@ namespace Librería.Escritorio.UserControls.Compras
 
             switch (mensaje)
             {
-                case MessageBoxResult.None:
-                    break;
-                case MessageBoxResult.OK:
-                    break;
                 case MessageBoxResult.Cancel:
                     return;
                 case MessageBoxResult.Yes:
                     var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
                     nCompra.EliminarCompra(compra);
-
                     CargarCompras();
-
                     mensaje = MessageBox.Show("Registro eliminado");
                     break;
                 case MessageBoxResult.No:

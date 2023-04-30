@@ -72,7 +72,7 @@ namespace Librería.Escritorio.UserControls.Articulo
                                 NombreTabla = "ARTICULO",
                                 Abreviatura = abreviatura,
                                 Serie = "-",
-                                NroCorrelativo = 1,
+                                NroCorrelativo = "1",
                                 IdEstado = 1
                             };
                             nCorrelativo.AgregarCorrelativo(eCorrelativo);
@@ -83,6 +83,7 @@ namespace Librería.Escritorio.UserControls.Articulo
                             eCorrelativo = new Entidades.Correlativo()
                             {
                                 IdEmpresa = correlativo.IdEmpresa,
+                                IdTipoDocumento = correlativo.IdTipoDocumento,
                                 NombreTabla = correlativo.NombreTabla,
                                 Abreviatura = correlativo.Abreviatura,
                                 Serie = correlativo.Serie,

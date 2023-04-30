@@ -75,11 +75,12 @@ namespace Librería.Data
                 {
                     IdCorrelativo = Convert.ToInt32(item[0].ToString()),
                     IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    NombreTabla = item[2].ToString(),
-                    Abreviatura = item[3].ToString(),
-                    Serie = item[4].ToString(),
-                    NroCorrelativo = Convert.ToInt32(item[5].ToString()),
-                    IdEstado = Convert.ToInt32(item[6].ToString())
+                    IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
+                    NombreTabla = item[3].ToString(),
+                    Abreviatura = item[4].ToString(),
+                    Serie = item[5].ToString(),
+                    NroCorrelativo = item[6].ToString(),
+                    IdEstado = Convert.ToInt32(item[7].ToString())
                 });
             }
             return listaCorrelativo;
@@ -103,11 +104,12 @@ namespace Librería.Data
                 {
                     IdCorrelativo = Convert.ToInt32(item[0].ToString()),
                     IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    NombreTabla = item[2].ToString(),
-                    Abreviatura = item[3].ToString(),
-                    Serie = item[4].ToString(),
-                    NroCorrelativo = Convert.ToInt32(item[5].ToString()),
-                    IdEstado = Convert.ToInt32(item[6].ToString())
+                    IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
+                    NombreTabla = item[3].ToString(),
+                    Abreviatura = item[4].ToString(),
+                    Serie = item[5].ToString(),
+                    NroCorrelativo = item[6].ToString(),
+                    IdEstado = Convert.ToInt32(item[7].ToString())
                 });
             }
             return listaCorrelativo;
@@ -212,11 +214,12 @@ namespace Librería.Data
                 {
                     IdCorrelativo = Convert.ToInt32(item[0].ToString()),
                     IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    NombreTabla = item[2].ToString(),
-                    Abreviatura = item[3].ToString(),
-                    Serie = item[4].ToString(),
-                    NroCorrelativo = Convert.ToInt32(item[5].ToString()),
-                    IdEstado = Convert.ToInt32(item[6].ToString())
+                    IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
+                    NombreTabla = item[3].ToString(),
+                    Abreviatura = item[4].ToString(),
+                    Serie = item[5].ToString(),
+                    NroCorrelativo = item[6].ToString(),
+                    IdEstado = Convert.ToInt32(item[7].ToString())
                 });
             }
             return listaCorrelativo;
