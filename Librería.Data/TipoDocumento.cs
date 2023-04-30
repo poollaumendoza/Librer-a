@@ -1,140 +1,104 @@
-ï»¿using LibrerÃ­a.Data.Properties;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Librería.Entidades;
+using Librería.Data.Properties;
 
-namespace LibrerÃ­a.Data
+namespace Librería.Data
 {
-    public class TipoDocumento
-    {
-        Entidades.TipoDocumento eTipoDocumento = new Entidades.TipoDocumento();
+	public class TipoDocumento
+	{
+		Entidades.TipoDocumento eTipoDocumento = new Entidades.TipoDocumento();
+		TipoDocumentoCollection listaTipoDocumento = new TipoDocumentoCollection();
+		string Cn = Settings.Default.CadenaConexion;
+		SqlConnection Cnx = null;
+		SqlCommand Cmd = null;
+		SqlDataAdapter Da = null;
+		DataTable Dt = new DataTable();
 
-        public bool AgregarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "insert into TipoDocumento(IdClasificacionTipoDocumento, NombreTipoDocumento, IdEstado) " +
-                    "values(@IdClasificacionTipoDocumento, @NombreTipoDocumento, @IdEstado)";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdClasificacionTipoDocumento", eTipoDocumento.IdClasificacionTipoDocumento);
-                Cmd.Parameters.AddWithValue("@NombreTipoDocumento", eTipoDocumento.NombreTipoDocumento);
-                Cmd.Parameters.AddWithValue("@IdEstado", eTipoDocumento.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public List<Entidades.TipoDocumento> ListaTipoDocumento()
-        {
-            List<Entidades.TipoDocumento> oLista = new List<Entidades.TipoDocumento>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdTipoDocumento, IdClasificacionTipoDocumento, NombreTipoDocumento, IdEstado " +
-                    "from TipoDocumento";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.TipoDocumento()
-                        {
-                            IdTipoDocumento = int.Parse(Dr["IdTipoDocumento"].ToString()),
-                            IdClasificacionTipoDocumento = int.Parse(Dr["IdClasificacionTipoDocumento"].ToString()),
-                            NombreTipoDocumento = Dr["NombreTipoDocumento"].ToString(),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.TipoDocumento> ListaTipoDocumento(int IdTipoDocumento)
-        {
-            List<Entidades.TipoDocumento> oLista = new List<Entidades.TipoDocumento>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdTipoDocumento, IdClasificacionTipoDocumento, NombreTipoDocumento, IdEstado " +
-                    "from TipoDocumento where IdTipoDocumento = @IdTipoDocumento";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdTipoDocumento", IdTipoDocumento);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.TipoDocumento()
-                        {
-                            IdTipoDocumento = int.Parse(Dr["IdTipoDocumento"].ToString()),
-                            IdClasificacionTipoDocumento = int.Parse(Dr["IdClasificacionTipoDocumento"].ToString()),
-                            NombreTipoDocumento = Dr["NombreTipoDocumento"].ToString(),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public bool EditarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "update TipoDocumento set IdClasificacionTipoDocumento = @IdClasificacionTipoDocumento," +
-                    "NombreTipoDocumento = @NombreTipoDocumento, IdEstado = @IdEstado where IdTipoDocumento = @IdTipoDocumento";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdTipoDocumento", eTipoDocumento.IdTipoDocumento);
-                Cmd.Parameters.AddWithValue("@IdClasificacionTipoDocumento", eTipoDocumento.IdClasificacionTipoDocumento);
-                Cmd.Parameters.AddWithValue("@NombreTipoDocumento", eTipoDocumento.NombreTipoDocumento);
-                Cmd.Parameters.AddWithValue("@IdEstado", eTipoDocumento.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public bool EliminarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Delete from TipoDocumento where IdTipoDocumento = @IdTipoDocumento";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdTipoDocumento", eTipoDocumento.IdTipoDocumento);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-    }
+		public void AgregarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_TipoDocumento_AgregarTipoDocumento", Cnx);
+			Cmd.CommandType = CommandType.StoredProcedure;
+			Cmd.Parameters.AddWithValue("@IdClasificacionTipoDocumento", eTipoDocumento.IdClasificacionTipoDocumento);
+			Cmd.Parameters.AddWithValue("@NombreTipoDocumento", eTipoDocumento.NombreTipoDocumento);
+			Cmd.Parameters.AddWithValue("@IdEstado", eTipoDocumento.IdEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EliminarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_TipoDocumento_EliminarTipoDocumento", Cnx);
+			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eTipoDocumento.IdTipoDocumento);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EditarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_TipoDocumento_ActualizarTipoDocumento", Cnx);
+			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eTipoDocumento.IdTipoDocumento);
+			Cmd.Parameters.AddWithValue("@IdClasificacionTipoDocumento", eTipoDocumento.IdClasificacionTipoDocumento);
+			Cmd.Parameters.AddWithValue("@NombreTipoDocumento", eTipoDocumento.NombreTipoDocumento);
+			Cmd.Parameters.AddWithValue("@IdEstado", eTipoDocumento.IdEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public ObservableCollection<Entidades.TipoDocumento> ListaTipoDocumento()
+		{
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
+            listaTipoDocumento.Clear();
+			
+			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_TipoDocumento_ObtenerTipoDocumento", new SqlConnection(Cn)));
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaTipoDocumento.Add(new Entidades.TipoDocumento()
+				{
+					IdTipoDocumento = Convert.ToInt32(item[0].ToString()),
+					IdClasificacionTipoDocumento = Convert.ToInt32(item[1].ToString()),
+					NombreTipoDocumento = item[2].ToString(),
+					IdEstado = Convert.ToInt32(item[3].ToString())
+				});
+			}
+			return listaTipoDocumento;
+		}
+		public ObservableCollection<Entidades.TipoDocumento> ListaTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			listaTipoDocumento.Clear();
+			
+			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_TipoDocumento_ObtenerPorIdTipoDocumento", new SqlConnection(Cn)));
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaTipoDocumento.Add(new Entidades.TipoDocumento()
+				{
+					IdTipoDocumento = Convert.ToInt32(item[0].ToString()),
+					IdClasificacionTipoDocumento = Convert.ToInt32(item[1].ToString()),
+					NombreTipoDocumento = item[2].ToString(),
+					IdEstado = Convert.ToInt32(item[3].ToString())
+				});
+			}
+			return listaTipoDocumento;
+		}
+	}
 }
+

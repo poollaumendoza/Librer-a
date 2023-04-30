@@ -333,6 +333,16 @@ namespace Librería.Escritorio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap logo {
+            get {
+                object obj = ResourceManager.GetObject("logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap mail {
             get {
                 object obj = ResourceManager.GetObject("mail", resourceCulture);
@@ -346,6 +356,16 @@ namespace Librería.Escritorio.Properties {
         internal static System.Drawing.Bitmap male_female_users {
             get {
                 object obj = ResourceManager.GetObject("male_female_users", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap male_female_users_128 {
+            get {
+                object obj = ResourceManager.GetObject("male_female_users_128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

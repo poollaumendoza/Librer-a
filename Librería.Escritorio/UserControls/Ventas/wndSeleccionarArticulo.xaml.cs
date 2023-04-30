@@ -35,7 +35,6 @@ namespace Librería.Escritorio.UserControls.Ventas
 
         private void BtnArticulo_Click(object sender, RoutedEventArgs e)
         {
-            //int idproveedor = App.IdProveedor;
             string criterio = string.Empty;
 
             oWindow = new Forms.Articulo.wndArticulo();

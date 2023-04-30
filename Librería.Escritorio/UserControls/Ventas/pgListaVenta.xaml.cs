@@ -49,7 +49,7 @@ namespace Librería.Escritorio.UserControls.Ventas
         {
             int Id = (int)((Button)sender).CommandParameter;
 
-            var venta = nVenta.ListaVenta(Id).FirstOrDefault();
+            var venta = nVenta.ListaVenta(new Entidades.Venta() { IdVenta = Id }).FirstOrDefault();
             nVenta.EliminarVenta(venta);
         }
     }

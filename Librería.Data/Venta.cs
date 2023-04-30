@@ -1,177 +1,156 @@
-ï»¿using LibrerÃ­a.Data.Properties;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Librería.Entidades;
+using Librería.Data.Properties;
 
-namespace LibrerÃ­a.Data
+namespace Librería.Data
 {
-    public class Venta
-    {
-        Entidades.Venta eVenta = new Entidades.Venta();
+	public class Venta
+	{
+		Entidades.Venta eVenta = new Entidades.Venta();
+		VentaCollection listaVenta = new VentaCollection();
+		string Cn = Settings.Default.CadenaConexion;
+		SqlConnection Cnx = null;
+		SqlCommand Cmd = null;
+		SqlDataAdapter Da = null;
+		DataTable Dt = new DataTable();
 
-        public bool AgregarVenta(Entidades.Venta eVenta)
-        {
-            bool respuesta = false;
+		public int AgregarVenta(Entidades.Venta eVenta)
+		{
+            int resultado = 0;
 
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "insert into Venta(IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdCorrelativo, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
-                    "IdEstado) values(@IdEmpresa, @IdEntidad, @IdTipoDocumento, @IdUsuario, @IdCorrelativo, @Correlativo, @FechaVenta, @FechaRegistro, @SubTotal, @Impuesto, @Total, @IdEstado)";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
-                Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdCliente);
-                Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
-                Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
-                Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
-                Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
-                Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
-                Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
-                Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
-                Cmd.Parameters.AddWithValue("@Total", eVenta.Total);
-                Cmd.Parameters.AddWithValue("@IdEstado", eVenta.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Venta_AgregarVenta", Cnx);
+			Cmd.CommandType = CommandType.StoredProcedure;
 
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
+            SqlParameter IdVenta = new SqlParameter();
+            IdVenta.ParameterName = "@IdVenta";
+            IdVenta.Direction = ParameterDirection.Output;
+            IdVenta.SqlDbType = SqlDbType.Int;
 
-            return respuesta;
+            Cmd.Parameters.Add(IdVenta);
+			Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
+			Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdEntidad);
+			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
+			Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
+			Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
+			Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
+			Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
+			Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
+			Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
+			Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
+			Cmd.Parameters.AddWithValue("@Total", eVenta.Total);
+			Cmd.Parameters.AddWithValue("@IdEstado", eVenta.IdEstado);
+
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+
+            return resultado = Convert.ToInt32(IdVenta.Value);
         }
+		public void EliminarVenta(Entidades.Venta eVenta)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Venta_EliminarVenta", Cnx);
+			Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EditarVenta(Entidades.Venta eVenta)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Venta_ActualizarVenta", Cnx);
+			Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
+			Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
+			Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdEntidad);
+			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
+			Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
+			Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
+			Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
+			Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
+			Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
+			Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
+			Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
+			Cmd.Parameters.AddWithValue("@Total", eVenta.Total);
+			Cmd.Parameters.AddWithValue("@IdEstado", eVenta.IdEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public ObservableCollection<Entidades.Venta> ListaVenta()
+		{
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
+            listaVenta.Clear();
+			
+			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Venta_ObtenerVenta", new SqlConnection(Cn)));
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaVenta.Add(new Entidades.Venta()
+				{
+					IdVenta = Convert.ToInt32(item[0].ToString()),
+					IdEmpresa = Convert.ToInt32(item[1].ToString()),
+					IdEntidad = Convert.ToInt32(item[2].ToString()),
+					IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
+					IdUsuario = Convert.ToInt32(item[4].ToString()),
+					IdCorrelativo = Convert.ToInt32(item[5].ToString()),
+					Correlativo = item[6].ToString(),
+					FechaVenta = Convert.ToDateTime(item[7].ToString()),
+					FechaRegistro = Convert.ToDateTime(item[8].ToString()),
+					SubTotal = Convert.ToDecimal(item[9].ToString()),
+					Impuesto = Convert.ToDecimal(item[10].ToString()),
+					Total = Convert.ToDecimal(item[11].ToString()),
+					IdEstado = Convert.ToInt32(item[12].ToString())
+				});
+			}
+			return listaVenta;
+		}
+		public ObservableCollection<Entidades.Venta> ListaVenta(Entidades.Venta eVenta)
+		{
+            Dt.Columns.Clear();
+            Dt.Rows.Clear();
+			listaVenta.Clear();
 
-        public List<Entidades.Venta> ListaVenta()
-        {
-            List<Entidades.Venta> oLista = new List<Entidades.Venta>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdCorrelativo, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
-                    "IdEstado from Venta";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Venta()
-                        {
-                            IdVenta = int.Parse(Dr["IdVenta"].ToString()),
-                            IdEmpresa = Dr["IdEmpresa"].ToString(),
-                            IdCliente = Dr["IdEntidad"].ToString(),
-                            IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
-                            IdUsuario = Dr["IdUsuario"].ToString(),
-                            IdCorrelativo = Convert.ToInt32(Dr["IdCorrelativo"].ToString()),
-                            Correlativo = Dr["Correlativo"].ToString(),
-                            FechaVenta = Dr["FechaVenta"].ToString(),
-                            FechaRegistro = Dr["FechaRegistro"].ToString(),
-                            SubTotal = decimal.Parse(Dr["SubTotal"].ToString()),
-                            Impuesto = decimal.Parse(Dr["Impuesto"].ToString()),
-                            Total = decimal.Parse(Dr["Total"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.Venta> ListaVenta(int IdVenta)
-        {
-            List<Entidades.Venta> oLista = new List<Entidades.Venta>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdVenta, IdEmpresa, IdEntidad, IdTipoDocumento, IdUsuario, IdCorrelativo, Correlativo, FechaVenta, FechaRegistro, SubTotal, Impuesto, Total, " +
-                    "IdEstado from Venta where IdVenta = @IdVenta";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdVenta", IdVenta);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Venta()
-                        {
-                            IdVenta = int.Parse(Dr["IdVenta"].ToString()),
-                            IdEmpresa = Dr["IdEmpresa"].ToString(),
-                            IdCliente = Dr["IdEntidad"].ToString(),
-                            IdTipoDocumento = Dr["IdTipoDocumento"].ToString(),
-                            IdUsuario = Dr["IdUsuario"].ToString(),
-                            IdCorrelativo = Convert.ToInt32(Dr["IdCorrelativo"].ToString()),
-                            Correlativo = Dr["Correlativo"].ToString(),
-                            FechaVenta = Dr["FechaVenta"].ToString(),
-                            FechaRegistro = Dr["FechaRegistro"].ToString(),
-                            SubTotal = decimal.Parse(Dr["SubTotal"].ToString()),
-                            Impuesto = decimal.Parse(Dr["Impuesto"].ToString()),
-                            Total = decimal.Parse(Dr["Total"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public bool EditarVenta(Entidades.Venta eVenta)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "update Venta set IdVenta = @IdVenta, IdEmpresa = @IdEmpresa, IdEntidad = @IdEntidad, IdTipoDocumento = @IdTipoDocumento, IdUsuario = " +
-                    "@IdUsuario, IdCorrelativo = @IdCorrelativo, Correlativo = @Correlativo, FechaVenta = @FechaVenta, FechaRegistro = @FechaRegistro, SubTotal = @SubTotal, " +
-                    "Impuesto = @Impuesto, Total = @Total, IdEstado = @IdEstado where IdVenta = @IdVenta";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
-                Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
-                Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdCliente);
-                Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
-                Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
-                Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
-                Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
-                Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
-                Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
-                Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
-                Cmd.Parameters.AddWithValue("@Total", eVenta.Total);
-                Cmd.Parameters.AddWithValue("@IdEstado", eVenta.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public bool EliminarVenta(Entidades.Venta eVenta)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Delete from Venta where IdVenta = @IdVenta";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-    }
+            Cmd = new SqlCommand("dbo.sp_Venta_ObtenerVentaPorIdVenta", new SqlConnection(Cn));
+            Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Da = new SqlDataAdapter(Cmd);
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaVenta.Add(new Entidades.Venta()
+				{
+					IdVenta = Convert.ToInt32(item[0].ToString()),
+					IdEmpresa = Convert.ToInt32(item[1].ToString()),
+					IdEntidad = Convert.ToInt32(item[2].ToString()),
+					IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
+					IdUsuario = Convert.ToInt32(item[4].ToString()),
+					IdCorrelativo = Convert.ToInt32(item[5].ToString()),
+					Correlativo = item[6].ToString(),
+					FechaVenta = Convert.ToDateTime(item[7].ToString()),
+					FechaRegistro = Convert.ToDateTime(item[8].ToString()),
+					SubTotal = Convert.ToDecimal(item[9].ToString()),
+					Impuesto = Convert.ToDecimal(item[10].ToString()),
+					Total = Convert.ToDecimal(item[11].ToString()),
+					IdEstado = Convert.ToInt32(item[12].ToString())
+				});
+			}
+			return listaVenta;
+		}
+	}
 }

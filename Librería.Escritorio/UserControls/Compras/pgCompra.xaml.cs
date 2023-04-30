@@ -50,9 +50,21 @@ namespace Librería.Escritorio.UserControls.Compras
                 txtImpuesto.Text = imp.ToString("#,###.##");
                 txtTotal.Text = tot.ToString("#,###.##");
             }
+            if(cboTipoDocumento.Text == "BOLETA")
+            {
+                txtSubTotal.Text = subt.ToString("#,###.##");
+                txtImpuesto.Text = "0.00";
+                txtTotal.Text = subt.ToString("#,###.##");
+            }
 
             dg.ItemsSource = null;
             dg.ItemsSource = App.oCompra;
+        }
+
+        void CargarCompraDetalle(int IdCompra)
+        {
+            dg.ItemsSource = null;
+            dg.ItemsSource = nCompraDetalle.ListaCompraDetalle(new Entidades.CompraDetalle() { IdCompra = IdCompra });
         }
         #endregion
 
@@ -67,17 +79,16 @@ namespace Librería.Escritorio.UserControls.Compras
 
             if (Id != 0)
             {
-                var compra = nCompra.ListaCompra(Id).FirstOrDefault();
-                cboProveedor.SelectedValue = compra.IdProveedor.ToString();
+                var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
+                cboProveedor.SelectedValue = compra.IdEntidad.ToString();
                 cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
                 txtNroDocumento.Text = compra.NroDocumento;
-                dtpFechaCompra.Text = compra.FechaCompra;
+                dtpFechaCompra.Text = compra.FechaCompra.ToShortDateString();
                 txtSubTotal.Text = compra.SubTotal.ToString();
                 txtImpuesto.Text = compra.Impuesto.ToString();
                 txtTotal.Text = compra.Total.ToString();
 
-                dg.ItemsSource = null;
-                dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString());
+                CargarCompraDetalle(Id);
             }
         }
 
@@ -97,19 +108,18 @@ namespace Librería.Escritorio.UserControls.Compras
                     Entidades.Compra eCompra = new Entidades.Compra()
                     {
                         IdEmpresa = App.IdEmpresa,
-                        IdProveedor = cboProveedor.SelectedValue.ToString(),
-                        IdTipoDocumento = cboTipoDocumento.SelectedValue.ToString(),
-                        IdUsuario = "0",
+                        IdEntidad = Convert.ToInt32(cboProveedor.SelectedValue),
+                        IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue),
+                        IdUsuario = App.IdUsuario,
                         NroDocumento = txtNroDocumento.Text,
-                        FechaCompra = dtpFechaCompra.Text,
-                        FechaRegistro = DateTime.Now.ToLongDateString(),
+                        FechaCompra = Convert.ToDateTime(dtpFechaCompra.Text),
+                        FechaRegistro = DateTime.Now,
                         SubTotal = Convert.ToDecimal(txtSubTotal.Text),
                         Impuesto = Convert.ToDecimal(txtImpuesto.Text),
                         Total = Convert.ToDecimal(txtTotal.Text),
                         IdEstado = 1
                     };
-                    nCompra.AgregarCompra(eCompra);
-
+                    eCompra.IdCompra = nCompra.AgregarCompra(eCompra);
 
                     foreach (var item in App.oCompra)
                     {
@@ -155,9 +165,9 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnSeleccionarArticulo_Click(object sender, RoutedEventArgs e)
         {
-            App.IdProveedor = Convert.ToInt32(cboProveedor.SelectedValue);
+            App.IdEntidad = Convert.ToInt32(cboProveedor.SelectedValue);
 
-            oWindow = new wndSeleccionarArticulo(App.IdProveedor);
+            oWindow = new wndSeleccionarArticulo(App.IdEntidad);
             if (oWindow.ShowDialog() == false)
                 if (App.Resultado == true)
                     CargarArticuloAlaCompra();
@@ -165,30 +175,35 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
-            int Id = (int)((Button)sender).CommandParameter;
-
-            var mensaje = MessageBox.Show("¿Desea eliminar este registro?", "Título");
-
-            switch (mensaje)
+            try
             {
-                case MessageBoxResult.None:
-                    break;
-                case MessageBoxResult.OK:
-                    break;
-                case MessageBoxResult.Cancel:
-                    return;
-                case MessageBoxResult.Yes:
-                    var compra = nCompra.ListaCompra(Id).FirstOrDefault();
-                    var compradetalle = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString()).FirstOrDefault();
-                    nCompraDetalle.EliminarCompraDetalle(compradetalle);
+                int IdDetalle = (int)((Button)sender).CommandParameter;
 
-                    dg.ItemsSource = null;
-                    dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString());
-                    break;
-                case MessageBoxResult.No:
-                    return;
-                default:
-                    break;
+                var mensaje = MessageBox.Show("¿Desea eliminar este registro?", "Título", MessageBoxButton.YesNoCancel);
+
+                switch (mensaje)
+                {
+                    case MessageBoxResult.Cancel:
+                        return;
+                    case MessageBoxResult.Yes:
+                        CargarCompraDetalle(eCompra.IdCompra);
+                        var eliminar = nCompraDetalle.ListaCompraDetalle("IdCompraDetalle", IdDetalle.ToString()).FirstOrDefault();
+                        nCompraDetalle.EliminarCompraDetalle(eliminar);
+
+                        dg.ItemsSource = null;
+                        dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", Id.ToString());
+                        break;
+                    case MessageBoxResult.No:
+                        App.oCompra.Clear();
+                        wndCompra.StaticMainFrame.Content = new pgListaCompra();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

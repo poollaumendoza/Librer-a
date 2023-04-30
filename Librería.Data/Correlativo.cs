@@ -1,41 +1,144 @@
-ï»¿using LibrerÃ­a.Data.Properties;
+using Librería.Data.Properties;
+using Librería.Entidades;
 using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
-namespace LibrerÃ­a.Data
+namespace Librería.Data
 {
     public class Correlativo
     {
         Entidades.Correlativo eCorrelativo = new Entidades.Correlativo();
-        List<Entidades.Correlativo> listaCorrelativo = new List<Entidades.Correlativo>();
+        CorrelativoCollection listaCorrelativo = new CorrelativoCollection();
+        string Cn = Settings.Default.CadenaConexion;
+        SqlConnection Cnx = null;
+        SqlCommand Cmd = null;
+        SqlDataAdapter Da = null;
+        DataTable Dt = new DataTable();
 
-        public bool AgregarCorrelativo(Entidades.Correlativo eCorrelativo)
+        public void AgregarCorrelativo(Entidades.Correlativo eCorrelativo)
         {
-            bool respuesta = false;
+            Cnx = new SqlConnection(Cn);
+            Cmd = new SqlCommand("dbo.sp_Correlativo_AgregarCorrelativo", Cnx);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
+            Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
+            Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
+            Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
+            Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
+            Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
+            Cnx.Open();
+            Cmd.ExecuteNonQuery();
+            Cnx.Close();
+        }
+        public void EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
+        {
+            Cnx = new SqlConnection(Cn);
+            Cmd = new SqlCommand("dbo.sp_Correlativo_EliminarCorrelativo", Cnx);
+            Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
+            Cnx.Open();
+            Cmd.ExecuteNonQuery();
+            Cnx.Close();
+        }
+        public void EditarCorrelativo(Entidades.Correlativo eCorrelativo)
+        {
+            Cnx = new SqlConnection(Cn);
+            Cmd = new SqlCommand("dbo.sp_Correlativo_ActualizarCorrelativo", Cnx);
+            Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
+            Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
+            Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
+            Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
+            Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
+            Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
+            Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
+            Cnx.Open();
+            Cmd.ExecuteNonQuery();
+            Cnx.Close();
+        }
+        public ObservableCollection<Entidades.Correlativo> ListaCorrelativo()
+        {
+            Dt.Columns.Clear();
+            Dt.Rows.Clear();
+            listaCorrelativo.Clear();
 
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
+            Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativo", new SqlConnection(Cn)));
+            Da.Fill(Dt);
+
+            var query = (from a in Dt.Rows.Cast<DataRow>()
+                         select a).ToList();
+
+            foreach (var item in query)
             {
-                Cnx.Open();
-                string query = "insert into Correlativo(IdEmpresa, NombreTabla, Abreviatura, Serie, NroCorrelativo, IdEstado) values(@IdEmpresa, @NombreTabla, " +
-                    "@Abreviatura, @Serie, @NroCorrelativo, @IdEstado)";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
-                Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
-                Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
-                Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
-                Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
-                Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
+                listaCorrelativo.Add(new Entidades.Correlativo()
+                {
+                    IdCorrelativo = Convert.ToInt32(item[0].ToString()),
+                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                    NombreTabla = item[2].ToString(),
+                    Abreviatura = item[3].ToString(),
+                    Serie = item[4].ToString(),
+                    NroCorrelativo = Convert.ToInt32(item[5].ToString()),
+                    IdEstado = Convert.ToInt32(item[6].ToString())
+                });
             }
+            return listaCorrelativo;
+        }
+        public ObservableCollection<Entidades.Correlativo> ListaCorrelativo(Entidades.Correlativo eCorrelativo)
+        {
+            listaCorrelativo.Clear();
 
-            return respuesta;
+            Cmd = new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativoPorIdCorrelativo", new SqlConnection(Cn));
+            Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Da = new SqlDataAdapter(Cmd);
+            Da.Fill(Dt);
+
+            var query = (from a in Dt.Rows.Cast<DataRow>()
+                         select a).ToList();
+
+            foreach (var item in query)
+            {
+                listaCorrelativo.Add(new Entidades.Correlativo()
+                {
+                    IdCorrelativo = Convert.ToInt32(item[0].ToString()),
+                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                    NombreTabla = item[2].ToString(),
+                    Abreviatura = item[3].ToString(),
+                    Serie = item[4].ToString(),
+                    NroCorrelativo = Convert.ToInt32(item[5].ToString()),
+                    IdEstado = Convert.ToInt32(item[6].ToString())
+                });
+            }
+            return listaCorrelativo;
         }
 
+        public string ConstruirCorrelativoDocumento(int IdCorrelativo)
+        {
+            Dt.Columns.Clear();
+            Dt.Rows.Clear();
+            string resultado = string.Empty;
+
+            Cmd = new SqlCommand("dbo.sp_Correlativo_ConstruirCorrelativoDocumento", new SqlConnection(Cn));
+            Cmd.Parameters.AddWithValue("@IdCorrelativo", IdCorrelativo);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Da = new SqlDataAdapter(Cmd);
+            Da.Fill(Dt);
+
+            if (Dt.Rows.Count > 0)
+            {
+                var q1 = (from c in Dt.Rows.Cast<DataRow>()
+                          select new
+                          {
+                              NroCorrelativo = Convert.ToInt32(c[0].ToString())
+                          }).FirstOrDefault();
+
+                int nroCorrelativo = q1.NroCorrelativo;
+                string ceros = "00000000";
+                resultado = resultado + ceros.PadLeft(ceros.Length - nroCorrelativo.ToString().Length) + nroCorrelativo.ToString();
+            }
+            return resultado;
+        }
 
         public string ConstruirCorrelativoArticulo(string codigo)
         {
@@ -60,219 +163,63 @@ namespace LibrerÃ­a.Data
             return correlativo;
         }
 
-        public string ConstruirCorrelativoDocumento(int IdCorrelativo)
+        public string ObtenerAbreviatura(int IdTipoDocumento, string NombreTabla)
         {
             string resultado = string.Empty;
 
-            int nroCorrelativo = (from c in ListaCorrelativo()
-                                  where c.IdCorrelativo.Equals(IdCorrelativo)
-                                  select c.NroCorrelativo).FirstOrDefault();
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
 
-            string ceros = "00000";
-            resultado = resultado + ceros.PadLeft(ceros.Length - nroCorrelativo.ToString().Length) + nroCorrelativo.ToString();
+            Cmd = new SqlCommand("sp_Correlativo_ObtenerAbreviatura", new SqlConnection(Cn));
+            Cmd.Parameters.AddWithValue("@IdTipoDocumento", IdTipoDocumento);
+            Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Da = new SqlDataAdapter(Cmd);
+            Da.Fill(Dt);
 
+            if (Dt.Rows.Count > 0)
+            {
+                var q1 = (from c in Dt.Rows.Cast<DataRow>()
+                          select new
+                          {
+                              Abreviatura = c[0].ToString()
+                          }).FirstOrDefault();
+
+                resultado = q1.Abreviatura;
+            }
             return resultado;
         }
 
-        public List<Entidades.Correlativo> ListaCorrelativo()
+        public ObservableCollection<Entidades.Correlativo> ObtenerSerie(string NombreTabla, string Abreviatura)
         {
-            List<Entidades.Correlativo> oLista = new List<Entidades.Correlativo>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdCorrelativo, IdEmpresa, NombreTabla, Abreviatura, Serie, NroCorrelativo, IdEstado from Correlativo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Correlativo()
-                        {
-                            IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = Dr["IdEmpresa"].ToString(),
-                            NombreTabla = Dr["NombreTabla"].ToString(),
-                            Abreviatura = Dr["Abreviatura"].ToString(),
-                            Serie = Dr["Serie"].ToString(),
-                            NroCorrelativo = int.Parse(Dr["NroCorrelativo"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.Correlativo> ListaCorrelativo(int IdCorrelativo)
-        {
-            List<Entidades.Correlativo> oLista = new List<Entidades.Correlativo>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-
-                string query = "Select IdCorrelativo, IdEmpresa, NombreTabla, Abreviatura, Serie, NroCorrelativo, IdEstado from Correlativo where IdCorrelativo =" +
-                    " @IdCorrelativo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", IdCorrelativo);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Correlativo()
-                        {
-                            IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = Dr["IdEmpresa"].ToString(),
-                            NombreTabla = Dr["NombreTabla"].ToString(),
-                            Abreviatura = Dr["Abreviatura"].ToString(),
-                            Serie = Dr["Serie"].ToString(),
-                            NroCorrelativo = int.Parse(Dr["NroCorrelativo"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.Correlativo> ListaCorrelativo(string Abreviatura)
-        {
-            List<Entidades.Correlativo> oLista = new List<Entidades.Correlativo>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-
-                string query = "Select IdCorrelativo, IdEmpresa, NombreTabla, Abreviatura, Serie, NroCorrelativo, IdEstado from Correlativo where Abreviatura = " +
-                    "@Abreviatura";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Correlativo()
-                        {
-                            IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = Dr["IdEmpresa"].ToString(),
-                            NombreTabla = Dr["NombreTabla"].ToString(),
-                            Abreviatura = Dr["Abreviatura"].ToString(),
-                            Serie = Dr["Serie"].ToString(),
-                            NroCorrelativo = int.Parse(Dr["NroCorrelativo"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public bool EditarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "update Correlativo set IdEmpresa = @IdEmpresa, NombreTabla = @NombreTabla, Abreviatura = @Abreviatura, " +
-                    "Serie = @Serie, NroCorrelativo = @NroCorrelativo, IdEstado = @IdEstado where IdCorrelativo = @IdCorrelativo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
-                Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
-                Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
-                Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
-                Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
-                Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
-                Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public bool EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Delete from Correlativo where IdCorrelativo = @IdCorrelativo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public List<Entidades.Correlativo> ObtenerSerie(string NombreTabla, string Abreviatura)
-        {
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
             listaCorrelativo.Clear();
 
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdCorrelativo, IdEmpresa, NombreTabla, Abreviatura, Serie, NroCorrelativo, IdEstado from Correlativo where " +
-                    "NombreTabla = @NombreTabla and Abreviatura = @Abreviatura";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
-                Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
-                Cmd.CommandType = System.Data.CommandType.Text;
+            Cmd = new SqlCommand("sp_Correlativo_ObtenerSerie", new SqlConnection(Cn));
+            Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
+            Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Da = new SqlDataAdapter(Cmd);
+            Da.Fill(Dt);
 
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
+            var query = (from a in Dt.Rows.Cast<DataRow>()
+                         select a).ToList();
+
+            foreach (var item in query)
+            {
+                listaCorrelativo.Add(new Entidades.Correlativo()
                 {
-                    while (Dr.Read())
-                    {
-                        listaCorrelativo.Add(new Entidades.Correlativo()
-                        {
-                            IdCorrelativo = int.Parse(Dr["IdCorrelativo"].ToString()),
-                            IdEmpresa = Dr["IdEmpresa"].ToString(),
-                            NombreTabla = Dr["NombreTabla"].ToString(),
-                            Abreviatura = Dr["Abreviatura"].ToString(),
-                            Serie = Dr["Serie"].ToString(),
-                            NroCorrelativo = int.Parse(Dr["NroCorrelativo"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
+                    IdCorrelativo = Convert.ToInt32(item[0].ToString()),
+                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                    NombreTabla = item[2].ToString(),
+                    Abreviatura = item[3].ToString(),
+                    Serie = item[4].ToString(),
+                    NroCorrelativo = Convert.ToInt32(item[5].ToString()),
+                    IdEstado = Convert.ToInt32(item[6].ToString())
+                });
             }
             return listaCorrelativo;
-        }
-
-        public int ObtenerCorrelativo(int IdCorrelativo)
-        {
-            int resultado = 0;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select NroCorrelativo from Correlativo where IdCorrelativo = @IdCorrelativo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", IdCorrelativo);
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                        resultado = Convert.ToInt32(Dr["NroCorrelativo"].ToString());
-                }
-            }
-            return resultado;
         }
     }
 }

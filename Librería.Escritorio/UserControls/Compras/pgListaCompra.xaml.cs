@@ -48,7 +48,7 @@ namespace Librería.Escritorio.UserControls.Compras
                 case MessageBoxResult.Cancel:
                     return;
                 case MessageBoxResult.Yes:
-                    var compra = nCompra.ListaCompra(Id).FirstOrDefault();
+                    var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
                     nCompra.EliminarCompra(compra);
 
                     CargarCompras();

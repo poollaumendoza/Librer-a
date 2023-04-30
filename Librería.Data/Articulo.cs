@@ -1,218 +1,162 @@
-ï»¿using LibrerÃ­a.Data.Properties;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Librería.Entidades;
+using Librería.Data.Properties;
 
-namespace LibrerÃ­a.Data
+namespace Librería.Data
 {
-    public class Articulo
-    {
-        Entidades.Articulo eArticulo = new Entidades.Articulo();
+	public class Articulo
+	{
+		Entidades.Articulo eArticulo = new Entidades.Articulo();
+		ArticuloCollection listaArticulo = new ArticuloCollection();
+		string Cn = Settings.Default.CadenaConexion;
+		SqlConnection Cnx = null;
+		SqlCommand Cmd = null;
+		SqlDataAdapter Da = null;
+		DataTable Dt = new DataTable();
 
-        public bool AgregarArticulo(Entidades.Articulo eArticulo)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
+		public void AgregarArticulo(Entidades.Articulo eArticulo)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Articulo_AgregarArticulo", Cnx);
+			Cmd.CommandType = CommandType.StoredProcedure;
+			Cmd.Parameters.AddWithValue("@IdEmpresa", eArticulo.IdEmpresa);
+			Cmd.Parameters.AddWithValue("@IdEntidad", eArticulo.IdEntidad);
+			Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);
+			Cmd.Parameters.AddWithValue("@DescripcionArticulo", eArticulo.DescripcionArticulo);
+			Cmd.Parameters.AddWithValue("@Cantidad", eArticulo.Cantidad);
+			Cmd.Parameters.AddWithValue("@PrecioCompra", eArticulo.PrecioCompra);
+			Cmd.Parameters.AddWithValue("@PrecioVenta", eArticulo.PrecioVenta);
+			Cmd.Parameters.AddWithValue("@IdEstado", eArticulo.IdEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EliminarArticulo(Entidades.Articulo eArticulo)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Articulo_EliminarArticulo", Cnx);
+			Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EditarArticulo(Entidades.Articulo eArticulo)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Articulo_ActualizarArticulo", Cnx);
+			Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
+			Cmd.Parameters.AddWithValue("@IdEmpresa", eArticulo.IdEmpresa);
+			Cmd.Parameters.AddWithValue("@IdEntidad", eArticulo.IdEntidad);
+			Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);
+			Cmd.Parameters.AddWithValue("@DescripcionArticulo", eArticulo.DescripcionArticulo);
+			Cmd.Parameters.AddWithValue("@Cantidad", eArticulo.Cantidad);
+			Cmd.Parameters.AddWithValue("@PrecioCompra", eArticulo.PrecioCompra);
+			Cmd.Parameters.AddWithValue("@PrecioVenta", eArticulo.PrecioVenta);
+			Cmd.Parameters.AddWithValue("@IdEstado", eArticulo.IdEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public ObservableCollection<Entidades.Articulo> ListaArticulo()
+		{
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
+            listaArticulo.Clear();
+			
+			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Articulo_ObtenerArticulo", new SqlConnection(Cn)));
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaArticulo.Add(new Entidades.Articulo()
+				{
+					IdArticulo = Convert.ToInt32(item[0].ToString()),
+					IdEmpresa = Convert.ToInt32(item[1].ToString()),
+					IdEntidad = Convert.ToInt32(item[2].ToString()),
+					CodigoArticulo = item[3].ToString(),
+					DescripcionArticulo = item[4].ToString(),
+					Cantidad = Convert.ToInt32(item[5].ToString()),
+					PrecioCompra = Convert.ToDecimal(item[6].ToString()),
+					PrecioVenta = Convert.ToDecimal(item[7].ToString()),
+					IdEstado = Convert.ToInt32(item[8].ToString())
+				});
+			}
+			return listaArticulo;
+		}
+		public ObservableCollection<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
+		{
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
+            listaArticulo.Clear();
+			
+            if(eArticulo.IdArticulo != 0)
             {
-                Cnx.Open();
-                string query = "insert into Articulo(IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado) " +
-                    "values(@IdProveedor, @CodigoArticulo, @DescripcionArticulo, @Cantidad, @PrecioCompra, @PrecioVenta, @IdEstado)";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdProveedor", eArticulo.IdProveedor);
-                Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);
-                Cmd.Parameters.AddWithValue("@DescripcionArticulo", eArticulo.DescripcionArticulo);
-                Cmd.Parameters.AddWithValue("@Cantidad", eArticulo.Cantidad);
-                Cmd.Parameters.AddWithValue("@PrecioCompra", eArticulo.PrecioCompra);
-                Cmd.Parameters.AddWithValue("@PrecioVenta", eArticulo.PrecioVenta);
-                Cmd.Parameters.AddWithValue("@IdEstado", eArticulo.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public List<Entidades.Articulo> ListaArticulo()
-        {
-            List<Entidades.Articulo> oLista = new List<Entidades.Articulo>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Articulo()
-                        {
-                            IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
-                            IdProveedor = int.Parse(Dr["IdProveedor"].ToString()),
-                            CodigoArticulo = Dr["CodigoArticulo"].ToString(),
-                            DescripcionArticulo = Dr["DescripcionArticulo"].ToString(),
-                            Cantidad = int.Parse(Dr["Cantidad"].ToString()),
-                            PrecioCompra = decimal.Parse(Dr["PrecioCompra"].ToString()),
-                            PrecioVenta = decimal.Parse(Dr["PrecioVenta"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.Articulo> ListaArticulo(string criterio)
-        {
-            List<Entidades.Articulo> oLista = new List<Entidades.Articulo>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where DescripcionArticulo like '%@Criterio%'";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@Criterio", criterio);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Articulo()
-                        {
-                            IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
-                            IdProveedor = int.Parse(Dr["IdProveedor"].ToString()),
-                            CodigoArticulo = Dr["CodigoArticulo"].ToString(),
-                            DescripcionArticulo = Dr["DescripcionArticulo"].ToString(),
-                            Cantidad = int.Parse(Dr["Cantidad"].ToString()),
-                            PrecioCompra = decimal.Parse(Dr["PrecioCompra"].ToString()),
-                            PrecioVenta = decimal.Parse(Dr["PrecioVenta"].ToString()),
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
-        {
-            List<Entidades.Articulo> oLista = new List<Entidades.Articulo>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-
-                if(eArticulo.IdArticulo !=0)
-                {
-                    string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where IdArticulo = @IdArticulo";
-                    SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                    Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
-                    Cmd.CommandType = System.Data.CommandType.Text;
-
-                    using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                    {
-                        while (Dr.Read())
-                        {
-                            oLista.Add(new Entidades.Articulo()
-                            {
-                                IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
-                                IdProveedor = int.Parse(Dr["IdProveedor"].ToString()),
-                                CodigoArticulo = Dr["CodigoArticulo"].ToString(),
-                                DescripcionArticulo = Dr["DescripcionArticulo"].ToString(),
-                                Cantidad = int.Parse(Dr["Cantidad"].ToString()),
-                                PrecioCompra = decimal.Parse(Dr["PrecioCompra"].ToString()),
-                                PrecioVenta = decimal.Parse(Dr["PrecioVenta"].ToString()),
-                                IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                            });
-                        }
-                    }
-                }
-
-                if(eArticulo.IdProveedor != 0)
-                {
-                    string query = "Select IdArticulo, IdProveedor, CodigoArticulo, DescripcionArticulo, Cantidad, PrecioCompra, PrecioVenta, IdEstado from Articulo where IdProveedor = @IdProveedor";
-                    SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                    Cmd.Parameters.AddWithValue("@IdProveedor", eArticulo.IdProveedor);
-                    Cmd.CommandType = System.Data.CommandType.Text;
-
-                    using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                    {
-                        while (Dr.Read())
-                        {
-                            oLista.Add(new Entidades.Articulo()
-                            {
-                                IdArticulo = int.Parse(Dr["IdArticulo"].ToString()),
-                                IdProveedor = int.Parse(Dr["IdProveedor"].ToString()),
-                                CodigoArticulo = Dr["CodigoArticulo"].ToString(),
-                                DescripcionArticulo = Dr["DescripcionArticulo"].ToString(),
-                                Cantidad = int.Parse(Dr["Cantidad"].ToString()),
-                                PrecioCompra = decimal.Parse(Dr["PrecioCompra"].ToString()),
-                                PrecioVenta = decimal.Parse(Dr["PrecioVenta"].ToString()),
-                                IdEstado = int.Parse(Dr["IdEstado"].ToString())
-                            });
-                        }
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public bool EditarArticulo(Entidades.Articulo eArticulo)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "update Articulo set IdProveedor = @IdProveedor, CodigoArticulo = @CodigoArticulo, DescripcionArticulo = @DescripcionArticulo, " +
-                    "Cantidad = @Cantidad, PrecioCompra = @PrecioCompra, PrecioVenta = @PrecioVenta, IdEstado = @IdEstado where IdArticulo = @IdArticulo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
+                Cmd = new SqlCommand("dbo.sp_Articulo_ObtenerArticuloPorIdArticulo", new SqlConnection(Cn));
                 Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
-                Cmd.Parameters.AddWithValue("@IdProveedor", eArticulo.IdProveedor);
-                Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);
-                Cmd.Parameters.AddWithValue("@DescripcionArticulo", eArticulo.DescripcionArticulo);
-                Cmd.Parameters.AddWithValue("@Cantidad", eArticulo.Cantidad);
-                Cmd.Parameters.AddWithValue("@PrecioCompra", eArticulo.PrecioCompra);
-                Cmd.Parameters.AddWithValue("@PrecioVenta", eArticulo.PrecioVenta);
-                Cmd.Parameters.AddWithValue("@IdEstado", eArticulo.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Da = new SqlDataAdapter(Cmd);
+                Da.Fill(Dt);
 
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
+                var query = (from a in Dt.Rows.Cast<DataRow>()
+                             select a).ToList();
+
+                foreach (var item in query)
+                {
+                    listaArticulo.Add(new Entidades.Articulo()
+                    {
+                        IdArticulo = Convert.ToInt32(item[0].ToString()),
+                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                        IdEntidad = Convert.ToInt32(item[2].ToString()),
+                        CodigoArticulo = item[3].ToString(),
+                        DescripcionArticulo = item[4].ToString(),
+                        Cantidad = Convert.ToInt32(item[5].ToString()),
+                        PrecioCompra = Convert.ToDecimal(item[6].ToString()),
+                        PrecioVenta = Convert.ToDecimal(item[7].ToString()),
+                        IdEstado = Convert.ToInt32(item[8].ToString())
+                    });
+                }
             }
-
-            return respuesta;
-        }
-
-        public bool EliminarArticulo(Entidades.Articulo eArticulo)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
+            if(eArticulo.IdEntidad != 0)
             {
-                Cnx.Open();
-                string query = "Delete from Articulo where IdArticulo = @IdArticulo";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
-                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd = new SqlCommand("dbo.sp_Articulo_ObtenerArticuloPorIdEntidad", new SqlConnection(Cn));
+                Cmd.Parameters.Clear();
+                Cmd.Parameters.AddWithValue("@IdEntidad", eArticulo.IdEntidad);
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Da = new SqlDataAdapter(Cmd);
+                Da.Fill(Dt);
 
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
+                var query = (from a in Dt.Rows.Cast<DataRow>()
+                             select a).ToList();
+
+                foreach (var item in query)
+                {
+                    listaArticulo.Add(new Entidades.Articulo()
+                    {
+                        IdArticulo = Convert.ToInt32(item[0].ToString()),
+                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                        IdEntidad = Convert.ToInt32(item[2].ToString()),
+                        CodigoArticulo = item[3].ToString(),
+                        DescripcionArticulo = item[4].ToString(),
+                        Cantidad = Convert.ToInt32(item[5].ToString()),
+                        PrecioCompra = Convert.ToDecimal(item[6].ToString()),
+                        PrecioVenta = Convert.ToDecimal(item[7].ToString()),
+                        IdEstado = Convert.ToInt32(item[8].ToString())
+                    });
+                }
             }
 
-            return respuesta;
-        }
-    }
+			
+			return listaArticulo;
+		}
+	}
 }
+

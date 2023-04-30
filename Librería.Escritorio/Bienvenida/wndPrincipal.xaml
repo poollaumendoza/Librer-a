@@ -16,7 +16,7 @@
             </MenuItem>
             <MenuItem Header="Principal">
                 <MenuItem Header="Mis Datos">
-                    <MenuItem Header="Mi empresa"/>
+                    <MenuItem Name="mnuEmpresa" Header="Mi empresa" Click="MnuEmpresa_Click"/>
                     <MenuItem Header="Mis Proveedores"/>
                     <MenuItem Header="Mis Clientes"/>
                     <MenuItem Header="Lo que vendo"/>

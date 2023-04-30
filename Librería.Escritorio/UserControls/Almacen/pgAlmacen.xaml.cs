@@ -22,7 +22,7 @@ namespace Librería.Escritorio.UserControls.Almacen
 
             if (Id != 0)
             {
-                var almacen = nAlmacen.ListaAlmacen(Id).FirstOrDefault();
+                var almacen = nAlmacen.ListaAlmacen(new Entidades.Almacen() { IdAlmacen = Id }).FirstOrDefault();
                 txtNombreAlmacen.Text = almacen.NombreAlmacen;
                 txtDireccion.Text = almacen.Direccion;
                 cboEstado.SelectedValue = almacen.IdEstado;
@@ -51,7 +51,7 @@ namespace Librería.Escritorio.UserControls.Almacen
             }
             else
             {
-                var almacen = nAlmacen.ListaAlmacen(Id).FirstOrDefault();
+                var almacen = nAlmacen.ListaAlmacen(new Entidades.Almacen() { IdAlmacen = Id }).FirstOrDefault();
                 almacen.NombreAlmacen = txtNombreAlmacen.Text;
                 almacen.Direccion = txtDireccion.Text;
                 almacen.IdEstado = Convert.ToInt32(cboEstado.SelectedValue);

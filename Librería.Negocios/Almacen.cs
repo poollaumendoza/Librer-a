@@ -1,38 +1,44 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Data;
+using Librería.Entidades;
+using Librería.Data;
 
-namespace LibrerÃ­a.Negocios
+namespace Librería.Negocios
 {
-    public class Almacen
-    {
-        Data.Almacen dAlmacen = new Data.Almacen();
+	public class Almacen
+	{
+		Entidades.Almacen eAlmacen = new Entidades.Almacen();
+		Data.Almacen dAlmacen = new Data.Almacen();
 
-        public bool AgregarAlmacen(Entidades.Almacen eAlmacen)
-        {
-            return dAlmacen.AgregarAlmacen(eAlmacen);
-        }
+		public void AgregarAlmacen(Entidades.Almacen eAlmacen)
+		{
+			dAlmacen.AgregarAlmacen(eAlmacen);
+		}
 
-        public List<Entidades.Almacen> ListaAlmacen()
-        {
-            return dAlmacen.ListaAlmacen();
-        }
+		public void EliminarAlmacen(Entidades.Almacen eAlmacen)
+		{
+			dAlmacen.EliminarAlmacen(eAlmacen);
+		}
 
-        public List<Entidades.Almacen> ListaAlmacen(int IdAlmacen)
-        {
-            return dAlmacen.ListaAlmacen(IdAlmacen);
-        }
+		public void EditarAlmacen(Entidades.Almacen eAlmacen)
+		{
+			dAlmacen.EditarAlmacen(eAlmacen);
+		}
 
-        public bool EditarAlmacen(Entidades.Almacen eAlmacen)
-        {
-            return dAlmacen.EditarAlmacen(eAlmacen);
-        }
+		public ObservableCollection<Entidades.Almacen> ListaAlmacen()
+		{
+			return dAlmacen.ListaAlmacen();
+		}
+		public ObservableCollection<Entidades.Almacen> ListaAlmacen(Entidades.Almacen eAlmacen)
+		{
+			return dAlmacen.ListaAlmacen(eAlmacen);
+		}
+	}
+}	
 
-        public bool EliminarAlmacen(Entidades.Almacen eAlmacen)
-        {
-            return dAlmacen.EliminarAlmacen(eAlmacen);
-        }
-    }
-}

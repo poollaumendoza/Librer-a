@@ -32,7 +32,14 @@ namespace Librería.Escritorio.Bienvenida
 
         private void BtnVentas_Click(object sender, RoutedEventArgs e)
         {
+            App.NombreTabla = "VENTA";
             oWindow = new Forms.Ventas.wndVenta();
+            oWindow.Show();
+        }
+
+        private void MnuEmpresa_Click(object sender, RoutedEventArgs e)
+        {
+            oWindow = new Forms.Empresa.wndEmpresa();
             oWindow.Show();
         }
     }

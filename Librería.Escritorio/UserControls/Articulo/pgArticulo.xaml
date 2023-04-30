@@ -29,11 +29,11 @@
         <Label Content="Proveedor:" HorizontalAlignment="Left" Margin="20,132,0,0" VerticalAlignment="Top"/>
         <ComboBox Name="cboProveedor" DisplayMemberPath="RazonSocial" SelectedValuePath="IdEntidad" HorizontalAlignment="Left" Margin="120,132,0,0" VerticalAlignment="Top" Width="300"/>
         <Label Content="Cantidad:" HorizontalAlignment="Left" Margin="20,163,0,0" VerticalAlignment="Top"/>
-        <mah:NumericUpDown Name="nupCantidad" HorizontalAlignment="left" Height="23" Margin="120,163,0,0" VerticalAlignment="top" Width="120"/>
+        <mah:NumericUpDown Name="nupCantidad" HorizontalAlignment="left" Height="23" Margin="120,163,0,0" VerticalAlignment="top" Width="120" Interval="1"/>
         <Label Content="Precio Compra:" HorizontalAlignment="Left" Margin="20,194,0,0" VerticalAlignment="Top"/>
-        <mah:NumericUpDown Name="nupPrecioCompra" HorizontalAlignment="Left" Height="23" Margin="120,194,0,0" VerticalAlignment="Top" Width="120"/>
+        <mah:NumericUpDown Name="nupPrecioCompra" HorizontalAlignment="Left" Height="23" Margin="120,194,0,0" VerticalAlignment="Top" Width="120" Interval="0.10"/>
         <Label Content="Precio Venta:" HorizontalAlignment="Left" Margin="20,225,0,0" VerticalAlignment="Top"/>
-        <mah:NumericUpDown Name="nupPrecioVenta" HorizontalAlignment="Left" Height="23" Margin="120,225,0,0" VerticalAlignment="Top" Width="120"/>
+        <mah:NumericUpDown Name="nupPrecioVenta" HorizontalAlignment="Left" Height="23" Margin="120,225,0,0" VerticalAlignment="Top" Width="120" Interval="0.10"/>
         <Label Content="Estado:" HorizontalAlignment="Left" Margin="20,256,0,0" VerticalAlignment="Top"/>
         <ComboBox Name="cboEstado" DisplayMemberPath="NombreEstado" SelectedValuePath="IdEstado" HorizontalAlignment="Left" Margin="120,256,0,0" VerticalAlignment="Top" Width="120"/>
     </Grid>

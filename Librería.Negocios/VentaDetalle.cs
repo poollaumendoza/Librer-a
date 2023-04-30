@@ -1,43 +1,45 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Data;
+using Librería.Entidades;
+using Librería.Data;
 
-namespace LibrerÃ­a.Negocios
+namespace Librería.Negocios
 {
-    public class VentaDetalle
-    {
-        Data.VentaDetalle dVentaDetalle = new Data.VentaDetalle();
+	public class VentaDetalle
+	{
+		Entidades.VentaDetalle eVentaDetalle = new Entidades.VentaDetalle();
+		Data.VentaDetalle dVentaDetalle = new Data.VentaDetalle();
 
-        public bool AgregarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-        {
-            return dVentaDetalle.AgregarVentaDetalle(eVentaDetalle);
-        }
+		public void AgregarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
+		{
+			dVentaDetalle.AgregarVentaDetalle(eVentaDetalle);
+		}
 
-        public List<Entidades.VentaDetalle> ListaVentaDetalle()
-        {
-            return dVentaDetalle.ListaVentaDetalle();
-        }
+		public void EliminarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
+		{
+			dVentaDetalle.EliminarVentaDetalle(eVentaDetalle);
+		}
 
-        public List<Entidades.VentaDetalle> ListaVentaDetalle(string nombreObjeto, string valor)
-        {
-            return dVentaDetalle.ListaVentaDetalle(nombreObjeto, valor);
-        }
+		public void EditarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
+		{
+			dVentaDetalle.EditarVentaDetalle(eVentaDetalle);
+		}
 
-        public List<Entidades.VentaDetalle> ListaVentaDetalle(int IdVentaDetalle)
-        {
-            return dVentaDetalle.ListaVentaDetalle(IdVentaDetalle);
-        }
+		public ObservableCollection<Entidades.VentaDetalle> ListaVentaDetalle()
+		{
+			return dVentaDetalle.ListaVentaDetalle();
+		}
 
-        public bool EditarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-        {
-            return dVentaDetalle.EditarVentaDetalle(eVentaDetalle);
-        }
-
-        public bool EliminarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-        {
-            return dVentaDetalle.EliminarVentaDetalle(eVentaDetalle);
-        }
+		public ObservableCollection<Entidades.VentaDetalle> ListaVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
+		{
+			return dVentaDetalle.ListaVentaDetalle(eVentaDetalle);
+		}
     }
-}
+}	
+

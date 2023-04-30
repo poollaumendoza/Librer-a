@@ -1,38 +1,44 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Data;
+using Librería.Entidades;
+using Librería.Data;
 
-namespace LibrerÃ­a.Negocios
+namespace Librería.Negocios
 {
-    public class TipoDocumento
-    {
-        Data.TipoDocumento dTipoDocumento = new Data.TipoDocumento();
+	public class TipoDocumento
+	{
+		Entidades.TipoDocumento eTipoDocumento = new Entidades.TipoDocumento();
+		Data.TipoDocumento dTipoDocumento = new Data.TipoDocumento();
 
-        public bool AgregarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-        {
-            return dTipoDocumento.AgregarTipoDocumento(eTipoDocumento);
-        }
+		public void AgregarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			dTipoDocumento.AgregarTipoDocumento(eTipoDocumento);
+		}
 
-        public List<Entidades.TipoDocumento> ListaTipoDocumento()
-        {
-            return dTipoDocumento.ListaTipoDocumento();
-        }
+		public void EliminarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			dTipoDocumento.EliminarTipoDocumento(eTipoDocumento);
+		}
 
-        public List<Entidades.TipoDocumento> ListaTipoDocumento(int IdTipoDocumento)
-        {
-            return dTipoDocumento.ListaTipoDocumento(IdTipoDocumento);
-        }
+		public void EditarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			dTipoDocumento.EditarTipoDocumento(eTipoDocumento);
+		}
 
-        public bool EditarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-        {
-            return dTipoDocumento.EditarTipoDocumento(eTipoDocumento);
-        }
+		public ObservableCollection<Entidades.TipoDocumento> ListaTipoDocumento()
+		{
+			return dTipoDocumento.ListaTipoDocumento();
+		}
+		public ObservableCollection<Entidades.TipoDocumento> ListaTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
+		{
+			return dTipoDocumento.ListaTipoDocumento(eTipoDocumento);
+		}
+	}
+}	
 
-        public bool EliminarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-        {
-            return dTipoDocumento.EliminarTipoDocumento(eTipoDocumento);
-        }
-    }
-}

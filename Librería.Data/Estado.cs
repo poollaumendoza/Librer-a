@@ -1,128 +1,96 @@
-ï»¿using LibrerÃ­a.Data.Properties;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Librería.Entidades;
+using Librería.Data.Properties;
 
-namespace LibrerÃ­a.Data
+namespace Librería.Data
 {
-    public class Estado
-    {
-        Entidades.Estado eEstado = new Entidades.Estado();
+	public class Estado
+	{
+		Entidades.Estado eEstado = new Entidades.Estado();
+		EstadoCollection listaEstado = new EstadoCollection();
+		string Cn = Settings.Default.CadenaConexion;
+		SqlConnection Cnx = null;
+		SqlCommand Cmd = null;
+		SqlDataAdapter Da = null;
+		DataTable Dt = new DataTable();
 
-        public bool AgregarEstado(Entidades.Estado eEstado)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "insert into Estado(NombreEstado) values(@NombreEstado)";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@NombreEstado", eEstado.NombreEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public List<Entidades.Estado> ListaEstado()
-        {
-            List<Entidades.Estado> oLista = new List<Entidades.Estado>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdEstado, NombreEstado from Estado";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Estado()
-                        {
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString()),
-                            NombreEstado = Dr["NombreEstado"].ToString()
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public List<Entidades.Estado> ListaEstado(int IdEstado)
-        {
-            List<Entidades.Estado> oLista = new List<Entidades.Estado>();
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Select IdEstado, NombreEstado from Estado where IdEstado = @IdEstado";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdEstado", IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                using (SQLiteDataReader Dr = Cmd.ExecuteReader())
-                {
-                    while (Dr.Read())
-                    {
-                        oLista.Add(new Entidades.Estado()
-                        {
-                            IdEstado = int.Parse(Dr["IdEstado"].ToString()),
-                            NombreEstado = Dr["NombreEstado"].ToString()
-                        });
-                    }
-                }
-            }
-
-            return oLista;
-        }
-
-        public bool EditarEstado(Entidades.Estado eEstado)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "update Estado set NombreEstado = @NombreEstado where IdEstado = @IdEstado";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
-                Cmd.Parameters.AddWithValue("@NombreEstado", eEstado.NombreEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-
-        public bool EliminarEstado(Entidades.Estado eEstado)
-        {
-            bool respuesta = false;
-
-            using (SQLiteConnection Cnx = new SQLiteConnection(Settings.Default.CadenaConexion))
-            {
-                Cnx.Open();
-                string query = "Delete from Estado where IdEstado = @IdEstado";
-                SQLiteCommand Cmd = new SQLiteCommand(query, Cnx);
-                Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
-                Cmd.CommandType = System.Data.CommandType.Text;
-
-                if (Cmd.ExecuteNonQuery() < 1)
-                    respuesta = false;
-            }
-
-            return respuesta;
-        }
-    }
+		public void AgregarEstado(Entidades.Estado eEstado)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Estado_AgregarEstado", Cnx);
+			Cmd.CommandType = CommandType.StoredProcedure;
+			Cmd.Parameters.AddWithValue("@NombreEstado", eEstado.NombreEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EliminarEstado(Entidades.Estado eEstado)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Estado_EliminarEstado", Cnx);
+			Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public void EditarEstado(Entidades.Estado eEstado)
+		{
+			Cnx = new SqlConnection(Cn);
+			Cmd = new SqlCommand("dbo.sp_Estado_ActualizarEstado", Cnx);
+			Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
+			Cmd.Parameters.AddWithValue("@NombreEstado", eEstado.NombreEstado);
+			Cnx.Open();
+			Cmd.ExecuteNonQuery();
+			Cnx.Close();
+		}
+		public ObservableCollection<Entidades.Estado> ListaEstado()
+		{
+            Dt.Rows.Clear();
+            Dt.Columns.Clear();
+            listaEstado.Clear();
+			
+			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Estado_ObtenerEstado", new SqlConnection(Cn)));
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaEstado.Add(new Entidades.Estado()
+				{
+					IdEstado = Convert.ToInt32(item[0].ToString()),
+					NombreEstado = item[1].ToString()
+				});
+			}
+			return listaEstado;
+		}
+		public ObservableCollection<Entidades.Estado> ListaEstado(Entidades.Estado eEstado)
+		{
+			listaEstado.Clear();
+			
+			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Estado_ObtenerPorIdEstado", new SqlConnection(Cn)));
+			Da.Fill(Dt);
+			
+			var query = (from a in Dt.Rows.Cast<DataRow>()
+					select a).ToList();
+			
+			foreach (var item in query)
+			{
+				listaEstado.Add(new Entidades.Estado()
+				{
+					IdEstado = Convert.ToInt32(item[0].ToString()),
+					NombreEstado = item[1].ToString()
+				});
+			}
+			return listaEstado;
+		}
+	}
 }
+

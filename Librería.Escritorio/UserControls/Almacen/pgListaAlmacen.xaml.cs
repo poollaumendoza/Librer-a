@@ -41,7 +41,7 @@ namespace Librería.Escritorio.UserControls.Almacen
         {
             int Id = (int)((Button)sender).CommandParameter;
 
-            var almacen = nAlmacen.ListaAlmacen(Id).FirstOrDefault();
+            var almacen = nAlmacen.ListaAlmacen(new Entidades.Almacen() { IdAlmacen = Id }).FirstOrDefault();
             nAlmacen.EliminarAlmacen(almacen);
 
             CargarAlmacenes();

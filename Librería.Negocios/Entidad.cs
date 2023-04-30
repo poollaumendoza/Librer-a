@@ -1,38 +1,44 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Data;
+using Librería.Entidades;
+using Librería.Data;
 
-namespace LibrerÃ­a.Negocios
+namespace Librería.Negocios
 {
-    public class Entidad
-    {
-        Data.Entidad dEntidad = new Data.Entidad();
+	public class Entidad
+	{
+		Entidades.Entidad eEntidad = new Entidades.Entidad();
+		Data.Entidad dEntidad = new Data.Entidad();
 
-        public bool AgregarEntidad(Entidades.Entidad eEntidad)
-        {
-            return dEntidad.AgregarEntidad(eEntidad);
-        }
+		public void AgregarEntidad(Entidades.Entidad eEntidad)
+		{
+			dEntidad.AgregarEntidad(eEntidad);
+		}
 
-        public List<Entidades.Entidad> ListaEntidad()
-        {
-            return dEntidad.ListaEntidad();
-        }
+		public void EliminarEntidad(Entidades.Entidad eEntidad)
+		{
+			dEntidad.EliminarEntidad(eEntidad);
+		}
 
-        public List<Entidades.Entidad> ListaEntidad(int IdEntidad)
-        {
-            return dEntidad.ListaEntidad(IdEntidad);
-        }
+		public void EditarEntidad(Entidades.Entidad eEntidad)
+		{
+			dEntidad.EditarEntidad(eEntidad);
+		}
 
-        public bool EditarEntidad(Entidades.Entidad eEntidad)
-        {
-            return dEntidad.EditarEntidad(eEntidad);
-        }
+		public ObservableCollection<Entidades.Entidad> ListaEntidad()
+		{
+			return dEntidad.ListaEntidad();
+		}
+		public ObservableCollection<Entidades.Entidad> ListaEntidad(Entidades.Entidad eEntidad)
+		{
+			return dEntidad.ListaEntidad(eEntidad);
+		}
+	}
+}	
 
-        public bool EliminarEntidad(Entidades.Entidad eEntidad)
-        {
-            return dEntidad.EliminarEntidad(eEntidad);
-        }
-    }
-}

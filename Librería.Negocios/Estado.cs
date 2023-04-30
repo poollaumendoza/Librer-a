@@ -1,38 +1,44 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Data;
+using Librería.Entidades;
+using Librería.Data;
 
-namespace LibrerÃ­a.Negocios
+namespace Librería.Negocios
 {
-    public class Estado
-    {
-        Data.Estado dEstado = new Data.Estado();
+	public class Estado
+	{
+		Entidades.Estado eEstado = new Entidades.Estado();
+		Data.Estado dEstado = new Data.Estado();
 
-        public bool AgregarEstado(Entidades.Estado eEstado)
-        {
-            return dEstado.AgregarEstado(eEstado);
-        }
+		public void AgregarEstado(Entidades.Estado eEstado)
+		{
+			dEstado.AgregarEstado(eEstado);
+		}
 
-        public List<Entidades.Estado> ListaEstado()
-        {
-            return dEstado.ListaEstado();
-        }
+		public void EliminarEstado(Entidades.Estado eEstado)
+		{
+			dEstado.EliminarEstado(eEstado);
+		}
 
-        public List<Entidades.Estado> ListaEstado(int IdEstado)
-        {
-            return dEstado.ListaEstado(IdEstado);
-        }
+		public void EditarEstado(Entidades.Estado eEstado)
+		{
+			dEstado.EditarEstado(eEstado);
+		}
 
-        public bool EditarEstado(Entidades.Estado eEstado)
-        {
-            return dEstado.EditarEstado(eEstado);
-        }
+		public ObservableCollection<Entidades.Estado> ListaEstado()
+		{
+			return dEstado.ListaEstado();
+		}
+		public ObservableCollection<Entidades.Estado> ListaEstado(Entidades.Estado eEstado)
+		{
+			return dEstado.ListaEstado(eEstado);
+		}
+	}
+}	
 
-        public bool EliminarEstado(Entidades.Estado eEstado)
-        {
-            return dEstado.EliminarEstado(eEstado);
-        }
-    }
-}

@@ -1,23 +1,49 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Data;
+using Librería.Entidades;
+using Librería.Data;
 
-namespace LibrerÃ­a.Negocios
+namespace Librería.Negocios
 {
-    public class Correlativo
-    {
-        Data.Correlativo dCorrelativo = new Data.Correlativo();
+	public class Correlativo
+	{
+		Entidades.Correlativo eCorrelativo = new Entidades.Correlativo();
+		Data.Correlativo dCorrelativo = new Data.Correlativo();
 
-        public bool AgregarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            return dCorrelativo.AgregarCorrelativo(eCorrelativo);
-        }
+		public void AgregarCorrelativo(Entidades.Correlativo eCorrelativo)
+		{
+			dCorrelativo.AgregarCorrelativo(eCorrelativo);
+		}
 
-        public string ConstruirCorrelativoArticulo(string codigo)
+		public void EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
+		{
+			dCorrelativo.EliminarCorrelativo(eCorrelativo);
+		}
+
+		public void EditarCorrelativo(Entidades.Correlativo eCorrelativo)
+		{
+			dCorrelativo.EditarCorrelativo(eCorrelativo);
+		}
+
+		public ObservableCollection<Entidades.Correlativo> ListaCorrelativo()
+		{
+			return dCorrelativo.ListaCorrelativo();
+		}
+
+		public ObservableCollection<Entidades.Correlativo> ListaCorrelativo(Entidades.Correlativo eCorrelativo)
+		{
+			return dCorrelativo.ListaCorrelativo(eCorrelativo);
+		}
+
+        public string ObtenerAbreviatura(int IdTipoDocumento, string NombreTabla)
         {
-            return dCorrelativo.ConstruirCorrelativoArticulo(codigo);
+            return dCorrelativo.ObtenerAbreviatura(IdTipoDocumento, NombreTabla);
         }
 
         public string ConstruirCorrelativoDocumento(int IdCorrelativo)
@@ -25,39 +51,14 @@ namespace LibrerÃ­a.Negocios
             return dCorrelativo.ConstruirCorrelativoDocumento(IdCorrelativo);
         }
 
-        public List<Entidades.Correlativo> ListaCorrelativo()
+        public string ConstruirCorrelativoArticulo(string codigo)
         {
-            return dCorrelativo.ListaCorrelativo();
+            return dCorrelativo.ConstruirCorrelativoArticulo(codigo);
         }
 
-        public List<Entidades.Correlativo> ListaCorrelativo(int IdCorrelativo)
-        {
-            return dCorrelativo.ListaCorrelativo(IdCorrelativo);
-        }
-
-        public List<Entidades.Correlativo> ListaCorrelativo(string Abreviatura)
-        {
-            return dCorrelativo.ListaCorrelativo(Abreviatura);
-        }
-
-        public bool EditarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            return dCorrelativo.EditarCorrelativo(eCorrelativo);
-        }
-
-        public bool EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            return dCorrelativo.EliminarCorrelativo(eCorrelativo);
-        }
-
-        public List<Entidades.Correlativo> ObtenerSerie(string NombreTabla, string Abreviatura)
+        public ObservableCollection<Entidades.Correlativo> ListaSerie(string NombreTabla, string Abreviatura)
         {
             return dCorrelativo.ObtenerSerie(NombreTabla, Abreviatura);
-        }
-
-        public int ObtenerCorrelativo(int IdCorrelativo)
-        {
-            return dCorrelativo.ObtenerCorrelativo(IdCorrelativo);
         }
     }
 }

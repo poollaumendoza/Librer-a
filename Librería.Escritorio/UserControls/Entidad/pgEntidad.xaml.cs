@@ -35,15 +35,15 @@ namespace Librería.Escritorio.UserControls.Entidad
 
             if(Id != 0)
             {
-                var entidad = nEntidad.ListaEntidad(Id).FirstOrDefault();
+                var entidad = nEntidad.ListaEntidad(new Entidades.Entidad() { IdEntidad = Id }).FirstOrDefault();
                 cboTipoDocumento.SelectedValue = entidad.IdTipoDocumento;
                 txtNroDocumento.Text = entidad.NroDocumento;
                 txtRazonSocial.Text = entidad.RazonSocial;
                 txtDireccion.Text = entidad.Direccion;
                 txtTelefono.Text = entidad.Telefono;
                 txtEmail.Text = entidad.Email;
-                rbCliente.IsChecked = entidad.EsCliente == 1 ? true : false;
-                rbProveedor.IsChecked = entidad.EsProveedor == 1 ? true : false;
+                rbCliente.IsChecked = Convert.ToBoolean(entidad.EsCliente);
+                rbProveedor.IsChecked = Convert.ToBoolean(entidad.EsProveedor);
                 cboEstado.SelectedValue = entidad.IdEstado;
             }
         }
@@ -76,8 +76,8 @@ namespace Librería.Escritorio.UserControls.Entidad
                     Direccion = txtDireccion.Text,
                     Telefono = txtTelefono.Text,
                     Email = txtEmail.Text,
-                    EsCliente = rbCliente.IsChecked == true ? 1 : 0,
-                    EsProveedor = rbProveedor.IsChecked == true ? 1 : 0,
+                    EsCliente = Convert.ToBoolean(rbCliente.IsChecked),
+                    EsProveedor = Convert.ToBoolean(rbProveedor.IsChecked),
                     IdEstado = Convert.ToInt32(cboEstado.SelectedValue)
                 };
                 nEntidad.AgregarEntidad(entidad);

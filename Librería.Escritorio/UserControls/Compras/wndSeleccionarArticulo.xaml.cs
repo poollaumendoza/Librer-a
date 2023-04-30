@@ -13,28 +13,28 @@ namespace Librería.Escritorio.UserControls.Compras
         Entidades.Articulo eArticulo;
         Window oWindow;
 
-        public wndSeleccionarArticulo(int IdProveedor = 0)
+        public wndSeleccionarArticulo(int IdEntidad = 0)
         {
             InitializeComponent();
-            CargarArticulos(IdProveedor);
+            CargarArticulos(IdEntidad);
         }
 
-        void CargarArticulos(int IdProveedor)
+        void CargarArticulos(int IdEntidad)
         {
             eArticulo = new Entidades.Articulo()
             {
-                IdProveedor = IdProveedor
+                IdEntidad = IdEntidad
             };
 
             dg.ItemsSource = null;
             dg.ItemsSource = nArticulo.ListaArticulo(eArticulo);
         }
 
-        void CargarArticulos(int IdProveedor, string criterio)
+        void CargarArticulos(int IdEntidad, string criterio)
         {
             eArticulo = new Entidades.Articulo()
             {
-                IdProveedor = IdProveedor
+                IdEntidad = IdEntidad
             };
 
             dg.ItemsSource = null;
@@ -48,13 +48,13 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnArticulo_Click(object sender, RoutedEventArgs e)
         {
-            int idproveedor = App.IdProveedor;
+            int IdEntidad = App.IdEntidad;
             string criterio = string.Empty;
 
             oWindow = new Forms.Articulo.wndArticulo();
             if (oWindow.ShowDialog() == false)
                 if (App.Resultado == true)
-                    CargarArticulos(idproveedor, criterio);
+                    CargarArticulos(IdEntidad, criterio);
         }
 
         private async void Dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)

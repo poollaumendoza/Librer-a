@@ -120,6 +120,9 @@
     <Compile Include="Forms\Compras\wndCompra.xaml.cs">
       <DependentUpon>wndCompra.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Empresa\wndEmpresa.xaml.cs">
+      <DependentUpon>wndEmpresa.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Entidad\wndEntidad.xaml.cs">
       <DependentUpon>wndEntidad.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,12 @@
     </Compile>
     <Compile Include="UserControls\Compras\wndSeleccionarArticulo.xaml.cs">
       <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Empresa\pgEmpresa.xaml.cs">
+      <DependentUpon>pgEmpresa.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Empresa\pgListaEmpresas.xaml.cs">
+      <DependentUpon>pgListaEmpresas.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Entidad\pgEntidad.xaml.cs">
       <DependentUpon>pgEntidad.xaml</DependentUpon>
@@ -186,6 +195,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Forms\Empresa\wndEmpresa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Forms\Entidad\wndEntidad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -219,6 +232,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Compras\wndSeleccionarArticulo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Empresa\pgEmpresa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Empresa\pgListaEmpresas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -462,6 +483,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\add_to_shopping_cart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\male_female_users_128.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

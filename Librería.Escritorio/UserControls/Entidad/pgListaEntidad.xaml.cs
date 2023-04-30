@@ -52,7 +52,7 @@ namespace Librería.Escritorio.UserControls.Entidad
         {
             int Id = (int)((Button)sender).CommandParameter;
 
-            var entidad = nEntidad.ListaEntidad(Id).FirstOrDefault();
+            var entidad = nEntidad.ListaEntidad(new Entidades.Entidad() { IdEntidad = Id }).FirstOrDefault();
             nEntidad.EliminarEntidad(entidad);
 
             CargarEntidad();

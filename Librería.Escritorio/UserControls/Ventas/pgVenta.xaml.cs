@@ -58,9 +58,16 @@ namespace Librería.Escritorio.UserControls.Ventas
         void CargarSeries(string NombreTabla, string Abreviatura)
         {
             cboSerie.ItemsSource = null;
-            cboSerie.ItemsSource = nCorrelativo.ObtenerSerie(NombreTabla, Abreviatura);
+            cboSerie.ItemsSource = nCorrelativo.ListaSerie(NombreTabla, Abreviatura);
+            cboSerie.DisplayMemberPath = "Serie";
+            cboSerie.SelectedValuePath = "IdCorrelativo";
         }
 
+        void CargarVentaDetalle(int IdVenta)
+        {
+            dg.ItemsSource = null;
+            dg.ItemsSource = nVentaDetalle.ListaVentaDetalle(new Entidades.VentaDetalle() { IdVenta = IdVenta });
+        }
         #endregion
 
         public pgVenta(int Id = 0)
@@ -69,59 +76,72 @@ namespace Librería.Escritorio.UserControls.Ventas
 
             CargarEntidad();
             CargarTipoDocumento();
-            //CargarSeries("VENTA", nCorrelativo.ObtenerAbreviatura(Convert.ToInt32(cboTipoDocumento.SelectedValue)));
 
             this.Id = Id;
 
             if (Id != 0)
             {
-                var Venta = nVenta.ListaVenta(Id).FirstOrDefault();
-                cboCliente.SelectedValue = Venta.IdCliente.ToString();
+                var Venta = nVenta.ListaVenta(new Entidades.Venta() { IdVenta = Id }).FirstOrDefault();
+                cboCliente.SelectedValue = Venta.IdEntidad.ToString();
                 cboTipoDocumento.SelectedValue = Venta.IdTipoDocumento;
-                //txtNroDocumento.Text = Venta.NroDocumento;
                 cboSerie.SelectedValue = Venta.IdCorrelativo;
-                txtCorrelativo.Text = Venta.Correlativo;
-                dtpFechaVenta.Text = Venta.FechaVenta;
+                dtpFechaVenta.Text = Venta.FechaVenta.ToShortDateString();
                 txtSubTotal.Text = Venta.SubTotal.ToString();
                 txtImpuesto.Text = Venta.Impuesto.ToString();
                 txtTotal.Text = Venta.Total.ToString();
 
-                dg.ItemsSource = null;
-                dg.ItemsSource = nVentaDetalle.ListaVentaDetalle("IdVenta", Venta.IdVenta.ToString());
+                CargarVentaDetalle(Id);
             }
         }
 
         private void BtnCrearVenta_Click(object sender, RoutedEventArgs e)
         {
-            Entidades.Venta eVenta = new Entidades.Venta()
-            {
-                IdEmpresa = App.IdEmpresa,
-                IdCliente = cboCliente.SelectedValue.ToString(),
-                IdTipoDocumento = cboTipoDocumento.SelectedValue.ToString(),
-                IdUsuario = "0",
-                NroDocumento = string.Format("{0}-{1}", cboSerie.Text, txtCorrelativo.Text),
-                FechaVenta = dtpFechaVenta.Text,
-                FechaRegistro = string.Format("{0}/{1}/{2}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
-                SubTotal = Convert.ToDecimal(txtSubTotal.Text),
-                Impuesto = Convert.ToDecimal(txtImpuesto.Text),
-                Total = Convert.ToDecimal(txtTotal.Text),
-                IdEstado = 1
+            var mensaje = MessageBox.Show("Desea guardar este registro?", "Título", MessageBoxButton.YesNoCancel);
 
-            };
-            nVenta.AgregarVenta(eVenta);
-
-            foreach (var item in App.oVenta)
+            switch (mensaje)
             {
-                Entidades.VentaDetalle eVentaDetalle = new Entidades.VentaDetalle()
-                {
-                    IdVenta = eVenta.IdVenta,
-                    Cantidad = item.Cantidad,
-                    Descripcion = item.Descripcion,
-                    Precio = item.Precio,
-                    Importe = item.Importe,
-                    IdEstado = 1
-                };
-                nVentaDetalle.AgregarVentaDetalle(eVentaDetalle);
+                case MessageBoxResult.Cancel:
+                    return;
+                case MessageBoxResult.Yes:
+                    Entidades.Venta eVenta = new Entidades.Venta()
+                    {
+                        IdEmpresa = App.IdEmpresa,
+                        IdEntidad = Convert.ToInt32(cboCliente.SelectedValue),
+                        IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue),
+                        IdUsuario = App.IdUsuario,
+                        IdCorrelativo = Convert.ToInt32(cboSerie.SelectedValue),
+                        Correlativo = txtCorrelativo.Text,
+                        NroDocumento = string.Format("{0}-{1}", cboSerie.Text, txtCorrelativo.Text),
+                        FechaVenta = Convert.ToDateTime(dtpFechaVenta.Text),
+                        FechaRegistro = DateTime.Now,
+                        SubTotal = Convert.ToDecimal(txtSubTotal.Text),
+                        Impuesto = Convert.ToDecimal(txtImpuesto.Text),
+                        Total = Convert.ToDecimal(txtTotal.Text),
+                        IdEstado = 1
+
+                    };
+                    eVenta.IdVenta = nVenta.AgregarVenta(eVenta);
+
+                    foreach (var item in App.oVenta)
+                    {
+                        Entidades.VentaDetalle eVentaDetalle = new Entidades.VentaDetalle()
+                        {
+                            IdVenta = eVenta.IdVenta,
+                            Cantidad = item.Cantidad,
+                            Descripcion = item.Descripcion,
+                            Precio = item.Precio,
+                            Importe = item.Importe,
+                            IdEstado = 1
+                        };
+                        nVentaDetalle.AgregarVentaDetalle(eVentaDetalle);
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    App.oCompra.Clear();
+                    wndVenta.StaticMainFrame.Content = new pgListaVenta();
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -149,43 +169,48 @@ namespace Librería.Escritorio.UserControls.Ventas
 
         private void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
-            //int Id = (int)((Button)sender).CommandParameter;
+            try
+            {
+                int IdDetalle = Convert.ToInt32(((Button)sender).CommandParameter);
 
-            //var compra = nCompra.ListaCompra(Id).FirstOrDefault();
-            //var compradetalle = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString()).FirstOrDefault();
-            //nCompraDetalle.EliminarCompraDetalle(compradetalle);
+                var mensaje = MessageBox.Show("Desea eliminar este registro?", "Título", MessageBoxButton.YesNoCancel);
 
-            //dg.ItemsSource = null;
-            //dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", compra.IdCompra.ToString());
+                switch (mensaje)
+                {
+                    case MessageBoxResult.Cancel:
+                        break;
+                    case MessageBoxResult.Yes:
+                        CargarVentaDetalle(eVenta.IdVenta);
+                        var eliminar = nVentaDetalle.ListaVentaDetalle(new Entidades.VentaDetalle() { IdVentaDetalle = IdDetalle }).FirstOrDefault();
+                        nVentaDetalle.EliminarVentaDetalle(eliminar);
+
+                        dg.ItemsSource = null;
+                        dg.ItemsSource = nVentaDetalle.ListaVentaDetalle(new Entidades.VentaDetalle() { IdVenta = Id });
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void CboTipoDocumento_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string IdEmpresa = App.IdEmpresa;
-            string nombreTabla = "VENTA";
-            string Abreviatura = string.Empty;
-            int tipodocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue);
+            int IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue);
+            string Abreviatura = nCorrelativo.ObtenerAbreviatura(IdTipoDocumento, App.NombreTabla);
 
-            switch (tipodocumento)
-            {
-                case 3:
-                    Abreviatura = "FACT";
-                    CargarSeries(nombreTabla, Abreviatura);
-                    break;
-                case 4:
-                    Abreviatura = "BOL";
-                    CargarSeries(nombreTabla, Abreviatura);
-                    break;
-                case 5:
-                    Abreviatura = "GR";
-                    CargarSeries(nombreTabla, Abreviatura);
-                    break;
-            }
+            CargarSeries(App.NombreTabla, Abreviatura);
         }
 
         private void CboSerie_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txtCorrelativo.Text = nCorrelativo.ConstruirCorrelativoDocumento(Convert.ToInt32(cboSerie.SelectedValue));
+            int serie = Convert.ToInt32(cboSerie.SelectedValue);
+            txtCorrelativo.Text = nCorrelativo.ConstruirCorrelativoDocumento(serie);
         }
     }
 }
