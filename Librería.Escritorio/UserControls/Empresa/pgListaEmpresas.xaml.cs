@@ -42,11 +42,15 @@ namespace Librería.Escritorio.UserControls.Empresa
             int Id = (int)((Button)sender).CommandParameter;
 
             App.IdEmpresa = Id;
+            var mensaje = MessageBox.Show("Empresa seleccionada");
         }
 
         private void BtnEditar_Click(object sender, RoutedEventArgs e)
         {
             int Id = (int)((Button)sender).CommandParameter;
+
+            pgEmpresa pFormulario = new pgEmpresa(Id);
+            wndEmpresa.StaticMainFrame.Content = pFormulario;
         }
     }
 }

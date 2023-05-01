@@ -24,28 +24,28 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Fecha de Venta" Binding="{Binding Path=FechaVenta, StringFormat=\{0:yyyy-MM-dd\}}" Width="auto">
+                <DataGridTextColumn Header="Fecha de Venta" Binding="{Binding Path=FechaVenta, StringFormat=\{0:yyyy.MM.dd\}}" Width="auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal, StringFormat=C2}" Width="auto">
+                <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal, StringFormat=C2, ConverterCulture=es-PE}" Width="auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto, StringFormat=C2}" Width="auto">
+                <DataGridTextColumn Header="Impuesto" Binding="{Binding Path=Impuesto, StringFormat=C2, ConverterCulture=es-PE}" Width="auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total, StringFormat=C2}" Width="auto">
+                <DataGridTextColumn Header="Total" Binding="{Binding Path=Total, StringFormat=C2, ConverterCulture=es-PE}" Width="auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>

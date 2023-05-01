@@ -40,6 +40,7 @@ namespace Librería.Data
 			Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
 			Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
 			Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
+            Cmd.Parameters.AddWithValue("@NroDocumento", eVenta.NroDocumento);
 			Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
 			Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
 			Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
@@ -73,7 +74,8 @@ namespace Librería.Data
 			Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
 			Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
 			Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
-			Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
+            Cmd.Parameters.AddWithValue("@NroDocumento", eVenta.NroDocumento);
+            Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
 			Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
 			Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
 			Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
@@ -106,12 +108,13 @@ namespace Librería.Data
 					IdUsuario = Convert.ToInt32(item[4].ToString()),
 					IdCorrelativo = Convert.ToInt32(item[5].ToString()),
 					Correlativo = item[6].ToString(),
-					FechaVenta = Convert.ToDateTime(item[7].ToString()),
-					FechaRegistro = Convert.ToDateTime(item[8].ToString()),
-					SubTotal = Convert.ToDecimal(item[9].ToString()),
-					Impuesto = Convert.ToDecimal(item[10].ToString()),
-					Total = Convert.ToDecimal(item[11].ToString()),
-					IdEstado = Convert.ToInt32(item[12].ToString())
+                    NroDocumento = item[7].ToString(),
+					FechaVenta = Convert.ToDateTime(item[8].ToString()),
+					FechaRegistro = Convert.ToDateTime(item[9].ToString()),
+					SubTotal = Convert.ToDecimal(item[10].ToString()),
+					Impuesto = Convert.ToDecimal(item[11].ToString()),
+					Total = Convert.ToDecimal(item[12].ToString()),
+					IdEstado = Convert.ToInt32(item[13].ToString())
 				});
 			}
 			return listaVenta;
@@ -133,23 +136,24 @@ namespace Librería.Data
 			
 			foreach (var item in query)
 			{
-				listaVenta.Add(new Entidades.Venta()
-				{
-					IdVenta = Convert.ToInt32(item[0].ToString()),
-					IdEmpresa = Convert.ToInt32(item[1].ToString()),
-					IdEntidad = Convert.ToInt32(item[2].ToString()),
-					IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
-					IdUsuario = Convert.ToInt32(item[4].ToString()),
-					IdCorrelativo = Convert.ToInt32(item[5].ToString()),
-					Correlativo = item[6].ToString(),
-					FechaVenta = Convert.ToDateTime(item[7].ToString()),
-					FechaRegistro = Convert.ToDateTime(item[8].ToString()),
-					SubTotal = Convert.ToDecimal(item[9].ToString()),
-					Impuesto = Convert.ToDecimal(item[10].ToString()),
-					Total = Convert.ToDecimal(item[11].ToString()),
-					IdEstado = Convert.ToInt32(item[12].ToString())
-				});
-			}
+                listaVenta.Add(new Entidades.Venta()
+                {
+                    IdVenta = Convert.ToInt32(item[0].ToString()),
+                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                    IdEntidad = Convert.ToInt32(item[2].ToString()),
+                    IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
+                    IdUsuario = Convert.ToInt32(item[4].ToString()),
+                    IdCorrelativo = Convert.ToInt32(item[5].ToString()),
+                    Correlativo = item[6].ToString(),
+                    NroDocumento = item[7].ToString(),
+                    FechaVenta = Convert.ToDateTime(item[8].ToString()),
+                    FechaRegistro = Convert.ToDateTime(item[9].ToString()),
+                    SubTotal = Convert.ToDecimal(item[10].ToString()),
+                    Impuesto = Convert.ToDecimal(item[11].ToString()),
+                    Total = Convert.ToDecimal(item[12].ToString()),
+                    IdEstado = Convert.ToInt32(item[13].ToString())
+                });
+            }
 			return listaVenta;
 		}
 	}

@@ -19,6 +19,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Codigo del Artículo" Binding="{Binding Path=CodigoArticulo}" Width="auto"/>
                 <DataGridTextColumn Header="Descripción del Artículo" Binding="{Binding Path=DescripcionArticulo}" Width="auto"/>
+                <DataGridTextColumn Width="5*"/>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

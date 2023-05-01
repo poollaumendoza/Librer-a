@@ -17,7 +17,7 @@ namespace Librería.Entidades
 		public string NombreTabla { get; set; }
 		public string Abreviatura { get; set; }
 		public string Serie { get; set; }
-		public string NroCorrelativo { get; set; }
+		public int NroCorrelativo { get; set; }
 		public int IdEstado { get; set; }
 	}
 }

@@ -60,5 +60,10 @@ namespace Librería.Negocios
         {
             return dCorrelativo.ObtenerSerie(NombreTabla, Abreviatura);
         }
+
+        public void ActualizarCorrelativoArticulo(string NombreTabla, string Abreviatura)
+        {
+            dCorrelativo.ActualizarCorrelativoArticulo(NombreTabla, Abreviatura);
+        }
     }
 }

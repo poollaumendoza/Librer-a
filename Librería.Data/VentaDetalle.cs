@@ -23,7 +23,6 @@ namespace Librería.Data
             Cnx = new SqlConnection(Cn);
             Cmd = new SqlCommand("dbo.sp_VentaDetalle_AgregarVentaDetalle", Cnx);
             Cmd.CommandType = CommandType.StoredProcedure;
-            Cmd.Parameters.AddWithValue("@IdVentaDetalle", eVentaDetalle.IdVentaDetalle);
             Cmd.Parameters.AddWithValue("@IdVenta", eVentaDetalle.IdVenta);
             Cmd.Parameters.AddWithValue("@Cantidad", eVentaDetalle.Cantidad);
             Cmd.Parameters.AddWithValue("@Descripcion", eVentaDetalle.Descripcion);

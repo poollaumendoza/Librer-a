@@ -69,29 +69,17 @@ namespace Librería.Escritorio.UserControls.Articulo
                             eCorrelativo = new Entidades.Correlativo()
                             {
                                 IdEmpresa = App.IdEmpresa,
+                                IdTipoDocumento = 0,
                                 NombreTabla = "ARTICULO",
                                 Abreviatura = abreviatura,
                                 Serie = "-",
-                                NroCorrelativo = "1",
+                                NroCorrelativo = 1,
                                 IdEstado = 1
                             };
                             nCorrelativo.AgregarCorrelativo(eCorrelativo);
                         }
                         else
-                        {
-                            var correlativo = nCorrelativo.ListaCorrelativo(new Entidades.Correlativo() { Abreviatura = abreviatura }).FirstOrDefault();
-                            eCorrelativo = new Entidades.Correlativo()
-                            {
-                                IdEmpresa = correlativo.IdEmpresa,
-                                IdTipoDocumento = correlativo.IdTipoDocumento,
-                                NombreTabla = correlativo.NombreTabla,
-                                Abreviatura = correlativo.Abreviatura,
-                                Serie = correlativo.Serie,
-                                NroCorrelativo = correlativo.NroCorrelativo + 1,
-                                IdEstado = correlativo.IdEstado
-                            };
-                            nCorrelativo.EditarCorrelativo(eCorrelativo);
-                        }
+                            nCorrelativo.ActualizarCorrelativoArticulo("ARTICULO", abreviatura);
 
                         eArticulo = new Entidades.Articulo()
                         {
@@ -120,6 +108,7 @@ namespace Librería.Escritorio.UserControls.Articulo
                         articulo.IdEstado = Convert.ToInt32(cboEstado.SelectedValue);
                         nArticulo.EditarArticulo(eArticulo);
 
+                        mensaje = MessageBox.Show("Registro guardado");
                         wndArticulo.StaticMainFrame.Content = new pgListaArticulo();
                     }
                     break;

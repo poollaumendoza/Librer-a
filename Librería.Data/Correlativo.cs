@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.VisualBasic;
 
 namespace Librería.Data
 {
@@ -24,6 +25,7 @@ namespace Librería.Data
             Cmd = new SqlCommand("dbo.sp_Correlativo_AgregarCorrelativo", Cnx);
             Cmd.CommandType = CommandType.StoredProcedure;
             Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
+            Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCorrelativo.IdTipoDocumento);
             Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
             Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
             Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
@@ -48,11 +50,13 @@ namespace Librería.Data
             Cmd = new SqlCommand("dbo.sp_Correlativo_ActualizarCorrelativo", Cnx);
             Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
             Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
+            Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCorrelativo.IdTipoDocumento);
             Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
             Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
             Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
             Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
             Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
+            Cmd.CommandType = CommandType.StoredProcedure;
             Cnx.Open();
             Cmd.ExecuteNonQuery();
             Cnx.Close();
@@ -79,7 +83,7 @@ namespace Librería.Data
                     NombreTabla = item[3].ToString(),
                     Abreviatura = item[4].ToString(),
                     Serie = item[5].ToString(),
-                    NroCorrelativo = item[6].ToString(),
+                    NroCorrelativo = Convert.ToInt32(item[6].ToString()),
                     IdEstado = Convert.ToInt32(item[7].ToString())
                 });
             }
@@ -87,31 +91,63 @@ namespace Librería.Data
         }
         public ObservableCollection<Entidades.Correlativo> ListaCorrelativo(Entidades.Correlativo eCorrelativo)
         {
+            Dt.Columns.Clear();
+            Dt.Rows.Clear();
             listaCorrelativo.Clear();
 
-            Cmd = new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativoPorIdCorrelativo", new SqlConnection(Cn));
-            Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Da = new SqlDataAdapter(Cmd);
-            Da.Fill(Dt);
-
-            var query = (from a in Dt.Rows.Cast<DataRow>()
-                         select a).ToList();
-
-            foreach (var item in query)
+            if(eCorrelativo.IdCorrelativo != 0)
             {
-                listaCorrelativo.Add(new Entidades.Correlativo()
+                Cmd = new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativoPorIdCorrelativo", new SqlConnection(Cn));
+                Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Da = new SqlDataAdapter(Cmd);
+                Da.Fill(Dt);
+
+                var query = (from a in Dt.Rows.Cast<DataRow>()
+                             select a).ToList();
+
+                foreach (var item in query)
                 {
-                    IdCorrelativo = Convert.ToInt32(item[0].ToString()),
-                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
-                    NombreTabla = item[3].ToString(),
-                    Abreviatura = item[4].ToString(),
-                    Serie = item[5].ToString(),
-                    NroCorrelativo = item[6].ToString(),
-                    IdEstado = Convert.ToInt32(item[7].ToString())
-                });
+                    listaCorrelativo.Add(new Entidades.Correlativo()
+                    {
+                        IdCorrelativo = Convert.ToInt32(item[0].ToString()),
+                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                        IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
+                        NombreTabla = item[3].ToString(),
+                        Abreviatura = item[4].ToString(),
+                        Serie = item[5].ToString(),
+                        NroCorrelativo = Convert.ToInt32(item[6].ToString()),
+                        IdEstado = Convert.ToInt32(item[7].ToString())
+                    });
+                }
             }
+            if(eCorrelativo.Abreviatura != string.Empty)
+            {
+                Cmd = new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativoPorAbreviatura", new SqlConnection(Cn));
+                Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Da = new SqlDataAdapter(Cmd);
+                Da.Fill(Dt);
+
+                var query = (from a in Dt.Rows.Cast<DataRow>()
+                             select a).ToList();
+
+                foreach (var item in query)
+                {
+                    listaCorrelativo.Add(new Entidades.Correlativo()
+                    {
+                        IdCorrelativo = Convert.ToInt32(item[0].ToString()),
+                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                        IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
+                        NombreTabla = item[3].ToString(),
+                        Abreviatura = item[4].ToString(),
+                        Serie = item[5].ToString(),
+                        NroCorrelativo = Convert.ToInt32(item[6].ToString()),
+                        IdEstado = Convert.ToInt32(item[7].ToString())
+                    });
+                }
+            }
+            
             return listaCorrelativo;
         }
 
@@ -137,7 +173,8 @@ namespace Librería.Data
 
                 int nroCorrelativo = q1.NroCorrelativo;
                 string ceros = "00000000";
-                resultado = resultado + ceros.PadLeft(ceros.Length - nroCorrelativo.ToString().Length) + nroCorrelativo.ToString();
+                int niz = ceros.Length - nroCorrelativo.ToString().Length;
+                resultado = string.Format("{0}{1}", Strings.Left(ceros, niz), nroCorrelativo.ToString());
             }
             return resultado;
         }
@@ -218,11 +255,23 @@ namespace Librería.Data
                     NombreTabla = item[3].ToString(),
                     Abreviatura = item[4].ToString(),
                     Serie = item[5].ToString(),
-                    NroCorrelativo = item[6].ToString(),
+                    NroCorrelativo = Convert.ToInt32(item[6].ToString()),
                     IdEstado = Convert.ToInt32(item[7].ToString())
                 });
             }
             return listaCorrelativo;
+        }
+
+        public void ActualizarCorrelativoArticulo(string NombreTabla, string Abreviatura)
+        {
+            Cnx = new SqlConnection(Cn);
+            Cmd = new SqlCommand("dbo.sp_Correlativo_ActualizarCorrelativoArticulo", Cnx);
+            Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
+            Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Cnx.Open();
+            Cmd.ExecuteNonQuery();
+            Cnx.Close();
         }
     }
 }

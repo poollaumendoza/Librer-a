@@ -13,7 +13,7 @@ namespace Librería.Escritorio
     {
         #region Variables
         public static bool Resultado = false;
-        public static int IdEmpresa = 1;
+        public static int IdEmpresa = 0;
         public static int IdArticulo = 0;
         public static int IdEntidad = 0;
         public static int IdUsuario = 0;

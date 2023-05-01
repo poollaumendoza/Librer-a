@@ -23,27 +23,25 @@ namespace Librería.Escritorio.UserControls.Empresa
         Negocios.Empresa nEmpresa = new Negocios.Empresa();
         public int Id = 0;
 
-        public pgEmpresa()
+        public pgEmpresa(int Id = 0)
         {
             InitializeComponent();
             CargarTipoDocumento();
             CargarEstado();
 
-            //this.Id = Id;
+            this.Id = Id;
 
-            //if (Id != 0)
-            //{
-            //    var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
-            //    cboProveedor.SelectedValue = compra.IdEntidad.ToString();
-            //    cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
-            //    txtNroDocumento.Text = compra.NroDocumento;
-            //    dtpFechaCompra.Text = compra.FechaCompra.ToShortDateString();
-            //    txtSubTotal.Text = compra.SubTotal.ToString();
-            //    txtImpuesto.Text = compra.Impuesto.ToString();
-            //    txtTotal.Text = compra.Total.ToString();
-
-            //    CargarCompraDetalle(Id);
-            //}
+            if (Id != 0)
+            {
+                var empresa = nEmpresa.ListaEmpresa(new Entidades.Empresa() { IdEmpresa = Id }).FirstOrDefault();
+                cboTipoDocumento.SelectedValue = empresa.IdTipoDocumento;
+                txtNroDocumento.Text = empresa.NroDocumento;
+                txtRazonSocial.Text = empresa.RazonSocial;
+                txtDireccion.Text = empresa.Direccion;
+                txtTelefono.Text = empresa.Telefono;
+                txtEmail.Text = empresa.Email;
+                cboEstado.SelectedValue = empresa.IdEstado;
+            }
         }
 
         void CargarTipoDocumento()
