@@ -153,10 +153,36 @@ namespace Librería.Data
                     });
                 }
             }
+            if(eArticulo.DescripcionArticulo != string.Empty)
+            {
+                Cmd = new SqlCommand("dbo.sp_Articulo_ObtenerArticuloPorDescripcion", new SqlConnection(Cn));
+                Cmd.Parameters.Clear();
+                Cmd.Parameters.AddWithValue("@Descripcion", eArticulo.DescripcionArticulo);
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Da = new SqlDataAdapter(Cmd);
+                Da.Fill(Dt);
 
+                var query = (from a in Dt.Rows.Cast<DataRow>()
+                             select a).ToList();
+
+                foreach (var item in query)
+                {
+                    listaArticulo.Add(new Entidades.Articulo()
+                    {
+                        IdArticulo = Convert.ToInt32(item[0].ToString()),
+                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
+                        IdEntidad = Convert.ToInt32(item[2].ToString()),
+                        CodigoArticulo = item[3].ToString(),
+                        DescripcionArticulo = item[4].ToString(),
+                        Cantidad = Convert.ToInt32(item[5].ToString()),
+                        PrecioCompra = Convert.ToDecimal(item[6].ToString()),
+                        PrecioVenta = Convert.ToDecimal(item[7].ToString()),
+                        IdEstado = Convert.ToInt32(item[8].ToString())
+                    });
+                }
+            }
 			
 			return listaArticulo;
 		}
 	}
 }
-

@@ -38,7 +38,7 @@
                     <Label Content="Ventas" VerticalContentAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button>
+            <Button Name="btnInventario" Click="BtnInventario_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Resources/note.png" Width="32"/>
                     <Label Content="Mi Inventario" VerticalContentAlignment="Center"/>

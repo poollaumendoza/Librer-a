@@ -51,6 +51,8 @@
     <Compile Include="Empresa.cs" />
     <Compile Include="Entidad.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="Movimiento.cs" />
+    <Compile Include="MovimientoDetalle.cs" />
     <Compile Include="Persona.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipoDocumento.cs" />

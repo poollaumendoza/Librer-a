@@ -12,13 +12,15 @@ namespace Librería.Escritorio.UserControls.Compras
     {
         #region Variables
         Window oWindow;
+        Entidades.Articulo eArticulo = new Entidades.Articulo();
         Entidades.Compra eCompra = new Entidades.Compra();
+        Negocios.Articulo nArticulo = new Negocios.Articulo();
         Negocios.Compra nCompra = new Negocios.Compra();
         Negocios.CompraDetalle nCompraDetalle = new Negocios.CompraDetalle();
         Negocios.Entidad nEntidad = new Negocios.Entidad();
+        Negocios.Movimiento nMovimiento = new Negocios.Movimiento();
+        Negocios.MovimientoDetalle nMovimientoDetalle = new Negocios.MovimientoDetalle();
         Negocios.TipoDocumento nTipoDocumento = new Negocios.TipoDocumento();
-        Negocios.Articulo nArticulo = new Negocios.Articulo();
-        Entidades.Articulo eArticulo = new Entidades.Articulo();
         public int Id = 0;
         #endregion
         #region Métodos
@@ -121,6 +123,16 @@ namespace Librería.Escritorio.UserControls.Compras
                     };
                     eCompra.IdCompra = nCompra.AgregarCompra(eCompra);
 
+                    Entidades.Movimiento eMovimiento = new Entidades.Movimiento()
+                    {
+                        IdEmpresa = App.IdEmpresa,
+                        IdTipoMovimiento = 1,
+                        IdUsuario = App.IdUsuario,
+                        FechaMovimiento = DateTime.Now,
+                        IdEstado = 1
+                    };
+                    eMovimiento.IdMovimiento = nMovimiento.AgregarMovimiento(eMovimiento);
+
                     foreach (var item in App.oCompra)
                     {
                         Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
@@ -133,6 +145,19 @@ namespace Librería.Escritorio.UserControls.Compras
                             IdEstado = 1
                         };
                         nCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
+
+                        var articulo = nArticulo.ListaArticulo(new Entidades.Articulo() { DescripcionArticulo = eCompraDetalle.Descripcion }).FirstOrDefault();
+
+                        Entidades.MovimientoDetalle eMovimientoDetalle = new Entidades.MovimientoDetalle()
+                        {
+                            IdMovimiento = eMovimiento.IdMovimiento,
+                            IdArticulo = articulo.IdArticulo,
+                            StockInicial = articulo.Cantidad,
+                            Ingreso = item.Cantidad,
+                            Salida = 0,
+                            IdEstado = 1
+                        };
+                        nMovimientoDetalle.AgregarMovimientoDetalle(eMovimientoDetalle);
                     }
 
                     mensaje = MessageBox.Show("Registro guardado", "Título");

@@ -126,6 +126,9 @@
     <Compile Include="Forms\Entidad\wndEntidad.xaml.cs">
       <DependentUpon>wndEntidad.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Inventario\wndMiInventario.xaml.cs">
+      <DependentUpon>wndMiInventario.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ventas\wndVenta.xaml.cs">
       <DependentUpon>wndVenta.xaml</DependentUpon>
     </Compile>
@@ -200,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forms\Entidad\wndEntidad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\Inventario\wndMiInventario.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

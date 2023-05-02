@@ -42,5 +42,11 @@ namespace Librería.Escritorio.Bienvenida
             oWindow = new Forms.Empresa.wndEmpresa();
             oWindow.Show();
         }
+
+        private void BtnInventario_Click(object sender, RoutedEventArgs e)
+        {
+            oWindow = new Forms.Inventario.wndMiInventario();
+            oWindow.Show();
+        }
     }
 }
