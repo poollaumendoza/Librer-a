@@ -1,25 +1,38 @@
 ﻿using MahApps.Metro.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Librería.Escritorio.Forms.Inventario
 {
     public partial class wndMiInventario : MetroWindow
     {
+        #region Variables
+        Negocios.MiInventario nInventario = new Negocios.MiInventario();
+        #endregion
+        #region Métodos
+        void CargarProductos(bool valor)
+        {
+            dgExistencias.ItemsSource = null;
+            dgExistencias.ItemsSource = nInventario.ListaProductos(valor);
+        }
+        #endregion
+
         public wndMiInventario()
         {
             InitializeComponent();
+            CargarProductos(Convert.ToBoolean(chkExistencia.IsChecked));
+        }
+
+        private void ChkExistencia_Checked(object sender, RoutedEventArgs e)
+        {
+            bool valor = Convert.ToBoolean(chkExistencia.IsChecked);
+            CargarProductos(valor);
+        }
+
+        private void ChkExistencia_Unchecked(object sender, RoutedEventArgs e)
+        {
+            bool valor = Convert.ToBoolean(chkExistencia.IsChecked);
+            CargarProductos(valor);
         }
     }
 }

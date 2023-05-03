@@ -80,6 +80,7 @@
     <Compile Include="Empresa.cs" />
     <Compile Include="Entidad.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="MiInventario.cs" />
     <Compile Include="Movimiento.cs" />
     <Compile Include="MovimientoDetalle.cs" />
     <Compile Include="Persona.cs" />

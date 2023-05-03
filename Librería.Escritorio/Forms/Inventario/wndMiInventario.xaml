@@ -10,28 +10,101 @@
                     <TabControl>
                         <TabItem Header="Compras">
                             <Grid>
-                                <Label Content="Selecciona Fecha:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                                <DatePicker HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                                <Button HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="auto" Height="auto">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Resources/search.png" Width="32"/>
-                                        <Label Content="Buscar" VerticalContentAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-                                <DataGrid Margin="123,10,10,10"/>
+                                <GroupBox Header="Seleccionar" HorizontalAlignment="Left" Margin="10,10,0,169" Width="137">
+                                    <Grid>
+                                        <Label Content="Fecha:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                                        <DatePicker HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                                        <Button HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="/Resources/search.png" Width="16"/>
+                                                <Label Content="Buscar" VerticalContentAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                    </Grid>
+                                </GroupBox>
+                                <DataGrid BorderThickness="1" Margin="152,10,10,0" Height="99" VerticalAlignment="Top"/>
+                                <DataGrid BorderThickness="1" Margin="152,114,10,10"/>
 
                             </Grid>
                         </TabItem>
                         <TabItem Header="Ventas">
 
                         </TabItem>
+                        <TabItem Header="Existencias">
+                            <Grid>
+                                <CheckBox Name="chkExistencia" Content="Mostrar todos los productos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ChkExistencia_Checked" Unchecked="ChkExistencia_Unchecked"/>
+                                <DataGrid Name="dgExistencias" Margin="0,40,0,0" BorderThickness="1" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Código" Binding="{Binding CodigoArticulo}" Width="auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Razon Social" Binding="{Binding RazonSocial}" Width="auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Descripción del Artículo" Binding="{Binding DescripcionArticulo}" Width="5*">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Inicial" Binding="{Binding Inicial}" Width="auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Ingreso" Binding="{Binding Ingreso}" Width="auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Salida" Binding="{Binding Salida}" Width="auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Existencia" Binding="{Binding Existencia}" Width="auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style>
+                                                    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
                     </TabControl>
                 </Grid>
             </TabItem>
             <TabItem Header="Movimiento de un Producto">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid>
+                    <TabControl>
+
+                    </TabControl>
+                </Grid>
             </TabItem>
         </TabControl>
-
     </Grid>
 </mah:MetroWindow>
