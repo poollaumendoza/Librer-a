@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.Controls;
+using Librería.Entidades;
 
 namespace Librería.Escritorio.UserControls.Compras
 {
@@ -12,6 +13,7 @@ namespace Librería.Escritorio.UserControls.Compras
     {
         #region Variables
         Window oWindow;
+        CompraDetalleCollection listaCompraDetalle = new CompraDetalleCollection();
         Entidades.Articulo eArticulo = new Entidades.Articulo();
         Entidades.Compra eCompra = new Entidades.Compra();
         Negocios.Articulo nArticulo = new Negocios.Articulo();
@@ -42,7 +44,7 @@ namespace Librería.Escritorio.UserControls.Compras
 
         void CargarArticuloAlaCompra()
         {
-            var subt = App.oCompra.Select(x => x.Importe).Sum();
+            var subt = listaCompraDetalle.Select(x => x.Importe).Sum();
             var imp = subt * 0.18M;
             var tot = subt + imp;
 
@@ -60,7 +62,7 @@ namespace Librería.Escritorio.UserControls.Compras
             }
 
             dg.ItemsSource = null;
-            dg.ItemsSource = App.oCompra;
+            dg.ItemsSource = listaCompraDetalle;
         }
 
         void CargarCompraDetalle(int IdCompra)
@@ -81,7 +83,8 @@ namespace Librería.Escritorio.UserControls.Compras
 
             if (Id != 0)
             {
-                var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
+                App.IdCompra = Id;
+                var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = App.IdCompra }).FirstOrDefault();
                 cboProveedor.SelectedValue = compra.IdEntidad.ToString();
                 cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
                 txtNroDocumento.Text = compra.NroDocumento;
@@ -90,7 +93,7 @@ namespace Librería.Escritorio.UserControls.Compras
                 txtImpuesto.Text = compra.Impuesto.ToString();
                 txtTotal.Text = compra.Total.ToString();
 
-                CargarCompraDetalle(Id);
+                CargarCompraDetalle(App.IdCompra);
             }
         }
 
@@ -107,66 +110,80 @@ namespace Librería.Escritorio.UserControls.Compras
                 case MessageBoxResult.Cancel:
                     return;
                 case MessageBoxResult.Yes:
-                    Entidades.Compra eCompra = new Entidades.Compra()
+                    if(Id != 0)
                     {
-                        IdEmpresa = App.IdEmpresa,
-                        IdEntidad = Convert.ToInt32(cboProveedor.SelectedValue),
-                        IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue),
-                        IdUsuario = App.IdUsuario,
-                        NroDocumento = txtNroDocumento.Text,
-                        FechaCompra = Convert.ToDateTime(dtpFechaCompra.Text),
-                        FechaRegistro = DateTime.Now,
-                        SubTotal = Convert.ToDecimal(txtSubTotal.Text),
-                        Impuesto = Convert.ToDecimal(txtImpuesto.Text),
-                        Total = Convert.ToDecimal(txtTotal.Text),
-                        IdEstado = 1
-                    };
-                    eCompra.IdCompra = nCompra.AgregarCompra(eCompra);
-
-                    Entidades.Movimiento eMovimiento = new Entidades.Movimiento()
-                    {
-                        IdEmpresa = App.IdEmpresa,
-                        IdTipoMovimiento = 1,
-                        IdUsuario = App.IdUsuario,
-                        FechaMovimiento = DateTime.Now,
-                        IdEstado = 1
-                    };
-                    eMovimiento.IdMovimiento = nMovimiento.AgregarMovimiento(eMovimiento);
-
-                    foreach (var item in App.oCompra)
-                    {
-                        Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
-                        {
-                            IdCompra = eCompra.IdCompra,
-                            Cantidad = item.Cantidad,
-                            Descripcion = item.Descripcion,
-                            Precio = item.Precio,
-                            Importe = item.Importe,
-                            IdEstado = 1
-                        };
-                        nCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
-
-                        var articulo = nArticulo.ListaArticulo(new Entidades.Articulo() { DescripcionArticulo = eCompraDetalle.Descripcion }).FirstOrDefault();
-
-                        Entidades.MovimientoDetalle eMovimientoDetalle = new Entidades.MovimientoDetalle()
-                        {
-                            IdMovimiento = eMovimiento.IdMovimiento,
-                            IdArticulo = articulo.IdArticulo,
-                            StockInicial = articulo.Cantidad,
-                            Ingreso = item.Cantidad,
-                            Salida = 0,
-                            IdEstado = 1
-                        };
-                        nMovimientoDetalle.AgregarMovimientoDetalle(eMovimientoDetalle);
+                        var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
+                        cboProveedor.SelectedValue = compra.IdEntidad.ToString();
+                        cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
+                        txtNroDocumento.Text = compra.NroDocumento;
+                        dtpFechaCompra.Text = compra.FechaCompra.ToShortDateString();
+                        txtSubTotal.Text = compra.SubTotal.ToString();
+                        txtImpuesto.Text = compra.Impuesto.ToString();
+                        txtTotal.Text = compra.Total.ToString();
                     }
+                    else
+                    {
+                        Entidades.Compra eCompra = new Entidades.Compra()
+                        {
+                            IdEmpresa = App.IdEmpresa,
+                            IdEntidad = Convert.ToInt32(cboProveedor.SelectedValue),
+                            IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue),
+                            IdUsuario = App.IdUsuario,
+                            NroDocumento = txtNroDocumento.Text,
+                            FechaCompra = Convert.ToDateTime(dtpFechaCompra.Text),
+                            FechaRegistro = DateTime.Now,
+                            SubTotal = Convert.ToDecimal(txtSubTotal.Text),
+                            Impuesto = Convert.ToDecimal(txtImpuesto.Text),
+                            Total = Convert.ToDecimal(txtTotal.Text),
+                            IdEstado = 1
+                        };
+                        eCompra.IdCompra = nCompra.AgregarCompra(eCompra);
 
-                    mensaje = MessageBox.Show("Registro guardado", "Título");
+                        Entidades.Movimiento eMovimiento = new Entidades.Movimiento()
+                        {
+                            IdEmpresa = App.IdEmpresa,
+                            IdTipoMovimiento = 1,
+                            IdUsuario = App.IdUsuario,
+                            FechaMovimiento = DateTime.Now,
+                            IdEstado = 1
+                        };
+                        eMovimiento.IdMovimiento = nMovimiento.AgregarMovimiento(eMovimiento);
 
-                    App.oCompra.Clear();
-                    wndCompra.StaticMainFrame.Content = new pgListaCompra();
+                        foreach (var item in listaCompraDetalle)
+                        {
+                            Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
+                            {
+                                IdCompra = eCompra.IdCompra,
+                                Cantidad = item.Cantidad,
+                                Descripcion = item.Descripcion,
+                                Precio = item.Precio,
+                                Importe = item.Importe,
+                                IdEstado = 1
+                            };
+                            nCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
+
+                            var articulo = nArticulo.ListaArticulo(new Entidades.Articulo() { DescripcionArticulo = eCompraDetalle.Descripcion }).FirstOrDefault();
+
+                            Entidades.MovimientoDetalle eMovimientoDetalle = new Entidades.MovimientoDetalle()
+                            {
+                                IdMovimiento = eMovimiento.IdMovimiento,
+                                IdArticulo = articulo.IdArticulo,
+                                StockInicial = articulo.Cantidad,
+                                Ingreso = item.Cantidad,
+                                Salida = 0,
+                                IdEstado = 1
+                            };
+                            nMovimientoDetalle.AgregarMovimientoDetalle(eMovimientoDetalle);
+                        }
+
+                        mensaje = MessageBox.Show("Registro guardado", "Título");
+
+                        listaCompraDetalle.Clear();
+                        wndCompra.StaticMainFrame.Content = new pgListaCompra();
+                    }
                     break;
                 case MessageBoxResult.No:
-                    App.oCompra.Clear();
+                    listaCompraDetalle.Clear();
                     wndCompra.StaticMainFrame.Content = new pgListaCompra();
                     break;
                 default:
@@ -176,7 +193,7 @@ namespace Librería.Escritorio.UserControls.Compras
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)
         {
-            App.oCompra.Clear();
+            listaCompraDetalle.Clear();
             wndCompra.StaticMainFrame.Content = new pgListaCompra();
         }
 
@@ -219,7 +236,7 @@ namespace Librería.Escritorio.UserControls.Compras
                         dg.ItemsSource = nCompraDetalle.ListaCompraDetalle("IdCompra", Id.ToString());
                         break;
                     case MessageBoxResult.No:
-                        App.oCompra.Clear();
+                        App.oListaCompraDetalle.Clear();
                         wndCompra.StaticMainFrame.Content = new pgListaCompra();
                         break;
                     default:

@@ -1,7 +1,9 @@
-﻿using MahApps.Metro.Controls;
+﻿using Librería.Entidades;
+using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,6 +13,7 @@ namespace Librería.Escritorio.UserControls.Compras
     {
         Negocios.Articulo nArticulo = new Negocios.Articulo();
         Entidades.Articulo eArticulo;
+        CompraDetalleCollection listaCompraDetalle = new CompraDetalleCollection();
         Window oWindow;
 
         public wndSeleccionarArticulo(int IdEntidad = 0)
@@ -71,12 +74,16 @@ namespace Librería.Escritorio.UserControls.Compras
                     NegativeButtonText = "No"
                 });
 
-            App.oCompra.Add(new App.CompraTemporal()
+            int requerido = (Convert.ToInt32(message));
+
+            var compra = nArticulo.ListaArticulo(new Entidades.Articulo() { DescripcionArticulo = ((Entidades.Articulo)fila).DescripcionArticulo }).FirstOrDefault();
+            listaCompraDetalle.Add(new Entidades.CompraDetalle()
             {
-                Cantidad = Convert.ToInt32(message),
-                Descripcion = ((Entidades.Articulo)fila).DescripcionArticulo,
-                Precio = ((Entidades.Articulo)fila).PrecioCompra,
-                Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioCompra)
+                IdCompra = App.IdCompra,
+                Cantidad = requerido,
+                Descripcion = compra.DescripcionArticulo,
+                Precio = compra.PrecioCompra,
+                Importe = requerido * compra.PrecioCompra
             });
             App.Resultado = true;
             this.Close();

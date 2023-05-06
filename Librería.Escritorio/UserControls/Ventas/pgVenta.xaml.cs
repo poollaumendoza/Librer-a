@@ -137,7 +137,7 @@ namespace Librería.Escritorio.UserControls.Ventas
                     }
                     break;
                 case MessageBoxResult.No:
-                    App.oCompra.Clear();
+                    App.oListaCompraDetalle.Clear();
                     wndVenta.StaticMainFrame.Content = new pgListaVenta();
                     break;
                 default:
@@ -147,7 +147,7 @@ namespace Librería.Escritorio.UserControls.Ventas
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)
         {
-            App.oCompra.Clear();
+            App.oListaCompraDetalle.Clear();
             wndVenta.StaticMainFrame.Content = new pgListaVenta();
         }
 

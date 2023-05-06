@@ -1,18 +1,8 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Librería.Escritorio.UserControls.Ventas
 {
@@ -20,6 +10,7 @@ namespace Librería.Escritorio.UserControls.Ventas
     {
         MetroWindow oWindow;
         Negocios.Articulo nArticulo = new Negocios.Articulo();
+        Negocios.MiInventario nInventario = new Negocios.MiInventario();
 
         public wndSeleccionarArticulo()
         {
@@ -45,6 +36,8 @@ namespace Librería.Escritorio.UserControls.Ventas
 
         private async void Dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+
+
             object fila = dg.SelectedItem;
 
             var message =
@@ -57,15 +50,29 @@ namespace Librería.Escritorio.UserControls.Ventas
                     NegativeButtonText = "No"
                 });
 
-            App.oVenta.Add(new App.VentaTemporal()
+            int IdArticulo = ((Entidades.Articulo)fila).IdArticulo;
+            int requerido = Convert.ToInt32(message);
+            int stock = nInventario.ObtenerExistenciaPorIdArticulo(IdArticulo);
+
+            if (requerido > stock)
             {
-                Cantidad = Convert.ToInt32(message),
-                Descripcion = ((Entidades.Articulo)fila).DescripcionArticulo,
-                Precio = ((Entidades.Articulo)fila).PrecioVenta,
-                Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioVenta)
-            });
-            App.Resultado = true;
-            this.Close();
+                App.oVenta.Add(new App.VentaTemporal()
+                {
+                    Cantidad = Convert.ToInt32(message),
+                    Descripcion = ((Entidades.Articulo)fila).DescripcionArticulo,
+                    Precio = ((Entidades.Articulo)fila).PrecioVenta,
+                    Importe = (Convert.ToInt32(message) * ((Entidades.Articulo)fila).PrecioVenta)
+                });
+                App.Resultado = true;
+                this.Close();
+            }
+            else
+            {
+                message = await this.ShowInputAsync(
+                "Título",
+                "No se puede vender más de lo que tienes en el stock. ¿Corregir?",
+                new MetroDialogSettings() { DefaultText = "Ok" });
+            }
         }
     }
 }

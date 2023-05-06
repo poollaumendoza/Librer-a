@@ -15,12 +15,16 @@ namespace Librería.Escritorio
         public static bool Resultado = false;
         public static int IdEmpresa = 0;
         public static int IdArticulo = 0;
+        public static int IdCompra = 0;
         public static int IdEntidad = 0;
         public static int IdUsuario = 0;
         public static string NombreTabla = string.Empty;
 
         public static ObservableCollection<CompraTemporal> oCompra = new ObservableCollection<CompraTemporal>();
         public static ObservableCollection<VentaTemporal> oVenta = new ObservableCollection<VentaTemporal>();
+        public static ObservableCollection<Entidades.CompraDetalle> oListaCompraDetalle = new ObservableCollection<Entidades.CompraDetalle>();
+        public static ObservableCollection<Entidades.VentaDetalle> oListaVentaDetalle = new ObservableCollection<Entidades.VentaDetalle>();
+
         #endregion
 
         #region Clases

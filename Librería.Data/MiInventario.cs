@@ -13,7 +13,6 @@ namespace Librería.Data
     {
         Entidades.Compra eCompra = new Entidades.Compra();
         string Cn = Settings.Default.CadenaConexion;
-        SqlConnection Cnx = null;
         SqlCommand Cmd = null;
         SqlDataAdapter Da = null;
         DataTable Dt = new DataTable();
@@ -49,6 +48,28 @@ namespace Librería.Data
             }
 
             return oLista;
+        }
+
+        public int ObtenerExistenciaPorIdArticulo(int IdArticulo)
+        {
+            int existencia = 0;
+
+            Cmd = new SqlCommand("dbo.sp_MiInventario_ObtenerExistenciaPorIdArticulo", new SqlConnection(Cn));
+            Cmd.Parameters.AddWithValue("@IdArticulo", IdArticulo);
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Da = new SqlDataAdapter(Cmd);
+            Da.Fill(Dt);
+
+            var query = (from a in Dt.Rows.Cast<DataRow>()
+                         select new
+                         {
+                             Existencia = Convert.ToInt32(a[0].ToString())
+                         }).FirstOrDefault();
+
+            if (query != null)
+                existencia = query.Existencia;
+
+            return existencia;
         }
     }
 }

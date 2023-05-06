@@ -14,5 +14,10 @@ namespace Librería.Negocios
         {
             return dMiInventario.ListaProductos(existencia);
         }
+
+        public int ObtenerExistenciaPorIdArticulo(int IdArticulo)
+        {
+            return dMiInventario.ObtenerExistenciaPorIdArticulo(IdArticulo);
+        }
     }
 }
