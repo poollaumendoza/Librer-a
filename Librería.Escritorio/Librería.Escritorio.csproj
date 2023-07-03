@@ -66,6 +66,12 @@
     <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.2.4.9\lib\net47\MahApps.Metro.dll</HintPath>
     </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.Material, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Material.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
@@ -108,73 +114,17 @@
     <Compile Include="Bienvenida\wndLogin.xaml.cs">
       <DependentUpon>wndLogin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Bienvenida\wndMain.xaml.cs">
+      <DependentUpon>wndMain.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Bienvenida\wndPrincipal.xaml.cs">
       <DependentUpon>wndPrincipal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Almacen\wndAlmacen.xaml.cs">
-      <DependentUpon>wndAlmacen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Articulo\wndArticulo.xaml.cs">
-      <DependentUpon>wndArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Compras\wndCompra.xaml.cs">
-      <DependentUpon>wndCompra.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Empresa\wndEmpresa.xaml.cs">
-      <DependentUpon>wndEmpresa.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Entidad\wndEntidad.xaml.cs">
-      <DependentUpon>wndEntidad.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Inventario\wndMiInventario.xaml.cs">
-      <DependentUpon>wndMiInventario.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Ventas\wndVenta.xaml.cs">
-      <DependentUpon>wndVenta.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Almacen\pgAlmacen.xaml.cs">
-      <DependentUpon>pgAlmacen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Almacen\pgListaAlmacen.xaml.cs">
-      <DependentUpon>pgListaAlmacen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Articulo\pgArticulo.xaml.cs">
-      <DependentUpon>pgArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Articulo\pgListaArticulo.xaml.cs">
-      <DependentUpon>pgListaArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Compras\pgCompra.xaml.cs">
-      <DependentUpon>pgCompra.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Compras\pgListaCompra.xaml.cs">
-      <DependentUpon>pgListaCompra.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Compras\wndSeleccionarArticulo.xaml.cs">
-      <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Empresa\pgEmpresa.xaml.cs">
-      <DependentUpon>pgEmpresa.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Empresa\pgListaEmpresas.xaml.cs">
-      <DependentUpon>pgListaEmpresas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Entidad\pgEntidad.xaml.cs">
-      <DependentUpon>pgEntidad.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Entidad\pgListaEntidad.xaml.cs">
-      <DependentUpon>pgListaEntidad.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Ventas\pgListaVenta.xaml.cs">
-      <DependentUpon>pgListaVenta.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Ventas\pgVenta.xaml.cs">
-      <DependentUpon>pgVenta.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Ventas\wndSeleccionarArticulo.xaml.cs">
-      <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
-    </Compile>
     <Page Include="Bienvenida\wndLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Bienvenida\wndMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -182,94 +132,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\Almacen\wndAlmacen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Forms\Articulo\wndArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Compras\wndCompra.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Empresa\wndEmpresa.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Entidad\wndEntidad.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Inventario\wndMiInventario.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Ventas\wndVenta.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Almacen\pgAlmacen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Almacen\pgListaAlmacen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Articulo\pgArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Articulo\pgListaArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Compras\pgCompra.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Compras\pgListaCompra.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Compras\wndSeleccionarArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Empresa\pgEmpresa.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Empresa\pgListaEmpresas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Entidad\pgEntidad.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Entidad\pgListaEntidad.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Ventas\pgListaVenta.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Ventas\pgVenta.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Ventas\wndSeleccionarArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -496,6 +362,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\male_female_users_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Forms\" />
+    <Folder Include="UserControls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,11 +1,9 @@
 ﻿using Librería.Escritorio.Forms.Compras;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using MahApps.Metro.Controls;
-using Librería.Entidades;
 
 namespace Librería.Escritorio.UserControls.Compras
 {
@@ -13,7 +11,7 @@ namespace Librería.Escritorio.UserControls.Compras
     {
         #region Variables
         Window oWindow;
-        CompraDetalleCollection listaCompraDetalle = new CompraDetalleCollection();
+        public static ObservableCollection<Entidades.CompraDetalle> listaCompraDetalle = new ObservableCollection<Entidades.CompraDetalle>();
         Entidades.Articulo eArticulo = new Entidades.Articulo();
         Entidades.Compra eCompra = new Entidades.Compra();
         Negocios.Articulo nArticulo = new Negocios.Articulo();
@@ -54,7 +52,7 @@ namespace Librería.Escritorio.UserControls.Compras
                 txtImpuesto.Text = imp.ToString("#,###.##");
                 txtTotal.Text = tot.ToString("#,###.##");
             }
-            if(cboTipoDocumento.Text == "BOLETA")
+            if (cboTipoDocumento.Text == "BOLETA")
             {
                 txtSubTotal.Text = subt.ToString("#,###.##");
                 txtImpuesto.Text = "0.00";
@@ -67,8 +65,25 @@ namespace Librería.Escritorio.UserControls.Compras
 
         void CargarCompraDetalle(int IdCompra)
         {
+            var cmpdt = (from cd in nCompraDetalle.ListaCompraDetalle(new Entidades.CompraDetalle() { IdCompra = IdCompra })
+                         select cd).ToList();
+
+            foreach (var item in cmpdt)
+            {
+                listaCompraDetalle.Add(new Entidades.CompraDetalle()
+                {
+                    IdCompraDetalle = item.IdCompraDetalle,
+                    IdCompra = item.IdCompra,
+                    Cantidad = item.Cantidad,
+                    Descripcion = item.Descripcion,
+                    Precio = item.Precio,
+                    Importe = item.Importe,
+                    IdEstado = item.IdEstado
+                });
+            }
+
             dg.ItemsSource = null;
-            dg.ItemsSource = nCompraDetalle.ListaCompraDetalle(new Entidades.CompraDetalle() { IdCompra = IdCompra });
+            dg.ItemsSource = listaCompraDetalle;
         }
         #endregion
 
@@ -110,16 +125,57 @@ namespace Librería.Escritorio.UserControls.Compras
                 case MessageBoxResult.Cancel:
                     return;
                 case MessageBoxResult.Yes:
-                    if(Id != 0)
+                    if (Id != 0)
                     {
                         var compra = nCompra.ListaCompra(new Entidades.Compra() { IdCompra = Id }).FirstOrDefault();
-                        cboProveedor.SelectedValue = compra.IdEntidad.ToString();
-                        cboTipoDocumento.SelectedValue = compra.IdTipoDocumento;
-                        txtNroDocumento.Text = compra.NroDocumento;
-                        dtpFechaCompra.Text = compra.FechaCompra.ToShortDateString();
-                        txtSubTotal.Text = compra.SubTotal.ToString();
-                        txtImpuesto.Text = compra.Impuesto.ToString();
-                        txtTotal.Text = compra.Total.ToString();
+                        compra.IdEntidad = Convert.ToInt32(cboProveedor.SelectedValue);
+                        compra.IdTipoDocumento = Convert.ToInt32(cboTipoDocumento.SelectedValue);
+                        compra.NroDocumento = txtNroDocumento.Text;
+                        compra.FechaCompra = Convert.ToDateTime(dtpFechaCompra.Text);
+                        compra.SubTotal = Convert.ToDecimal(txtSubTotal.Text);
+                        compra.Impuesto = Convert.ToDecimal(txtImpuesto.Text);
+                        compra.Total = Convert.ToDecimal(txtTotal.Text);
+                        nCompra.EditarCompra(compra);
+
+                        Entidades.Movimiento eMovimiento = new Entidades.Movimiento()
+                        {
+                            IdEmpresa = App.IdEmpresa,
+                            IdTipoMovimiento = 1,
+                            IdUsuario = App.IdUsuario,
+                            FechaMovimiento = DateTime.Now,
+                            NroDocumento = compra.NroDocumento,
+                            IdEstado = 1
+                        };
+                        eMovimiento.IdMovimiento = nMovimiento.AgregarMovimiento(eMovimiento);
+
+                        var md = listaCompraDetalle.Where(x => x.IdCompraDetalle == 0).ToList();
+
+                        foreach (var item in md)
+                        {
+                            Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle()
+                            {
+                                IdCompra = App.IdCompra,
+                                Cantidad = item.Cantidad,
+                                Descripcion = item.Descripcion,
+                                Precio = item.Precio,
+                                Importe = item.Importe,
+                                IdEstado = 1
+                            };
+                            nCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
+
+                            var articulo = nArticulo.ListaArticulo(new Entidades.Articulo() { DescripcionArticulo = eCompraDetalle.Descripcion }).FirstOrDefault();
+
+                            Entidades.MovimientoDetalle eMovimientoDetalle = new Entidades.MovimientoDetalle()
+                            {
+                                IdMovimiento = eMovimiento.IdMovimiento,
+                                IdArticulo = articulo.IdArticulo,
+                                StockInicial = articulo.Cantidad,
+                                Ingreso = item.Cantidad,
+                                Salida = 0,
+                                IdEstado = 1
+                            };
+                            nMovimientoDetalle.AgregarMovimientoDetalle(eMovimientoDetalle);
+                        }
                     }
                     else
                     {
@@ -145,6 +201,7 @@ namespace Librería.Escritorio.UserControls.Compras
                             IdTipoMovimiento = 1,
                             IdUsuario = App.IdUsuario,
                             FechaMovimiento = DateTime.Now,
+                            NroDocumento = eCompra.NroDocumento,
                             IdEstado = 1
                         };
                         eMovimiento.IdMovimiento = nMovimiento.AgregarMovimiento(eMovimiento);
@@ -175,12 +232,10 @@ namespace Librería.Escritorio.UserControls.Compras
                             };
                             nMovimientoDetalle.AgregarMovimientoDetalle(eMovimientoDetalle);
                         }
-
-                        mensaje = MessageBox.Show("Registro guardado", "Título");
-
-                        listaCompraDetalle.Clear();
-                        wndCompra.StaticMainFrame.Content = new pgListaCompra();
                     }
+                    mensaje = MessageBox.Show("Registro guardado", "Título");
+                    listaCompraDetalle.Clear();
+                    wndCompra.StaticMainFrame.Content = new pgListaCompra();
                     break;
                 case MessageBoxResult.No:
                     listaCompraDetalle.Clear();

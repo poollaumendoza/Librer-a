@@ -1,108 +1,148 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using Librería.Entidades;
-using Librería.Data.Properties;
 
 namespace Librería.Data
 {
-	public class Usuario
-	{
-		Entidades.Usuario eUsuario = new Entidades.Usuario();
-		UsuarioCollection listaUsuario = new UsuarioCollection();
-		string Cn = Settings.Default.CadenaConexion;
-		SqlConnection Cnx = null;
-		SqlCommand Cmd = null;
-		SqlDataAdapter Da = null;
-		DataTable Dt = new DataTable();
+    public class Usuario
+    {
+        public List<Entidades.Usuario> Listar()
+        {
+            List<Entidades.Usuario> lista = new List<Entidades.Usuario>();
 
-		public void AgregarUsuario(Entidades.Usuario eUsuario)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Usuario_AgregarUsuario", Cnx);
-			Cmd.CommandType = CommandType.StoredProcedure;
-			Cmd.Parameters.AddWithValue("@IdUsuario", eUsuario.IdUsuario);
-			Cmd.Parameters.AddWithValue("@IdPersona", eUsuario.IdPersona);
-			Cmd.Parameters.AddWithValue("@NombreUsuario", eUsuario.NombreUsuario);
-			Cmd.Parameters.AddWithValue("@Contraseña", eUsuario.Contraseña);
-			Cmd.Parameters.AddWithValue("@IdEstado", eUsuario.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EliminarUsuario(Entidades.Usuario eUsuario)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Usuario_EliminarUsuario", Cnx);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EditarUsuario(Entidades.Usuario eUsuario)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Usuario_ActualizarUsuario", Cnx);
-			Cmd.Parameters.AddWithValue("@IdUsuario", eUsuario.IdUsuario);
-			Cmd.Parameters.AddWithValue("@IdPersona", eUsuario.IdPersona);
-			Cmd.Parameters.AddWithValue("@NombreUsuario", eUsuario.NombreUsuario);
-			Cmd.Parameters.AddWithValue("@Contraseña", eUsuario.Contraseña);
-			Cmd.Parameters.AddWithValue("@IdEstado", eUsuario.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public ObservableCollection<Entidades.Usuario> ListaUsuario()
-		{
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaUsuario.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Usuario_ObtenerUsuario", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaUsuario.Add(new Entidades.Usuario()
-				{
-					IdUsuario = Convert.ToInt32(item[0].ToString()),
-					IdPersona = Convert.ToInt32(item[1].ToString()),
-					NombreUsuario = item[2].ToString(),
-					Contraseña = item[3].ToString(),
-					IdEstado = Convert.ToInt32(item[4].ToString())
-				});
-			}
-			return listaUsuario;
-		}
-		public ObservableCollection<Entidades.Usuario> ListaUsuario(Entidades.Usuario eUsuario)
-		{
-			listaUsuario.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Usuario_ObtenerPorIdUsuario", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaUsuario.Add(new Entidades.Usuario()
-				{
-					IdUsuario = Convert.ToInt32(item[0].ToString()),
-					IdPersona = Convert.ToInt32(item[1].ToString()),
-					NombreUsuario = item[2].ToString(),
-					Contraseña = item[3].ToString(),
-					IdEstado = Convert.ToInt32(item[4].ToString())
-				});
-			}
-			return listaUsuario;
-		}
-	}
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    string query =
+                        "Select u.IdUsuario, u.IdPersona, CONCAT(p.ApellidoPaterno, ' ', p.ApellidoMaterno, ', ', p.PrimerNombre, ' ', p.SegundoNombre)[NombreCompleto], u.NombreUsuario, u.Contraseña, u.IdEstado, e.NombreEstado from Usuario u join Persona p on u.IdPersona = p.IdPersona join Estado e on u.IdEstado = e.IdEstado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
+
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
+                    {
+                        while (Dr.Read())
+                        {
+                            lista.Add(new Entidades.Usuario()
+                            {
+                                IdUsuario = Convert.ToInt32(Dr["IdUsuario"]),
+                                oPersona = new Entidades.Persona()
+                                {
+                                    IdPersona = Convert.ToInt32(Dr["IdPersona"]),
+                                    NombreCompleto = Dr["NombreCompleto"].ToString()
+                                },
+                                NombreUsuario = Dr["NombreUsuario"].ToString(),
+                                Contraseña = _Util.Decrypt(Dr["Contraseña"].ToString(), false),
+                                oEstado = new Entidades.Estado()
+                                {
+                                    IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                    NombreEstado = Dr["NombreEstado"].ToString()
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                lista = new List<Entidades.Usuario>();
+            }
+
+            return lista;
+        }
+
+        public int Registrar(Entidades.Usuario obj, out string Mensaje)
+        {
+            int IdAutogenerado = 0;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Usuario_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdPersona", obj.oPersona.IdPersona);
+                    Cmd.Parameters.AddWithValue("NombreUsuario", obj.NombreUsuario);
+                    Cmd.Parameters.AddWithValue("Contraseña", _Util.Encrypt(obj.Contraseña, false));
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Usuario obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Usuario_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdUsuario", obj.IdUsuario);
+                    Cmd.Parameters.AddWithValue("IdPersona", obj.oPersona.IdPersona);
+                    Cmd.Parameters.AddWithValue("NombreUsuario", obj.NombreUsuario);
+                    Cmd.Parameters.AddWithValue("Contraseña", _Util.Encrypt(obj.Contraseña, false));
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Usuario_Eliminar", Cnx);
+                    Cmd.Parameters.AddWithValue("@IdUsuario", id);
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+    }
 }
-

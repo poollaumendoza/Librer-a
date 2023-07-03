@@ -7,114 +7,156 @@ using System.IO;
 using System.Linq;
 using Librería.Entidades;
 using Librería.Data.Properties;
+using System.Configuration;
 
 namespace Librería.Data
 {
 	public class Empresa
 	{
-		Entidades.Empresa eEmpresa = new Entidades.Empresa();
-		EmpresaCollection listaEmpresa = new EmpresaCollection();
-		string Cn = Settings.Default.CadenaConexion;
-		SqlConnection Cnx = null;
-		SqlCommand Cmd = null;
-		SqlDataAdapter Da = null;
-		DataTable Dt = new DataTable();
+        public List<Entidades.Empresa> Listar()
+        {
+            List<Entidades.Empresa> lista = new List<Entidades.Empresa>();
 
-		public void AgregarEmpresa(Entidades.Empresa eEmpresa)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Empresa_AgregarEmpresa", Cnx);
-			Cmd.CommandType = CommandType.StoredProcedure;
-			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eEmpresa.IdTipoDocumento);
-			Cmd.Parameters.AddWithValue("@NroDocumento", eEmpresa.NroDocumento);
-			Cmd.Parameters.AddWithValue("@RazonSocial", eEmpresa.RazonSocial);
-			Cmd.Parameters.AddWithValue("@Direccion", eEmpresa.Direccion);
-			Cmd.Parameters.AddWithValue("@Telefono", eEmpresa.Telefono);
-			Cmd.Parameters.AddWithValue("@Email", eEmpresa.Email);
-			Cmd.Parameters.AddWithValue("@IdEstado", eEmpresa.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EliminarEmpresa(Entidades.Empresa eEmpresa)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Empresa_EliminarEmpresa", Cnx);
-			Cmd.Parameters.AddWithValue("@IdEmpresa", eEmpresa.IdEmpresa);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EditarEmpresa(Entidades.Empresa eEmpresa)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Empresa_ActualizarEmpresa", Cnx);
-			Cmd.Parameters.AddWithValue("@IdEmpresa", eEmpresa.IdEmpresa);
-			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eEmpresa.IdTipoDocumento);
-			Cmd.Parameters.AddWithValue("@NroDocumento", eEmpresa.NroDocumento);
-			Cmd.Parameters.AddWithValue("@RazonSocial", eEmpresa.RazonSocial);
-			Cmd.Parameters.AddWithValue("@Direccion", eEmpresa.Direccion);
-			Cmd.Parameters.AddWithValue("@Telefono", eEmpresa.Telefono);
-			Cmd.Parameters.AddWithValue("@Email", eEmpresa.Email);
-			Cmd.Parameters.AddWithValue("@IdEstado", eEmpresa.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public ObservableCollection<Entidades.Empresa> ListaEmpresa()
-		{
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaEmpresa.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Empresa_ObtenerEmpresa", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaEmpresa.Add(new Entidades.Empresa()
-				{
-					IdEmpresa = Convert.ToInt32(item[0].ToString()),
-					IdTipoDocumento = Convert.ToInt32(item[1].ToString()),
-					NroDocumento = item[2].ToString(),
-					RazonSocial = item[3].ToString(),
-					Direccion = item[4].ToString(),
-					Telefono = item[5].ToString(),
-					Email = item[6].ToString(),
-					IdEstado = Convert.ToInt32(item[7].ToString())
-				});
-			}
-			return listaEmpresa;
-		}
-		public ObservableCollection<Entidades.Empresa> ListaEmpresa(Entidades.Empresa eEmpresa)
-		{
-			listaEmpresa.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Empresa_ObtenerPorIdEmpresa", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaEmpresa.Add(new Entidades.Empresa()
-				{
-					IdEmpresa = Convert.ToInt32(item[0].ToString()),
-					IdTipoDocumento = Convert.ToInt32(item[1].ToString()),
-					NroDocumento = item[2].ToString(),
-					RazonSocial = item[3].ToString(),
-					Direccion = item[4].ToString(),
-					Telefono = item[5].ToString(),
-					Email = item[6].ToString(),
-					IdEstado = Convert.ToInt32(item[7].ToString())
-				});
-			}
-			return listaEmpresa;
-		}
-	}
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    string query =
+                        "Select em.IdEmpresa, em.IdTipoDocumento, td.NombreTipoDocumento, em.NroDocumento, em.RazonSocial, em.Direccion, em.Telefono, em.Email, em.IdEstado, es.NombreEstado from Empresa em join TipoDocumento td on em.IdTipoDocumento = td.IdTipoDocumento join Estado es on em.IdEstado = es.IdEstado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
+
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
+                    {
+                        while (Dr.Read())
+                        {
+                            lista.Add(new Entidades.Empresa()
+                            {
+                                IdEmpresa = Convert.ToInt32(Dr["IdEmpresa"]),
+                                oTipoDocumento = new Entidades.TipoDocumento()
+                                {
+                                    IdTipoDocumento = Convert.ToInt32(Dr["IdTipoDocumento"]),
+                                    NombreTipoDocumento = Dr["NombreTipoDocumento"].ToString()
+                                },
+                                NroDocumento = Dr["NroDocumento"].ToString(),
+                                RazonSocial = Dr["RazonSocial"].ToString(),
+                                Direccion = Dr["Direccion"].ToString(),
+                                Telefono = Dr["Telefono"].ToString(),
+                                Email = Dr["Email"].ToString(),
+                                oEstado = new Entidades.Estado()
+                                {
+                                    IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                    NombreEstado = Dr["NombreEstado"].ToString()
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                lista = new List<Entidades.Empresa>();
+            }
+
+            return lista;
+        }
+
+        public int Registrar(Entidades.Empresa obj, out string Mensaje)
+        {
+            int IdAutogenerado = 0;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Empresa_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("NroDocumento", obj.NroDocumento);
+                    Cmd.Parameters.AddWithValue("RazonSocial", obj.RazonSocial);
+                    Cmd.Parameters.AddWithValue("Direccion", obj.Direccion);
+                    Cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
+                    Cmd.Parameters.AddWithValue("Email", obj.Email);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Empresa obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Empresa_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("NroDocumento", obj.NroDocumento);
+                    Cmd.Parameters.AddWithValue("RazonSocial", obj.RazonSocial);
+                    Cmd.Parameters.AddWithValue("Direccion", obj.Direccion);
+                    Cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
+                    Cmd.Parameters.AddWithValue("Email", obj.Email);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Empresa_Eliminar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", id);
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+    }
 }
-

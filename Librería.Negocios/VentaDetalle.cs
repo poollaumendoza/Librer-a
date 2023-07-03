@@ -13,33 +13,62 @@ namespace Librería.Negocios
 {
 	public class VentaDetalle
 	{
-		Entidades.VentaDetalle eVentaDetalle = new Entidades.VentaDetalle();
-		Data.VentaDetalle dVentaDetalle = new Data.VentaDetalle();
+        Data.VentaDetalle dVentaDetalle = new Data.VentaDetalle();
 
-		public void AgregarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-		{
-			dVentaDetalle.AgregarVentaDetalle(eVentaDetalle);
-		}
+        public List<Entidades.VentaDetalle> Listar()
+        {
+            return dVentaDetalle.Listar();
+        }
 
-		public void EliminarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-		{
-			dVentaDetalle.EliminarVentaDetalle(eVentaDetalle);
-		}
+        public int Registrar(Entidades.VentaDetalle obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
 
-		public void EditarVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-		{
-			dVentaDetalle.EditarVentaDetalle(eVentaDetalle);
-		}
+            if (obj.oVenta.IdVenta == 0)
+                Mensaje = "Debe seleccionar una venta";
+            else if (obj.oArticulo.IdArticulo == 0)
+                Mensaje = "Debe seleccionar un artículo";
+            else if (obj.Cantidad == 0)
+                Mensaje = "La cantidad no puede ser 0";
+            else if (obj.Precio == 0)
+                Mensaje = "La precio no puede ser 0";
+            else if (obj.Importe == 0)
+                Mensaje = "La importe no puede ser 0";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
 
-		public ObservableCollection<Entidades.VentaDetalle> ListaVentaDetalle()
-		{
-			return dVentaDetalle.ListaVentaDetalle();
-		}
+            if (string.IsNullOrEmpty(Mensaje))
+                return dVentaDetalle.Registrar(obj, out Mensaje);
+            else
+                return 0;
+        }
 
-		public ObservableCollection<Entidades.VentaDetalle> ListaVentaDetalle(Entidades.VentaDetalle eVentaDetalle)
-		{
-			return dVentaDetalle.ListaVentaDetalle(eVentaDetalle);
-		}
+        public bool Editar(Entidades.VentaDetalle obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (obj.oVenta.IdVenta == 0)
+                Mensaje = "Debe seleccionar una venta";
+            else if (obj.oArticulo.IdArticulo == 0)
+                Mensaje = "Debe seleccionar un artículo";
+            else if (obj.Cantidad == 0)
+                Mensaje = "La cantidad no puede ser 0";
+            else if (obj.Precio == 0)
+                Mensaje = "La precio no puede ser 0";
+            else if (obj.Importe == 0)
+                Mensaje = "La importe no puede ser 0";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dVentaDetalle.Editar(obj, out Mensaje);
+            else
+                return false;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return dVentaDetalle.Eliminar(id, out Mensaje);
+        }
     }
-}	
-
+}

@@ -15,27 +15,16 @@ namespace Librería.Escritorio.UserControls.Almacen
         public pgAlmacen(int Id = 0)
         {
             InitializeComponent();
-
             CargarEstado();
-
-            this.Id = Id;
-
-            if (Id != 0)
-            {
-                var almacen = nAlmacen.ListaAlmacen(new Entidades.Almacen() { IdAlmacen = Id }).FirstOrDefault();
-                txtNombreAlmacen.Text = almacen.NombreAlmacen;
-                txtDireccion.Text = almacen.Direccion;
-                cboEstado.SelectedValue = almacen.IdEstado;
-            }
         }
 
         void CargarEstado()
         {
             cboEstado.ItemsSource = null;
-            cboEstado.ItemsSource = nEstado.ListaEstado();
+            cboEstado.ItemsSource = nEstado.Listar();
         }
 
-        private void BtnGuardar_Click(object sender, RoutedEventArgs e)
+        void Guardar()
         {
             if (Id == 0)
             {
@@ -43,7 +32,11 @@ namespace Librería.Escritorio.UserControls.Almacen
                 {
                     NombreAlmacen = txtNombreAlmacen.Text,
                     Direccion = txtDireccion.Text,
-                    IdEstado = Convert.ToInt32(cboEstado.SelectedValue)
+                    oEstado = new Entidades.Estado()
+                    {
+                        IdEstado = Convert.ToInt32(cboEstado.SelectedValue),
+                        NombreEstado = cboEstado.Text
+                    }
                 };
                 nAlmacen.AgregarAlmacen(almacen);
 
@@ -51,14 +44,19 @@ namespace Librería.Escritorio.UserControls.Almacen
             }
             else
             {
-                var almacen = nAlmacen.ListaAlmacen(new Entidades.Almacen() { IdAlmacen = Id }).FirstOrDefault();
+                var almacen = nAlmacen.Listar(new Entidades.Almacen() { IdAlmacen = Id }).FirstOrDefault();
                 almacen.NombreAlmacen = txtNombreAlmacen.Text;
                 almacen.Direccion = txtDireccion.Text;
-                almacen.IdEstado = Convert.ToInt32(cboEstado.SelectedValue);
-                nAlmacen.EditarAlmacen(almacen);
+                almacen.oEstado.IdEstado = Convert.ToInt32(cboEstado.SelectedValue);
+                nAlmacen.Editar(almacen, Mensaje);
 
                 wndAlmacen.StaticMainFrame.Content = new pgListaAlmacen();
             }
+        }
+
+        private void BtnGuardar_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)

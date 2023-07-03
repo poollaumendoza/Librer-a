@@ -12,10 +12,12 @@ namespace Librería.Entidades
     public class Movimiento
     {
         public int IdMovimiento { get; set; }
-        public int IdEmpresa { get; set; }
-        public int IdTipoMovimiento { get; set; }
-        public int IdUsuario { get; set; }
-        public DateTime FechaMovimiento { get; set; }
-        public int IdEstado { get; set; }
+        public Empresa oEmpresa { get; set; }
+        public TipoMovimiento oTipoMovimiento { get; set; }
+        public Usuario oUsuario { get; set; }
+        public string FechaMovimiento { get; set; }
+        public string NroMovimiento { get; set; }
+        public Estado oEstado { get; set; }
+        public List<Movimiento> oListaMovimiento { get; set; }
     }
 }

@@ -13,32 +13,46 @@ namespace Librería.Negocios
 {
 	public class ClasificacionTipoDocumento
 	{
-		Entidades.ClasificacionTipoDocumento eClasificacionTipoDocumento = new Entidades.ClasificacionTipoDocumento();
-		Data.ClasificacionTipoDocumento dClasificacionTipoDocumento = new Data.ClasificacionTipoDocumento();
+        Data.ClasificacionTipoDocumento dClasificacionTipoDocumento = new Data.ClasificacionTipoDocumento();
 
-		public void AgregarClasificacionTipoDocumento(Entidades.ClasificacionTipoDocumento eClasificacionTipoDocumento)
-		{
-			dClasificacionTipoDocumento.AgregarClasificacionTipoDocumento(eClasificacionTipoDocumento);
-		}
+        public List<Entidades.ClasificacionTipoDocumento> Listar()
+        {
+            return dClasificacionTipoDocumento.Listar();
+        }
 
-		public void EliminarClasificacionTipoDocumento(Entidades.ClasificacionTipoDocumento eClasificacionTipoDocumento)
-		{
-			dClasificacionTipoDocumento.EliminarClasificacionTipoDocumento(eClasificacionTipoDocumento);
-		}
+        public int Registrar(Entidades.ClasificacionTipoDocumento obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
 
-		public void EditarClasificacionTipoDocumento(Entidades.ClasificacionTipoDocumento eClasificacionTipoDocumento)
-		{
-			dClasificacionTipoDocumento.EditarClasificacionTipoDocumento(eClasificacionTipoDocumento);
-		}
+            if (string.IsNullOrEmpty(obj.NombreClasificacionTipoDocumento) || string.IsNullOrWhiteSpace(obj.NombreClasificacionTipoDocumento))
+                Mensaje = "El nombre del almacén no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
 
-		public ObservableCollection<Entidades.ClasificacionTipoDocumento> ListaClasificacionTipoDocumento()
-		{
-			return dClasificacionTipoDocumento.ListaClasificacionTipoDocumento();
-		}
-		public ObservableCollection<Entidades.ClasificacionTipoDocumento> ListaClasificacionTipoDocumento(Entidades.ClasificacionTipoDocumento eClasificacionTipoDocumento)
-		{
-			return dClasificacionTipoDocumento.ListaClasificacionTipoDocumento(eClasificacionTipoDocumento);
-		}
-	}
-}	
+            if (string.IsNullOrEmpty(Mensaje))
+                return dClasificacionTipoDocumento.Registrar(obj, out Mensaje);
+            else
+                return 0;
+        }
 
+        public bool Editar(Entidades.ClasificacionTipoDocumento obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (string.IsNullOrEmpty(obj.NombreClasificacionTipoDocumento) || string.IsNullOrWhiteSpace(obj.NombreClasificacionTipoDocumento))
+                Mensaje = "El nombre del almacén no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dClasificacionTipoDocumento.Editar(obj, out Mensaje);
+            else
+                return false;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return dClasificacionTipoDocumento.Eliminar(id, out Mensaje);
+        }
+    }
+}

@@ -32,11 +32,11 @@ namespace Librería.Escritorio.UserControls.Articulo
                 var articulo = nArticulo.ListaArticulo(eArticulo).FirstOrDefault();
                 txtCodigo.Text = articulo.CodigoArticulo;
                 txtDescripcion.Text = articulo.DescripcionArticulo;
-                cboProveedor.SelectedValue = articulo.IdEntidad;
+                cboProveedor.SelectedValue = articulo.oEntidad.IdEntidad;
                 nupCantidad.Value = articulo.Cantidad;
                 nupPrecioCompra.Value = Convert.ToDouble(articulo.PrecioCompra);
                 nupPrecioVenta.Value = Convert.ToDouble(articulo.PrecioVenta);
-                cboEstado.SelectedValue = articulo.IdEstado;
+                cboEstado.SelectedValue = articulo.oEstado.IdEstado;
             }
         }
 
@@ -68,7 +68,11 @@ namespace Librería.Escritorio.UserControls.Articulo
                         {
                             eCorrelativo = new Entidades.Correlativo()
                             {
-                                IdEmpresa = App.IdEmpresa,
+                                oEmpresa = new Entidades.Empresa()
+                                {
+                                    IdEmpresa = App.IdEmpresa,
+
+                                },
                                 IdTipoDocumento = 0,
                                 NombreTabla = "ARTICULO",
                                 Abreviatura = abreviatura,

@@ -7,18 +7,15 @@ using System.Threading.Tasks;
 
 namespace Librería.Entidades
 {
-	public class EmpresaCollection : ObservableCollection<Empresa> { }
-
 	public class Empresa
 	{
 		public int IdEmpresa { get; set; }
-		public int IdTipoDocumento { get; set; }
+		public TipoDocumento oTipoDocumento { get; set; }
 		public string NroDocumento { get; set; }
 		public string RazonSocial { get; set; }
 		public string Direccion { get; set; }
 		public string Telefono { get; set; }
 		public string Email { get; set; }
-		public int IdEstado { get; set; }
+		public Estado oEstado { get; set; }
 	}
 }
-

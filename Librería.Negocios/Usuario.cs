@@ -13,32 +13,54 @@ namespace Librería.Negocios
 {
 	public class Usuario
 	{
-		Entidades.Usuario eUsuario = new Entidades.Usuario();
-		Data.Usuario dUsuario = new Data.Usuario();
+        Data.Usuario dUsuario = new Data.Usuario();
 
-		public void AgregarUsuario(Entidades.Usuario eUsuario)
-		{
-			dUsuario.AgregarUsuario(eUsuario);
-		}
+        public List<Entidades.Usuario> Listar()
+        {
+            return dUsuario.Listar();
+        }
 
-		public void EliminarUsuario(Entidades.Usuario eUsuario)
-		{
-			dUsuario.EliminarUsuario(eUsuario);
-		}
+        public int Registrar(Entidades.Usuario obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
 
-		public void EditarUsuario(Entidades.Usuario eUsuario)
-		{
-			dUsuario.EditarUsuario(eUsuario);
-		}
+            if (obj.oPersona.IdPersona == 0)
+                Mensaje = "Debe seleccionar una persona";
+            if (string.IsNullOrEmpty(obj.NombreUsuario) || string.IsNullOrWhiteSpace(obj.NombreUsuario))
+                Mensaje = "El nombre del usuario no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.Contraseña) || string.IsNullOrWhiteSpace(obj.Contraseña))
+                Mensaje = "La dirección del almacén no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
 
-		public ObservableCollection<Entidades.Usuario> ListaUsuario()
-		{
-			return dUsuario.ListaUsuario();
-		}
-		public ObservableCollection<Entidades.Usuario> ListaUsuario(Entidades.Usuario eUsuario)
-		{
-			return dUsuario.ListaUsuario(eUsuario);
-		}
-	}
-}	
+            if (string.IsNullOrEmpty(Mensaje))
+                return dUsuario.Registrar(obj, out Mensaje);
+            else
+                return 0;
+        }
 
+        public bool Editar(Entidades.Usuario obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (obj.oPersona.IdPersona == 0)
+                Mensaje = "Debe seleccionar una persona";
+            if (string.IsNullOrEmpty(obj.NombreUsuario) || string.IsNullOrWhiteSpace(obj.NombreUsuario))
+                Mensaje = "El nombre del usuario no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.Contraseña) || string.IsNullOrWhiteSpace(obj.Contraseña))
+                Mensaje = "La dirección del almacén no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dUsuario.Editar(obj, out Mensaje);
+            else
+                return false;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return dUsuario.Eliminar(id, out Mensaje);
+        }
+    }
+}

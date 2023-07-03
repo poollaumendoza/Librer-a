@@ -13,57 +13,66 @@ namespace Librería.Negocios
 {
 	public class Correlativo
 	{
-		Entidades.Correlativo eCorrelativo = new Entidades.Correlativo();
-		Data.Correlativo dCorrelativo = new Data.Correlativo();
+        Data.Correlativo dCorrelativo = new Data.Correlativo();
 
-		public void AgregarCorrelativo(Entidades.Correlativo eCorrelativo)
-		{
-			dCorrelativo.AgregarCorrelativo(eCorrelativo);
-		}
-
-		public void EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
-		{
-			dCorrelativo.EliminarCorrelativo(eCorrelativo);
-		}
-
-		public void EditarCorrelativo(Entidades.Correlativo eCorrelativo)
-		{
-			dCorrelativo.EditarCorrelativo(eCorrelativo);
-		}
-
-		public ObservableCollection<Entidades.Correlativo> ListaCorrelativo()
-		{
-			return dCorrelativo.ListaCorrelativo();
-		}
-
-		public ObservableCollection<Entidades.Correlativo> ListaCorrelativo(Entidades.Correlativo eCorrelativo)
-		{
-			return dCorrelativo.ListaCorrelativo(eCorrelativo);
-		}
-
-        public string ObtenerAbreviatura(int IdTipoDocumento, string NombreTabla)
+        public List<Entidades.Correlativo> Listar()
         {
-            return dCorrelativo.ObtenerAbreviatura(IdTipoDocumento, NombreTabla);
+            return dCorrelativo.Listar();
         }
 
-        public string ConstruirCorrelativoDocumento(int IdCorrelativo)
+        public int Registrar(Entidades.Correlativo obj, out string Mensaje)
         {
-            return dCorrelativo.ConstruirCorrelativoDocumento(IdCorrelativo);
+            Mensaje = string.Empty;
+
+            if (obj.oEmpresa.IdEmpresa == 0)
+                Mensaje = "Debe seleccionar una empresa";
+            else if (obj.oTipoDocumento.IdTipoDocumento == 0)
+                Mensaje = "Debe seleccionar un tipo de documento";
+            else if (string.IsNullOrEmpty(obj.NombreTabla) || string.IsNullOrWhiteSpace(obj.NombreTabla))
+                Mensaje = "El nombre de la tabla no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.Abreviatura) || string.IsNullOrWhiteSpace(obj.Abreviatura))
+                Mensaje = "La abreviatura no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.Serie) || string.IsNullOrWhiteSpace(obj.Serie))
+                Mensaje = "La abreviatura no puede ser vacío";
+            else if (obj.NroCorrelativo == 0)
+                Mensaje = "La abreviatura no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dCorrelativo.Registrar(obj, out Mensaje);
+            else
+                return 0;
         }
 
-        public string ConstruirCorrelativoArticulo(string codigo)
+        public bool Editar(Entidades.Correlativo obj, out string Mensaje)
         {
-            return dCorrelativo.ConstruirCorrelativoArticulo(codigo);
+            Mensaje = string.Empty;
+
+            if (obj.oEmpresa.IdEmpresa == 0)
+                Mensaje = "Debe seleccionar una empresa";
+            else if (obj.oTipoDocumento.IdTipoDocumento == 0)
+                Mensaje = "Debe seleccionar un tipo de documento";
+            else if (string.IsNullOrEmpty(obj.NombreTabla) || string.IsNullOrWhiteSpace(obj.NombreTabla))
+                Mensaje = "El nombre de la tabla no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.Abreviatura) || string.IsNullOrWhiteSpace(obj.Abreviatura))
+                Mensaje = "La abreviatura no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.Serie) || string.IsNullOrWhiteSpace(obj.Serie))
+                Mensaje = "La abreviatura no puede ser vacío";
+            else if (obj.NroCorrelativo == 0)
+                Mensaje = "La abreviatura no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dCorrelativo.Editar(obj, out Mensaje);
+            else
+                return false;
         }
 
-        public ObservableCollection<Entidades.Correlativo> ListaSerie(string NombreTabla, string Abreviatura)
+        public bool Eliminar(int id, out string Mensaje)
         {
-            return dCorrelativo.ObtenerSerie(NombreTabla, Abreviatura);
-        }
-
-        public void ActualizarCorrelativoArticulo(string NombreTabla, string Abreviatura)
-        {
-            dCorrelativo.ActualizarCorrelativoArticulo(NombreTabla, Abreviatura);
+            return dCorrelativo.Eliminar(id, out Mensaje);
         }
     }
 }

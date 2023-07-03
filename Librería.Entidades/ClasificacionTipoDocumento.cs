@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace Librería.Entidades
 {
-	public class ClasificacionTipoDocumentoCollection : ObservableCollection<ClasificacionTipoDocumento> { }
-
 	public class ClasificacionTipoDocumento
 	{
 		public int IdClasificacionTipoDocumento { get; set; }
 		public string NombreClasificacionTipoDocumento { get; set; }
-		public int IdEstado { get; set; }
+		public Estado oEstado { get; set; }
 	}
 }
-

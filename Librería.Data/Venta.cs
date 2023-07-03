@@ -7,154 +7,186 @@ using System.IO;
 using System.Linq;
 using Librería.Entidades;
 using Librería.Data.Properties;
+using System.Configuration;
 
 namespace Librería.Data
 {
 	public class Venta
 	{
-		Entidades.Venta eVenta = new Entidades.Venta();
-		VentaCollection listaVenta = new VentaCollection();
-		string Cn = Settings.Default.CadenaConexion;
-		SqlConnection Cnx = null;
-		SqlCommand Cmd = null;
-		SqlDataAdapter Da = null;
-		DataTable Dt = new DataTable();
+        public List<Entidades.Venta> Listar()
+        {
+            List<Entidades.Venta> lista = new List<Entidades.Venta>();
 
-		public int AgregarVenta(Entidades.Venta eVenta)
-		{
-            int resultado = 0;
-
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Venta_AgregarVenta", Cnx);
-			Cmd.CommandType = CommandType.StoredProcedure;
-
-            SqlParameter IdVenta = new SqlParameter();
-            IdVenta.ParameterName = "@IdVenta";
-            IdVenta.Direction = ParameterDirection.Output;
-            IdVenta.SqlDbType = SqlDbType.Int;
-
-            Cmd.Parameters.Add(IdVenta);
-			Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
-			Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdEntidad);
-			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
-			Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
-			Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
-			Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
-            Cmd.Parameters.AddWithValue("@NroDocumento", eVenta.NroDocumento);
-			Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
-			Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
-			Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
-			Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
-			Cmd.Parameters.AddWithValue("@Total", eVenta.Total);
-			Cmd.Parameters.AddWithValue("@IdEstado", eVenta.IdEstado);
-
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-
-            return resultado = Convert.ToInt32(IdVenta.Value);
-        }
-		public void EliminarVenta(Entidades.Venta eVenta)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Venta_EliminarVenta", Cnx);
-			Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EditarVenta(Entidades.Venta eVenta)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Venta_ActualizarVenta", Cnx);
-			Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
-			Cmd.Parameters.AddWithValue("@IdEmpresa", eVenta.IdEmpresa);
-			Cmd.Parameters.AddWithValue("@IdEntidad", eVenta.IdEntidad);
-			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eVenta.IdTipoDocumento);
-			Cmd.Parameters.AddWithValue("@IdUsuario", eVenta.IdUsuario);
-			Cmd.Parameters.AddWithValue("@IdCorrelativo", eVenta.IdCorrelativo);
-			Cmd.Parameters.AddWithValue("@Correlativo", eVenta.Correlativo);
-            Cmd.Parameters.AddWithValue("@NroDocumento", eVenta.NroDocumento);
-            Cmd.Parameters.AddWithValue("@FechaVenta", eVenta.FechaVenta);
-			Cmd.Parameters.AddWithValue("@FechaRegistro", eVenta.FechaRegistro);
-			Cmd.Parameters.AddWithValue("@SubTotal", eVenta.SubTotal);
-			Cmd.Parameters.AddWithValue("@Impuesto", eVenta.Impuesto);
-			Cmd.Parameters.AddWithValue("@Total", eVenta.Total);
-			Cmd.Parameters.AddWithValue("@IdEstado", eVenta.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public ObservableCollection<Entidades.Venta> ListaVenta()
-		{
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaVenta.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Venta_ObtenerVenta", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaVenta.Add(new Entidades.Venta()
-				{
-					IdVenta = Convert.ToInt32(item[0].ToString()),
-					IdEmpresa = Convert.ToInt32(item[1].ToString()),
-					IdEntidad = Convert.ToInt32(item[2].ToString()),
-					IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
-					IdUsuario = Convert.ToInt32(item[4].ToString()),
-					IdCorrelativo = Convert.ToInt32(item[5].ToString()),
-					Correlativo = item[6].ToString(),
-                    NroDocumento = item[7].ToString(),
-					FechaVenta = Convert.ToDateTime(item[8].ToString()),
-					FechaRegistro = Convert.ToDateTime(item[9].ToString()),
-					SubTotal = Convert.ToDecimal(item[10].ToString()),
-					Impuesto = Convert.ToDecimal(item[11].ToString()),
-					Total = Convert.ToDecimal(item[12].ToString()),
-					IdEstado = Convert.ToInt32(item[13].ToString())
-				});
-			}
-			return listaVenta;
-		}
-		public ObservableCollection<Entidades.Venta> ListaVenta(Entidades.Venta eVenta)
-		{
-            Dt.Columns.Clear();
-            Dt.Rows.Clear();
-			listaVenta.Clear();
-
-            Cmd = new SqlCommand("dbo.sp_Venta_ObtenerVentaPorIdVenta", new SqlConnection(Cn));
-            Cmd.Parameters.AddWithValue("@IdVenta", eVenta.IdVenta);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Da = new SqlDataAdapter(Cmd);
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-                listaVenta.Add(new Entidades.Venta()
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
                 {
-                    IdVenta = Convert.ToInt32(item[0].ToString()),
-                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    IdEntidad = Convert.ToInt32(item[2].ToString()),
-                    IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
-                    IdUsuario = Convert.ToInt32(item[4].ToString()),
-                    IdCorrelativo = Convert.ToInt32(item[5].ToString()),
-                    Correlativo = item[6].ToString(),
-                    NroDocumento = item[7].ToString(),
-                    FechaVenta = Convert.ToDateTime(item[8].ToString()),
-                    FechaRegistro = Convert.ToDateTime(item[9].ToString()),
-                    SubTotal = Convert.ToDecimal(item[10].ToString()),
-                    Impuesto = Convert.ToDecimal(item[11].ToString()),
-                    Total = Convert.ToDecimal(item[12].ToString()),
-                    IdEstado = Convert.ToInt32(item[13].ToString())
-                });
+                    string query =
+                        "Select v.IdVenta, v.IdEmpresa, em.RazonSocial[NombreEmpresa], v.IdEntidad, en.RazonSocial[NombreEntidad], v.IdTipoDocumento, td.NombreTipoDocumento, v.IdUsuario, u.NombreUsuario, v.IdCorrelativo, cr.NroCorrelativo, v.NroDocumento, v.FechaVenta, v.FechaRegistro, v.SubTotal, v.Impuesto, v.Total, v.IdEstado, es.NombreEstado from Venta v join Empresa em on v.IdEmpresa = em.IdEmpresa join Entidad en on v.IdEntidad = en.IdEntidad join TipoDocumento td on v.IdTipoDocumento = td.IdTipoDocumento join Usuario u on v.IdUsuario = u.IdUsuario join Correlativo cr on v.IdCorrelativo = cr.IdCorrelativo join Estado es on v.IdEstado = es.IdEstado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
+
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
+                    {
+                        while (Dr.Read())
+                        {
+                            lista.Add(new Entidades.Venta()
+                            {
+                                IdVenta = Convert.ToInt32(Dr["IdVenta"]),
+                                oEmpresa = new Entidades.Empresa()
+                                {
+                                    IdEmpresa = Convert.ToInt32(Dr["IdEmpresa"]),
+                                    RazonSocial = Dr["NombreEmpresa"].ToString()
+                                },
+                                oEntidad = new Entidades.Entidad()
+                                {
+                                    IdEntidad = Convert.ToInt32(Dr["IdEntidad"]),
+                                    RazonSocial = Dr["NombreEntidad"].ToString()
+                                },
+                                oTipoDocumento = new Entidades.TipoDocumento()
+                                {
+                                    IdTipoDocumento = Convert.ToInt32(Dr["IdTipoDocumento"]),
+                                    NombreTipoDocumento = Dr["NombreTipoDocumento"].ToString()
+                                },
+                                oUsuario = new Entidades.Usuario()
+                                {
+                                    IdUsuario = Convert.ToInt32(Dr["IdUsuario"]),
+                                    NombreUsuario = Dr["NombreUsuario"].ToString()
+                                },
+                                oCorrelativo = new Entidades.Correlativo()
+                                {
+                                    IdCorrelativo = Convert.ToInt32(Dr["IdCorrelativo"]),
+                                    NroCorrelativo = Convert.ToInt32(Dr["NroCorrelativo"])
+                                },
+                                FechaVenta = Dr["FechaVenta"].ToString(),
+                                FechaRegistro = Dr["FechaRegistro"].ToString(),
+                                SubTotal = Convert.ToDecimal(Dr["SubTotal"]),
+                                Impuesto = Convert.ToDecimal(Dr["Impuesto"]),
+                                Total = Convert.ToDecimal(Dr["Total"]),
+                                oEstado = new Entidades.Estado()
+                                {
+                                    IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                    NombreEstado = Dr["NombreEstado"].ToString()
+                                }
+                            });
+                        }
+                    }
+                }
             }
-			return listaVenta;
-		}
-	}
+            catch
+            {
+                lista = new List<Entidades.Venta>();
+            }
+
+            return lista;
+        }
+
+        public int Registrar(Entidades.Venta obj, out string Mensaje)
+        {
+            int IdAutogenerado = 0;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Venta_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdEntidad", obj.oEntidad.IdEntidad);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("IdUsuario", obj.oUsuario.IdUsuario);
+                    Cmd.Parameters.AddWithValue("IdCorrelativo", obj.oCorrelativo.IdCorrelativo);
+                    Cmd.Parameters.AddWithValue("NroDocumento", obj.NroDocumento);
+                    Cmd.Parameters.AddWithValue("FechaVenta", obj.FechaVenta);
+                    Cmd.Parameters.AddWithValue("FechaRegistro", obj.FechaRegistro);
+                    Cmd.Parameters.AddWithValue("SubTotal", obj.SubTotal);
+                    Cmd.Parameters.AddWithValue("Impuesto", obj.Impuesto);
+                    Cmd.Parameters.AddWithValue("Total", obj.Total);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Venta obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Venta_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdVenta", obj.IdVenta);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdEntidad", obj.oEntidad.IdEntidad);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("IdUsuario", obj.oUsuario.IdUsuario);
+                    Cmd.Parameters.AddWithValue("IdCorrelativo", obj.oCorrelativo.IdCorrelativo);
+                    Cmd.Parameters.AddWithValue("NroDocumento", obj.NroDocumento);
+                    Cmd.Parameters.AddWithValue("FechaVenta", obj.FechaVenta);
+                    Cmd.Parameters.AddWithValue("FechaRegistro", obj.FechaRegistro);
+                    Cmd.Parameters.AddWithValue("SubTotal", obj.SubTotal);
+                    Cmd.Parameters.AddWithValue("Impuesto", obj.Impuesto);
+                    Cmd.Parameters.AddWithValue("Total", obj.Total);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Venta_Eliminar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdVenta", id);
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+    }
 }

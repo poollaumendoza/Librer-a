@@ -1,7 +1,9 @@
 using Librería.Data.Properties;
 using Librería.Entidades;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,182 +12,157 @@ namespace Librería.Data
 {
     public class Articulo
     {
-        Entidades.Articulo eArticulo = new Entidades.Articulo();
-        ArticuloCollection listaArticulo = new ArticuloCollection();
-        string Cn = Settings.Default.CadenaConexion;
-        SqlConnection Cnx = null;
-        SqlCommand Cmd = null;
-        SqlDataAdapter Da = null;
-        DataTable Dt = new DataTable();
-
-        public void AgregarArticulo(Entidades.Articulo eArticulo)
+        public List<Entidades.Articulo> Listar()
         {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Articulo_AgregarArticulo", Cnx);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Cmd.Parameters.AddWithValue("@IdEmpresa", eArticulo.IdEmpresa);
-            Cmd.Parameters.AddWithValue("@IdEntidad", eArticulo.IdEntidad);
-            Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);
-            Cmd.Parameters.AddWithValue("@DescripcionArticulo", eArticulo.DescripcionArticulo);
-            Cmd.Parameters.AddWithValue("@Cantidad", eArticulo.Cantidad);
-            Cmd.Parameters.AddWithValue("@PrecioCompra", eArticulo.PrecioCompra);
-            Cmd.Parameters.AddWithValue("@PrecioVenta", eArticulo.PrecioVenta);
-            Cmd.Parameters.AddWithValue("@IdEstado", eArticulo.IdEstado);
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
-        public void EliminarArticulo(Entidades.Articulo eArticulo)
-        {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Articulo_EliminarArticulo", Cnx);
-            Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
-        public void EditarArticulo(Entidades.Articulo eArticulo)
-        {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Articulo_ActualizarArticulo", Cnx);
-            Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
-            Cmd.Parameters.AddWithValue("@IdEmpresa", eArticulo.IdEmpresa);
-            Cmd.Parameters.AddWithValue("@IdEntidad", eArticulo.IdEntidad);
-            Cmd.Parameters.AddWithValue("@CodigoArticulo", eArticulo.CodigoArticulo);
-            Cmd.Parameters.AddWithValue("@DescripcionArticulo", eArticulo.DescripcionArticulo);
-            Cmd.Parameters.AddWithValue("@Cantidad", eArticulo.Cantidad);
-            Cmd.Parameters.AddWithValue("@PrecioCompra", eArticulo.PrecioCompra);
-            Cmd.Parameters.AddWithValue("@PrecioVenta", eArticulo.PrecioVenta);
-            Cmd.Parameters.AddWithValue("@IdEstado", eArticulo.IdEstado);
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
-        public ObservableCollection<Entidades.Articulo> ListaArticulo()
-        {
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaArticulo.Clear();
+            List<Entidades.Articulo> lista = new List<Entidades.Articulo>();
 
-            Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Articulo_ObtenerArticulo", new SqlConnection(Cn)));
-            Da.Fill(Dt);
-
-            var query = (from a in Dt.Rows.Cast<DataRow>()
-                         select a).ToList();
-
-            foreach (var item in query)
+            try
             {
-                listaArticulo.Add(new Entidades.Articulo()
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
                 {
-                    IdArticulo = Convert.ToInt32(item[0].ToString()),
-                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    IdEntidad = Convert.ToInt32(item[2].ToString()),
-                    CodigoArticulo = item[3].ToString(),
-                    DescripcionArticulo = item[4].ToString(),
-                    Cantidad = Convert.ToInt32(item[5].ToString()),
-                    PrecioCompra = Convert.ToDecimal(item[6].ToString()),
-                    PrecioVenta = Convert.ToDecimal(item[7].ToString()),
-                    IdEstado = Convert.ToInt32(item[8].ToString())
-                });
-            }
-            return listaArticulo;
-        }
-        public ObservableCollection<Entidades.Articulo> ListaArticulo(Entidades.Articulo eArticulo)
-        {
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaArticulo.Clear();
+                    string query =
+                        "Select art.IdArticulo, art.IdEmpresa, em.RazonSocial[NombreEmpresa], art.IdEntidad, en.RazonSocial[NombreEntidad], art.CodigoArticulo, art.DescripcionArticulo, art.Cantidad, art.PrecioCompra, art.PrecioVenta, art.IdEstado, es.NombreEstado from Articulo art join Empresa em on art.IdEmpresa = em.IdEmpresa join Entidad en on art.IdEntidad = en.IdEntidad join Estado es on art.IdEstado = es.IdEstado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
 
-            if (eArticulo.IdArticulo != 0)
-            {
-                Cmd = new SqlCommand("dbo.sp_Articulo_ObtenerArticuloPorIdArticulo", new SqlConnection(Cn));
-                Cmd.Parameters.AddWithValue("@IdArticulo", eArticulo.IdArticulo);
-                Cmd.CommandType = CommandType.StoredProcedure;
-                Da = new SqlDataAdapter(Cmd);
-                Da.Fill(Dt);
-
-                var query = (from a in Dt.Rows.Cast<DataRow>()
-                             select a).ToList();
-
-                foreach (var item in query)
-                {
-                    listaArticulo.Add(new Entidades.Articulo()
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
                     {
-                        IdArticulo = Convert.ToInt32(item[0].ToString()),
-                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                        IdEntidad = Convert.ToInt32(item[2].ToString()),
-                        CodigoArticulo = item[3].ToString(),
-                        DescripcionArticulo = item[4].ToString(),
-                        Cantidad = Convert.ToInt32(item[5].ToString()),
-                        PrecioCompra = Convert.ToDecimal(item[6].ToString()),
-                        PrecioVenta = Convert.ToDecimal(item[7].ToString()),
-                        IdEstado = Convert.ToInt32(item[8].ToString())
-                    });
-                }
-            }
-            else
-            {
-                if (eArticulo.IdEntidad != 0)
-                {
-                    Cmd = new SqlCommand("dbo.sp_Articulo_ObtenerArticuloPorIdEntidad", new SqlConnection(Cn));
-                    Cmd.Parameters.Clear();
-                    Cmd.Parameters.AddWithValue("@IdEntidad", eArticulo.IdEntidad);
-                    Cmd.CommandType = CommandType.StoredProcedure;
-                    Da = new SqlDataAdapter(Cmd);
-                    Da.Fill(Dt);
-
-                    var query = (from a in Dt.Rows.Cast<DataRow>()
-                                 select a).ToList();
-
-                    foreach (var item in query)
-                    {
-                        listaArticulo.Add(new Entidades.Articulo()
+                        while (Dr.Read())
                         {
-                            IdArticulo = Convert.ToInt32(item[0].ToString()),
-                            IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                            IdEntidad = Convert.ToInt32(item[2].ToString()),
-                            CodigoArticulo = item[3].ToString(),
-                            DescripcionArticulo = item[4].ToString(),
-                            Cantidad = Convert.ToInt32(item[5].ToString()),
-                            PrecioCompra = Convert.ToDecimal(item[6].ToString()),
-                            PrecioVenta = Convert.ToDecimal(item[7].ToString()),
-                            IdEstado = Convert.ToInt32(item[8].ToString())
-                        });
-                    }
-                }
-                else
-                {
-                    if (eArticulo.DescripcionArticulo != string.Empty)
-                    {
-                        Cmd = new SqlCommand("dbo.sp_Articulo_ObtenerArticuloPorDescripcion", new SqlConnection(Cn));
-                        Cmd.Parameters.Clear();
-                        Cmd.Parameters.AddWithValue("@Descripcion", eArticulo.DescripcionArticulo);
-                        Cmd.CommandType = CommandType.StoredProcedure;
-                        Da = new SqlDataAdapter(Cmd);
-                        Da.Fill(Dt);
-
-                        var query = (from a in Dt.Rows.Cast<DataRow>()
-                                     select a).ToList();
-
-                        foreach (var item in query)
-                        {
-                            listaArticulo.Add(new Entidades.Articulo()
+                            lista.Add(new Entidades.Articulo()
                             {
-                                IdArticulo = Convert.ToInt32(item[0].ToString()),
-                                IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                                IdEntidad = Convert.ToInt32(item[2].ToString()),
-                                CodigoArticulo = item[3].ToString(),
-                                DescripcionArticulo = item[4].ToString(),
-                                Cantidad = Convert.ToInt32(item[5].ToString()),
-                                PrecioCompra = Convert.ToDecimal(item[6].ToString()),
-                                PrecioVenta = Convert.ToDecimal(item[7].ToString()),
-                                IdEstado = Convert.ToInt32(item[8].ToString())
+                                IdArticulo = Convert.ToInt32(Dr["IdArticulo"]),
+                                oEmpresa = new Entidades.Empresa()
+                                {
+                                    IdEmpresa = Convert.ToInt32(Dr["IdEmpresa"]),
+                                    RazonSocial = Dr["NombreEmpresa"].ToString()
+                                },
+                                oEntidad = new Entidades.Entidad()
+                                {
+                                    IdEntidad = Convert.ToInt32(Dr["IdEntidad"]),
+                                    RazonSocial = Dr["NombreEntidad"].ToString()
+                                },
+                                CodigoArticulo = Dr["CodigoArticulo"].ToString(),
+                                DescripcionArticulo = Dr["DescripcionArticulo"].ToString(),
+                                Cantidad = Convert.ToInt32(Dr["Cantidad"]),
+                                PrecioCompra = Convert.ToDecimal(Dr["PrecioCompra"]),
+                                PrecioVenta = Convert.ToDecimal(Dr["PrecioVenta"]),
+                                oEstado = new Entidades.Estado()
+                                {
+                                    IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                    NombreEstado = Dr["NombreEstado"].ToString()
+                                }
                             });
                         }
                     }
                 }
             }
-            return listaArticulo;
+            catch
+            {
+                lista = new List<Entidades.Articulo>();
+            }
+
+            return lista;
+        }
+
+        public int Registrar(Entidades.Articulo obj, out string Mensaje)
+        {
+            int IdAutogenerado = 0;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Articulo_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdEntidad", obj.oEntidad.IdEntidad);
+                    Cmd.Parameters.AddWithValue("CodigoArticulo", obj.CodigoArticulo);
+                    Cmd.Parameters.AddWithValue("DescripcionArticulo", obj.DescripcionArticulo);
+                    Cmd.Parameters.AddWithValue("Cantidad", obj.Cantidad);
+                    Cmd.Parameters.AddWithValue("PrecioCompra", obj.PrecioCompra);
+                    Cmd.Parameters.AddWithValue("PrecioVenta", obj.PrecioVenta);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Articulo obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Articulo_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdArticulo", obj.IdArticulo);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdEntidad", obj.oEntidad.IdEntidad);
+                    Cmd.Parameters.AddWithValue("CodigoArticulo", obj.CodigoArticulo);
+                    Cmd.Parameters.AddWithValue("DescripcionArticulo", obj.DescripcionArticulo);
+                    Cmd.Parameters.AddWithValue("Cantidad", obj.Cantidad);
+                    Cmd.Parameters.AddWithValue("PrecioCompra", obj.PrecioCompra);
+                    Cmd.Parameters.AddWithValue("PrecioVenta", obj.PrecioVenta);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Articulo_Eliminar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdArticulo", id);
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
         }
     }
 }

@@ -7,149 +7,179 @@ using System.IO;
 using System.Linq;
 using Librería.Entidades;
 using Librería.Data.Properties;
+using System.Configuration;
 
 namespace Librería.Data
 {
 	public class Compra
 	{
-		Entidades.Compra eCompra = new Entidades.Compra();
-		CompraCollection listaCompra = new CompraCollection();
-		string Cn = Settings.Default.CadenaConexion;
-		SqlConnection Cnx = null;
-		SqlCommand Cmd = null;
-		SqlDataAdapter Da = null;
-		DataTable Dt = new DataTable();
+        public List<Entidades.Compra> Listar()
+        {
+            List<Entidades.Compra> lista = new List<Entidades.Compra>();
 
-		public int AgregarCompra(Entidades.Compra eCompra)
-		{
-            int resultado = 0;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    string query =
+                        "Select c.IdCompra, c.IdEmpresa, em.RazonSocial[NombreEmpresa], c.IdEntidad, en.RazonSocial[NombreEntidad], c.IdTipoDocumento, td.NombreTipoDocumento, c.IdUsuario, u.NombreUsuario, c.FechaCompra, c.FechaRegistro, c.SubTotal, c.Impuesto, c.Total, c.IdEstado, es.NombreEstado from Compra c join Empresa em on c.IdEmpresa = em.IdEmpresa join Entidad en on c.IdEntidad = en.IdEntidad join TipoDocumento td on c.IdTipoDocumento = td.IdTipoDocumento join Usuario u on c.IdUsuario = u.IdUsuario join Estado es on c.IdEstado = es.IdEstado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
 
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Compra_AgregarCompra", Cnx);
-			Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
+                    {
+                        while (Dr.Read())
+                        {
+                            lista.Add(new Entidades.Compra()
+                            {
+                                IdCompra = Convert.ToInt32(Dr["IdCompra"]),
+                                oEmpresa = new Entidades.Empresa()
+                                {
+                                    IdEmpresa = Convert.ToInt32(Dr["IdEmpresa"]),
+                                    RazonSocial = Dr["NombreEmpresa"].ToString()
+                                },
+                                oEntidad = new Entidades.Entidad()
+                                {
+                                    IdEntidad = Convert.ToInt32(Dr["IdEntidad"]),
+                                    RazonSocial = Dr["NombreEntidad"].ToString()
+                                },
+                                oTipoDocumento = new Entidades.TipoDocumento()
+                                {
+                                    IdTipoDocumento = Convert.ToInt32(Dr["IdTipoDocumento"]),
+                                    NombreTipoDocumento = Dr["NombreTipoDocumento"].ToString()
+                                },
+                                oUsuario = new Entidades.Usuario()
+                                {
+                                    IdUsuario = Convert.ToInt32(Dr["IdUsuario"]),
+                                    NombreUsuario = Dr["NombreUsuario"].ToString()
+                                },
+                                FechaCompra = Dr["FechaCompra"].ToString(),
+                                FechaRegistro = Dr["FechaRegistro"].ToString(),
+                                SubTotal = Convert.ToDecimal(Dr["SubTotal"]),
+                                Impuesto = Convert.ToDecimal(Dr["Impuesto"]),
+                                Total = Convert.ToDecimal(Dr["Total"]),
+                                oEstado = new Entidades.Estado()
+                                {
+                                    IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                    NombreEstado = Dr["NombreEstado"].ToString()
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                lista = new List<Entidades.Compra>();
+            }
 
-            SqlParameter IdCompra = new SqlParameter();
-            IdCompra.ParameterName = "@IdCompra";
-            IdCompra.Direction = ParameterDirection.Output;
-            IdCompra.SqlDbType = SqlDbType.Int;
+            return lista;
+        }
 
-            Cmd.Parameters.Add(IdCompra);
-            Cmd.Parameters.AddWithValue("@IdEmpresa", eCompra.IdEmpresa);
-			Cmd.Parameters.AddWithValue("@IdEntidad", eCompra.IdEntidad);
-			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCompra.IdTipoDocumento);
-			Cmd.Parameters.AddWithValue("@IdUsuario", eCompra.IdUsuario);
-			Cmd.Parameters.AddWithValue("@NroDocumento", eCompra.NroDocumento);
-			Cmd.Parameters.AddWithValue("@FechaCompra", eCompra.FechaCompra);
-			Cmd.Parameters.AddWithValue("@FechaRegistro", eCompra.FechaRegistro);
-			Cmd.Parameters.AddWithValue("@SubTotal", eCompra.SubTotal);
-			Cmd.Parameters.AddWithValue("@Impuesto", eCompra.Impuesto);
-			Cmd.Parameters.AddWithValue("@Total", eCompra.Total);
-			Cmd.Parameters.AddWithValue("@IdEstado", eCompra.IdEstado);
+        public int Registrar(Entidades.Compra obj, out string Mensaje)
+        {
+            int IdAutogenerado = 0;
 
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Compra_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdEntidad", obj.oEntidad.IdEntidad);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("IdUsuario", obj.oUsuario.IdUsuario);
+                    Cmd.Parameters.AddWithValue("NroDocumento", obj.NroDocumento);
+                    Cmd.Parameters.AddWithValue("FechaCompra", obj.FechaCompra);
+                    Cmd.Parameters.AddWithValue("FechaRegistro", obj.FechaRegistro);
+                    Cmd.Parameters.AddWithValue("SubTotal", obj.SubTotal);
+                    Cmd.Parameters.AddWithValue("Impuesto", obj.Impuesto);
+                    Cmd.Parameters.AddWithValue("Total", obj.Total);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
 
-            resultado = Convert.ToInt32(IdCompra.Value);
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
 
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Compra obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Compra_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdCompra", obj.IdCompra);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdEntidad", obj.oEntidad.IdEntidad);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("IdUsuario", obj.oUsuario.IdUsuario);
+                    Cmd.Parameters.AddWithValue("NroDocumento", obj.NroDocumento);
+                    Cmd.Parameters.AddWithValue("FechaCompra", obj.FechaCompra);
+                    Cmd.Parameters.AddWithValue("FechaRegistro", obj.FechaRegistro);
+                    Cmd.Parameters.AddWithValue("SubTotal", obj.SubTotal);
+                    Cmd.Parameters.AddWithValue("Impuesto", obj.Impuesto);
+                    Cmd.Parameters.AddWithValue("Total", obj.Total);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
             return resultado;
-		}
-		public void EliminarCompra(Entidades.Compra eCompra)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Compra_EliminarCompra", Cnx);
-			Cmd.Parameters.AddWithValue("@IdCompra", eCompra.IdCompra);
-            Cmd.CommandType = CommandType.StoredProcedure;
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EditarCompra(Entidades.Compra eCompra)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Compra_ActualizarCompra", Cnx);
-			Cmd.Parameters.AddWithValue("@IdCompra", eCompra.IdCompra);
-			Cmd.Parameters.AddWithValue("@IdEmpresa", eCompra.IdEmpresa);
-			Cmd.Parameters.AddWithValue("@IdEntidad", eCompra.IdEntidad);
-			Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCompra.IdTipoDocumento);
-			Cmd.Parameters.AddWithValue("@IdUsuario", eCompra.IdUsuario);
-			Cmd.Parameters.AddWithValue("@NroDocumento", eCompra.NroDocumento);
-			Cmd.Parameters.AddWithValue("@FechaCompra", eCompra.FechaCompra);
-			Cmd.Parameters.AddWithValue("@FechaRegistro", eCompra.FechaRegistro);
-			Cmd.Parameters.AddWithValue("@SubTotal", eCompra.SubTotal);
-			Cmd.Parameters.AddWithValue("@Impuesto", eCompra.Impuesto);
-			Cmd.Parameters.AddWithValue("@Total", eCompra.Total);
-			Cmd.Parameters.AddWithValue("@IdEstado", eCompra.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public ObservableCollection<Entidades.Compra> ListaCompra()
-		{
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaCompra.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Compra_ObtenerCompra", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaCompra.Add(new Entidades.Compra()
-				{
-					IdCompra = Convert.ToInt32(item[0].ToString()),
-					IdEmpresa = Convert.ToInt32(item[1].ToString()),
-					IdEntidad = Convert.ToInt32(item[2].ToString()),
-					IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
-					IdUsuario = Convert.ToInt32(item[4].ToString()),
-					NroDocumento = item[5].ToString(),
-					FechaCompra = Convert.ToDateTime(item[6].ToString()),
-					FechaRegistro = Convert.ToDateTime(item[7].ToString()),
-					SubTotal = Convert.ToDecimal(item[8].ToString()),
-					Impuesto = Convert.ToDecimal(item[9].ToString()),
-					Total = Convert.ToDecimal(item[10].ToString()),
-					IdEstado = Convert.ToInt32(item[11].ToString())
-				});
-			}
-			return listaCompra;
-		}
-		public ObservableCollection<Entidades.Compra> ListaCompra(Entidades.Compra eCompra)
-		{
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-			listaCompra.Clear();
+        }
 
-            Cmd = new SqlCommand("dbo.sp_Compra_ObtenerCompraPorIdCompra", new SqlConnection(Cn));
-            Cmd.Parameters.AddWithValue("@IdCompra", eCompra.IdCompra);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Da = new SqlDataAdapter(Cmd);
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaCompra.Add(new Entidades.Compra()
-				{
-					IdCompra = Convert.ToInt32(item[0].ToString()),
-					IdEmpresa = Convert.ToInt32(item[1].ToString()),
-					IdEntidad = Convert.ToInt32(item[2].ToString()),
-					IdTipoDocumento = Convert.ToInt32(item[3].ToString()),
-					IdUsuario = Convert.ToInt32(item[4].ToString()),
-					NroDocumento = item[5].ToString(),
-					FechaCompra = Convert.ToDateTime(item[6].ToString()),
-					FechaRegistro = Convert.ToDateTime(item[7].ToString()),
-					SubTotal = Convert.ToDecimal(item[8].ToString()),
-					Impuesto = Convert.ToDecimal(item[9].ToString()),
-					Total = Convert.ToDecimal(item[10].ToString()),
-					IdEstado = Convert.ToInt32(item[11].ToString())
-				});
-			}
-			return listaCompra;
-		}
-	}
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Compra_Eliminar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdCompra", id);
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+    }
 }

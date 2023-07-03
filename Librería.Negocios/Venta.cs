@@ -13,32 +13,86 @@ namespace Librería.Negocios
 {
 	public class Venta
 	{
-		Entidades.Venta eVenta = new Entidades.Venta();
-		Data.Venta dVenta = new Data.Venta();
+        Data.Venta dVenta = new Data.Venta();
 
-		public int AgregarVenta(Entidades.Venta eVenta)
-		{
-			return dVenta.AgregarVenta(eVenta);
-		}
+        public List<Entidades.Venta> Listar()
+        {
+            return dVenta.Listar();
+        }
 
-		public void EliminarVenta(Entidades.Venta eVenta)
-		{
-			dVenta.EliminarVenta(eVenta);
-		}
+        public int Registrar(Entidades.Venta obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
 
-		public void EditarVenta(Entidades.Venta eVenta)
-		{
-			dVenta.EditarVenta(eVenta);
-		}
+            if (obj.oEmpresa.IdEmpresa == 0)
+                Mensaje = "Debe seleccionar una empresa";
+            else if (obj.oEntidad.IdEntidad == 0)
+                Mensaje = "Debe seleccionar un cliente";
+            else if (obj.oTipoDocumento.IdTipoDocumento == 0)
+                Mensaje = "Debe seleccionar un tipo de documento";
+            else if (obj.oUsuario.IdUsuario == 0)
+                Mensaje = "Debe seleccionar un usuario";
+            else if (obj.oCorrelativo.IdCorrelativo == 0)
+                Mensaje = "Debe seleccionar un correlativo";
+            else if (string.IsNullOrEmpty(obj.NroDocumento) || string.IsNullOrWhiteSpace(obj.NroDocumento))
+                Mensaje = "El número de documento no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.FechaVenta) || string.IsNullOrWhiteSpace(obj.FechaVenta))
+                Mensaje = "La fecha de venta no puede ser vacía";
+            else if (string.IsNullOrEmpty(obj.FechaRegistro) || string.IsNullOrWhiteSpace(obj.FechaRegistro))
+                Mensaje = "La fecha de registro no puede ser vacío";
+            else if (obj.SubTotal == 0)
+                Mensaje = "El subtotal no puede ser 0";
+            else if (obj.Impuesto == 0)
+                Mensaje = "El impuesto no puede ser 0";
+            else if (obj.Total == 0)
+                Mensaje = "El total no puede ser 0";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
 
-		public ObservableCollection<Entidades.Venta> ListaVenta()
-		{
-			return dVenta.ListaVenta();
-		}
-		public ObservableCollection<Entidades.Venta> ListaVenta(Entidades.Venta eVenta)
-		{
-			return dVenta.ListaVenta(eVenta);
-		}
-	}
-}	
+            if (string.IsNullOrEmpty(Mensaje))
+                return dVenta.Registrar(obj, out Mensaje);
+            else
+                return 0;
+        }
 
+        public bool Editar(Entidades.Venta obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (obj.oEmpresa.IdEmpresa == 0)
+                Mensaje = "Debe seleccionar una empresa";
+            else if (obj.oEntidad.IdEntidad == 0)
+                Mensaje = "Debe seleccionar un cliente";
+            else if (obj.oTipoDocumento.IdTipoDocumento == 0)
+                Mensaje = "Debe seleccionar un tipo de documento";
+            else if (obj.oUsuario.IdUsuario == 0)
+                Mensaje = "Debe seleccionar un usuario";
+            else if (obj.oCorrelativo.IdCorrelativo == 0)
+                Mensaje = "Debe seleccionar un correlativo";
+            else if (string.IsNullOrEmpty(obj.NroDocumento) || string.IsNullOrWhiteSpace(obj.NroDocumento))
+                Mensaje = "El número de documento no puede ser vacío";
+            else if (string.IsNullOrEmpty(obj.FechaVenta) || string.IsNullOrWhiteSpace(obj.FechaVenta))
+                Mensaje = "La fecha de venta no puede ser vacía";
+            else if (string.IsNullOrEmpty(obj.FechaRegistro) || string.IsNullOrWhiteSpace(obj.FechaRegistro))
+                Mensaje = "La fecha de registro no puede ser vacío";
+            else if (obj.SubTotal == 0)
+                Mensaje = "El subtotal no puede ser 0";
+            else if (obj.Impuesto == 0)
+                Mensaje = "El impuesto no puede ser 0";
+            else if (obj.Total == 0)
+                Mensaje = "El total no puede ser 0";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dVenta.Editar(obj, out Mensaje);
+            else
+                return false;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return dVenta.Eliminar(id, out Mensaje);
+        }
+    }
+}

@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace Librería.Entidades
 {
-	public class CompraDetalleCollection : ObservableCollection<CompraDetalle> { }
-
 	public class CompraDetalle
 	{
 		public int IdCompraDetalle { get; set; }
-		public int IdCompra { get; set; }
-		public int Cantidad { get; set; }
-		public string Descripcion { get; set; }
+		public Compra oCompra { get; set; }
+        public Articulo oArticulo { get; set; }
+        public int Cantidad { get; set; }
 		public decimal Precio { get; set; }
 		public decimal Importe { get; set; }
-		public int IdEstado { get; set; }
+		public Estado oEstado { get; set; }
 	}
 }
-

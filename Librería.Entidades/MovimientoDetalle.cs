@@ -12,11 +12,9 @@ namespace Librería.Entidades
     public class MovimientoDetalle
     {
         public int IdMovimientoDetalle { get; set; }
-        public int IdMovimiento { get; set; }
-        public int IdArticulo { get; set; }
-        public int StockInicial { get; set; }
-        public int Ingreso { get; set; }
-        public int Salida { get; set; }
-        public int IdEstado { get; set; }
+        public Movimiento oMovimiento { get; set; }
+        public Articulo oArticulo { get; set; }
+        public int Cantidad { get; set; }
+        public Estado oEstado { get; set; }
     }
 }

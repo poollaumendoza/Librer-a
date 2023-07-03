@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace Librería.Entidades
 {
-	public class UsuarioCollection : ObservableCollection<Usuario> { }
-
 	public class Usuario
 	{
 		public int IdUsuario { get; set; }
-		public int IdPersona { get; set; }
+		public Persona oPersona { get; set; }
 		public string NombreUsuario { get; set; }
 		public string Contraseña { get; set; }
-		public int IdEstado { get; set; }
+		public Estado oEstado { get; set; }
 	}
 }
-

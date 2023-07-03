@@ -13,7 +13,6 @@ namespace Librería.Escritorio.UserControls.Compras
     {
         Negocios.Articulo nArticulo = new Negocios.Articulo();
         Entidades.Articulo eArticulo;
-        CompraDetalleCollection listaCompraDetalle = new CompraDetalleCollection();
         Window oWindow;
 
         public wndSeleccionarArticulo(int IdEntidad = 0)
@@ -77,7 +76,7 @@ namespace Librería.Escritorio.UserControls.Compras
             int requerido = (Convert.ToInt32(message));
 
             var compra = nArticulo.ListaArticulo(new Entidades.Articulo() { DescripcionArticulo = ((Entidades.Articulo)fila).DescripcionArticulo }).FirstOrDefault();
-            listaCompraDetalle.Add(new Entidades.CompraDetalle()
+            pgCompra.listaCompraDetalle.Add(new Entidades.CompraDetalle()
             {
                 IdCompra = App.IdCompra,
                 Cantidad = requerido,

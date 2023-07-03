@@ -12,8 +12,8 @@ namespace Librería.Entidades
 	public class Entidad
 	{
 		public int IdEntidad { get; set; }
-		public int IdEmpresa { get; set; }
-		public int IdTipoDocumento { get; set; }
+		public Empresa oEmpresa { get; set; }
+		public TipoDocumento oTipoDocumento { get; set; }
 		public string NroDocumento { get; set; }
 		public string RazonSocial { get; set; }
 		public string Direccion { get; set; }
@@ -21,7 +21,7 @@ namespace Librería.Entidades
 		public string Email { get; set; }
 		public bool EsCliente { get; set; }
 		public bool EsProveedor { get; set; }
-		public int IdEstado { get; set; }
+		public Estado oEstado { get; set; }
 	}
 }
 

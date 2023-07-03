@@ -13,32 +13,50 @@ namespace Librería.Negocios
 {
 	public class TipoDocumento
 	{
-		Entidades.TipoDocumento eTipoDocumento = new Entidades.TipoDocumento();
-		Data.TipoDocumento dTipoDocumento = new Data.TipoDocumento();
+        Data.TipoDocumento dTipoDocumento = new Data.TipoDocumento();
 
-		public void AgregarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-		{
-			dTipoDocumento.AgregarTipoDocumento(eTipoDocumento);
-		}
+        public List<Entidades.TipoDocumento> Listar()
+        {
+            return dTipoDocumento.Listar();
+        }
 
-		public void EliminarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-		{
-			dTipoDocumento.EliminarTipoDocumento(eTipoDocumento);
-		}
+        public int Registrar(Entidades.TipoDocumento obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
 
-		public void EditarTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-		{
-			dTipoDocumento.EditarTipoDocumento(eTipoDocumento);
-		}
+            if (obj.oClasificacionTipoDocumento.IdClasificacionTipoDocumento == 0)
+                Mensaje = "Debe seleccionar una clasificación";
+            else if (string.IsNullOrEmpty(obj.NombreTipoDocumento) || string.IsNullOrWhiteSpace(obj.NombreTipoDocumento))
+                Mensaje = "El nombre no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
 
-		public ObservableCollection<Entidades.TipoDocumento> ListaTipoDocumento()
-		{
-			return dTipoDocumento.ListaTipoDocumento();
-		}
-		public ObservableCollection<Entidades.TipoDocumento> ListaTipoDocumento(Entidades.TipoDocumento eTipoDocumento)
-		{
-			return dTipoDocumento.ListaTipoDocumento(eTipoDocumento);
-		}
-	}
-}	
+            if (string.IsNullOrEmpty(Mensaje))
+                return dTipoDocumento.Registrar(obj, out Mensaje);
+            else
+                return 0;
+        }
 
+        public bool Editar(Entidades.TipoDocumento obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (obj.oClasificacionTipoDocumento.IdClasificacionTipoDocumento == 0)
+                Mensaje = "Debe seleccionar una clasificación";
+            else if (string.IsNullOrEmpty(obj.NombreTipoDocumento) || string.IsNullOrWhiteSpace(obj.NombreTipoDocumento))
+                Mensaje = "El nombre no puede ser vacío";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dTipoDocumento.Editar(obj, out Mensaje);
+            else
+                return false;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return dTipoDocumento.Eliminar(id, out Mensaje);
+        }
+    }
+}

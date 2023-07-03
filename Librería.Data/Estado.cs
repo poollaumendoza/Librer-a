@@ -7,90 +7,131 @@ using System.IO;
 using System.Linq;
 using Librería.Entidades;
 using Librería.Data.Properties;
+using System.Configuration;
 
 namespace Librería.Data
 {
 	public class Estado
 	{
-		Entidades.Estado eEstado = new Entidades.Estado();
-		EstadoCollection listaEstado = new EstadoCollection();
-		string Cn = Settings.Default.CadenaConexion;
-		SqlConnection Cnx = null;
-		SqlCommand Cmd = null;
-		SqlDataAdapter Da = null;
-		DataTable Dt = new DataTable();
+        public List<Entidades.Estado> Listar()
+        {
+            List<Entidades.Estado> lista = new List<Entidades.Estado>();
 
-		public void AgregarEstado(Entidades.Estado eEstado)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Estado_AgregarEstado", Cnx);
-			Cmd.CommandType = CommandType.StoredProcedure;
-			Cmd.Parameters.AddWithValue("@NombreEstado", eEstado.NombreEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EliminarEstado(Entidades.Estado eEstado)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Estado_EliminarEstado", Cnx);
-			Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public void EditarEstado(Entidades.Estado eEstado)
-		{
-			Cnx = new SqlConnection(Cn);
-			Cmd = new SqlCommand("dbo.sp_Estado_ActualizarEstado", Cnx);
-			Cmd.Parameters.AddWithValue("@IdEstado", eEstado.IdEstado);
-			Cmd.Parameters.AddWithValue("@NombreEstado", eEstado.NombreEstado);
-			Cnx.Open();
-			Cmd.ExecuteNonQuery();
-			Cnx.Close();
-		}
-		public ObservableCollection<Entidades.Estado> ListaEstado()
-		{
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaEstado.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Estado_ObtenerEstado", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaEstado.Add(new Entidades.Estado()
-				{
-					IdEstado = Convert.ToInt32(item[0].ToString()),
-					NombreEstado = item[1].ToString()
-				});
-			}
-			return listaEstado;
-		}
-		public ObservableCollection<Entidades.Estado> ListaEstado(Entidades.Estado eEstado)
-		{
-			listaEstado.Clear();
-			
-			Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Estado_ObtenerPorIdEstado", new SqlConnection(Cn)));
-			Da.Fill(Dt);
-			
-			var query = (from a in Dt.Rows.Cast<DataRow>()
-					select a).ToList();
-			
-			foreach (var item in query)
-			{
-				listaEstado.Add(new Entidades.Estado()
-				{
-					IdEstado = Convert.ToInt32(item[0].ToString()),
-					NombreEstado = item[1].ToString()
-				});
-			}
-			return listaEstado;
-		}
-	}
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    string query = "Select IdEstado, NombreEstado from Estado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
+
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
+                    {
+                        while (Dr.Read())
+                        {
+                            lista.Add(new Entidades.Estado()
+                            {
+                                IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                NombreEstado = Dr["NombreEstado"].ToString()
+
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = ex.Message;
+                lista = new List<Entidades.Estado>();
+            }
+
+            return lista;
+        }
+
+        public int Registrar(Entidades.Estado obj, out string Mensaje)
+        {
+            int IdAutogenerado = 0;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Estado_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("NombreEstado", obj.NombreEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Estado obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Estado_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.IdEstado);
+                    Cmd.Parameters.AddWithValue("NombreEstado", obj.NombreEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("Delete Estado where IdEstado = @IdEstado", Cnx);
+                    Cmd.Parameters.AddWithValue("@IdEstado", id);
+                    Cmd.CommandType = CommandType.Text;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+    }
 }
-

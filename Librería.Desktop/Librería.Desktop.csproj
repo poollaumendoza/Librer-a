@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0EB368D-F1DF-4DF1-855E-C5BEB691B545}</ProjectGuid>
+    <ProjectGuid>{8B857250-07F1-45DD-BFC4-1719E38C47B3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Librería.Desktop</RootNamespace>
     <AssemblyName>Librería.Desktop</AssemblyName>
@@ -35,30 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.4.4.0\lib\net462\ControlzEx.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.2.4.9\lib\net47\MahApps.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks.Material, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Material.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -77,74 +61,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Bienvenida\wndLogin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Bienvenida\wndPrincipal.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Almacen\wndAlmacen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Almacen\wndListaAlmacen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Articulo\wndArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Articulo\wndListaArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Compras\wndCompra.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Compras\wndListaCompras.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Compras\wndSeleccionarArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Empresa\wndEmpresa.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Empresa\wndListaEmpresas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Entidad\wndEntidad.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Entidad\wndListaEntidades.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Inventario\wndInventario.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Ventas\wndListaVentas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Ventas\wndSeleccionarArticulo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\Ventas\wndVenta.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -153,129 +69,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Bienvenida\wndLogin.xaml.cs">
-      <DependentUpon>wndLogin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Bienvenida\wndPrincipal.xaml.cs">
-      <DependentUpon>wndPrincipal.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Almacen\wndAlmacen.xaml.cs">
-      <DependentUpon>wndAlmacen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Almacen\wndListaAlmacen.xaml.cs">
-      <DependentUpon>wndListaAlmacen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Articulo\wndArticulo.xaml.cs">
-      <DependentUpon>wndArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Articulo\wndListaArticulo.xaml.cs">
-      <DependentUpon>wndListaArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Compras\wndCompra.xaml.cs">
-      <DependentUpon>wndCompra.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Compras\wndListaCompras.xaml.cs">
-      <DependentUpon>wndListaCompras.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Compras\wndSeleccionarArticulo.xaml.cs">
-      <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Empresa\wndEmpresa.xaml.cs">
-      <DependentUpon>wndEmpresa.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Empresa\wndListaEmpresas.xaml.cs">
-      <DependentUpon>wndListaEmpresas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Entidad\wndEntidad.xaml.cs">
-      <DependentUpon>wndEntidad.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Entidad\wndListaEntidades.xaml.cs">
-      <DependentUpon>wndListaEntidades.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Inventario\wndInventario.xaml.cs">
-      <DependentUpon>wndInventario.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Ventas\wndListaVentas.xaml.cs">
-      <DependentUpon>wndListaVentas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Ventas\wndSeleccionarArticulo.xaml.cs">
-      <DependentUpon>wndSeleccionarArticulo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Ventas\wndVenta.xaml.cs">
-      <DependentUpon>wndVenta.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Almacen.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Articulo.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ClasificacionTipoDocumento.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Compra.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\CompraDetalle.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Correlativo.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Empresa.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Entidad.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Estado.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\mdLib.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>mdLib.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\mdLib.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\mdLib.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>mdLib.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Movimiento.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MovimientoDetalle.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Persona.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\TipoDocumento.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\TipoMovimiento.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Usuario.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Venta.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\VentaDetalle.cs">
-      <DependentUpon>mdLib.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -293,13 +92,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="Models\mdLib.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>mdLib.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Models\mdLib.edmx.diagram">
-      <DependentUpon>mdLib.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -308,35 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Resource Include="Resources\businessman_woman.png" />
-    <Resource Include="Resources\add_to_shopping_cart.png" />
-    <Resource Include="Resources\shopping_cart.png" />
-    <Resource Include="Resources\package.png" />
-    <Resource Include="Resources\note.png" />
-    <Resource Include="Resources\save.png" />
-    <Resource Include="Resources\edit.png" />
-    <Resource Include="Resources\delete.png" />
-    <Resource Include="Resources\add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Models\mdLib.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>mdLib.edmx</DependentUpon>
-      <LastGenOutput>mdLib.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\mdLib.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>mdLib.edmx</DependentUpon>
-      <LastGenOutput>mdLib.cs</LastGenOutput>
-    </Content>
-    <Resource Include="Resources\search.png" />
-    <Resource Include="Resources\ruler_pencil.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

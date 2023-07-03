@@ -11,40 +11,64 @@ using Librería.Data;
 
 namespace Librería.Negocios
 {
-	public class CompraDetalle
+	public class CompraDetalleDetalle
 	{
-		Entidades.CompraDetalle eCompraDetalle = new Entidades.CompraDetalle();
-		Data.CompraDetalle dCompraDetalle = new Data.CompraDetalle();
+        Data.CompraDetalle dCompraDetalle = new Data.CompraDetalle();
 
-		public void AgregarCompraDetalle(Entidades.CompraDetalle eCompraDetalle)
-		{
-			dCompraDetalle.AgregarCompraDetalle(eCompraDetalle);
-		}
-
-		public void EliminarCompraDetalle(Entidades.CompraDetalle eCompraDetalle)
-		{
-			dCompraDetalle.EliminarCompraDetalle(eCompraDetalle);
-		}
-
-		public void EditarCompraDetalle(Entidades.CompraDetalle eCompraDetalle)
-		{
-			dCompraDetalle.EditarCompraDetalle(eCompraDetalle);
-		}
-
-		public ObservableCollection<Entidades.CompraDetalle> ListaCompraDetalle()
-		{
-			return dCompraDetalle.ListaCompraDetalle();
-		}
-
-		public ObservableCollection<Entidades.CompraDetalle> ListaCompraDetalle(Entidades.CompraDetalle eCompraDetalle)
-		{
-			return dCompraDetalle.ListaCompraDetalle(eCompraDetalle);
-		}
-
-        public List<Entidades.CompraDetalle> ListaCompraDetalle(string nombreObjeto, string valor)
+        public List<Entidades.CompraDetalle> Listar()
         {
-            return dCompraDetalle.ListaCompraDetalle(nombreObjeto, valor);
+            return dCompraDetalle.Listar();
         }
 
+        public int Registrar(Entidades.CompraDetalle obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (obj.oCompra.IdCompra == 0)
+                Mensaje = "Debe seleccionar una CompraDetalle";
+            else if (obj.oArticulo.IdArticulo == 0)
+                Mensaje = "Debe seleccionar un artículo";
+            else if (obj.Cantidad == 0)
+                Mensaje = "La cantidad no puede ser 0";
+            else if (obj.Precio == 0)
+                Mensaje = "El precio no puede ser 0";
+            else if (obj.Importe == 0)
+                Mensaje = "El importe no puede ser 0";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dCompraDetalle.Registrar(obj, out Mensaje);
+            else
+                return 0;
+        }
+
+        public bool Editar(Entidades.CompraDetalle obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+
+            if (obj.oCompra.IdCompra == 0)
+                Mensaje = "Debe seleccionar una CompraDetalle";
+            else if (obj.oArticulo.IdArticulo == 0)
+                Mensaje = "Debe seleccionar un artículo";
+            else if (obj.Cantidad == 0)
+                Mensaje = "La cantidad no puede ser 0";
+            else if (obj.Precio == 0)
+                Mensaje = "El precio no puede ser 0";
+            else if (obj.Importe == 0)
+                Mensaje = "El importe no puede ser 0";
+            else if (obj.oEstado.IdEstado == 0)
+                Mensaje = "Debe seleccionar un estado";
+
+            if (string.IsNullOrEmpty(Mensaje))
+                return dCompraDetalle.Editar(obj, out Mensaje);
+            else
+                return false;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return dCompraDetalle.Eliminar(id, out Mensaje);
+        }
     }
 }

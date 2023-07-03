@@ -6,272 +6,284 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
+using System.Configuration;
 
 namespace Librería.Data
 {
     public class Correlativo
     {
-        Entidades.Correlativo eCorrelativo = new Entidades.Correlativo();
-        CorrelativoCollection listaCorrelativo = new CorrelativoCollection();
-        string Cn = Settings.Default.CadenaConexion;
-        SqlConnection Cnx = null;
-        SqlCommand Cmd = null;
-        SqlDataAdapter Da = null;
-        DataTable Dt = new DataTable();
-
-        public void AgregarCorrelativo(Entidades.Correlativo eCorrelativo)
+        public List<Entidades.Correlativo> Listar()
         {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Correlativo_AgregarCorrelativo", Cnx);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
-            Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCorrelativo.IdTipoDocumento);
-            Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
-            Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
-            Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
-            Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
-            Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
-        public void EliminarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Correlativo_EliminarCorrelativo", Cnx);
-            Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
-        public void EditarCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Correlativo_ActualizarCorrelativo", Cnx);
-            Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
-            Cmd.Parameters.AddWithValue("@IdEmpresa", eCorrelativo.IdEmpresa);
-            Cmd.Parameters.AddWithValue("@IdTipoDocumento", eCorrelativo.IdTipoDocumento);
-            Cmd.Parameters.AddWithValue("@NombreTabla", eCorrelativo.NombreTabla);
-            Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
-            Cmd.Parameters.AddWithValue("@Serie", eCorrelativo.Serie);
-            Cmd.Parameters.AddWithValue("@NroCorrelativo", eCorrelativo.NroCorrelativo);
-            Cmd.Parameters.AddWithValue("@IdEstado", eCorrelativo.IdEstado);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
-        public ObservableCollection<Entidades.Correlativo> ListaCorrelativo()
-        {
-            Dt.Columns.Clear();
-            Dt.Rows.Clear();
-            listaCorrelativo.Clear();
+            List<Entidades.Correlativo> lista = new List<Entidades.Correlativo>();
 
-            Da = new SqlDataAdapter(new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativo", new SqlConnection(Cn)));
-            Da.Fill(Dt);
-
-            var query = (from a in Dt.Rows.Cast<DataRow>()
-                         select a).ToList();
-
-            foreach (var item in query)
+            try
             {
-                listaCorrelativo.Add(new Entidades.Correlativo()
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
                 {
-                    IdCorrelativo = Convert.ToInt32(item[0].ToString()),
-                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
-                    NombreTabla = item[3].ToString(),
-                    Abreviatura = item[4].ToString(),
-                    Serie = item[5].ToString(),
-                    NroCorrelativo = Convert.ToInt32(item[6].ToString()),
-                    IdEstado = Convert.ToInt32(item[7].ToString())
-                });
-            }
-            return listaCorrelativo;
-        }
-        public ObservableCollection<Entidades.Correlativo> ListaCorrelativo(Entidades.Correlativo eCorrelativo)
-        {
-            Dt.Columns.Clear();
-            Dt.Rows.Clear();
-            listaCorrelativo.Clear();
+                    string query =
+                        "Select c.IdCorrelativo, c.IdEmpresa, em.RazonSocial, c.IdTipoDocumento, td.NombreTipoDocumento, c.NombreTabla, c.Abreviatura, c.Serie, c.NroCorrelativo, c.IdEstado, es.NombreEstado from Correlativo c join Empresa em on c.IdEmpresa = c.IdEmpresa join TipoDocumento td on c.IdTipoDocumento = td.IdTipoDocumento join Estado es on c.IdEstado = es.IdEstado";
+                    SqlCommand Cmd = new SqlCommand(query, Cnx);
 
-            if(eCorrelativo.IdCorrelativo != 0)
-            {
-                Cmd = new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativoPorIdCorrelativo", new SqlConnection(Cn));
-                Cmd.Parameters.AddWithValue("@IdCorrelativo", eCorrelativo.IdCorrelativo);
-                Cmd.CommandType = CommandType.StoredProcedure;
-                Da = new SqlDataAdapter(Cmd);
-                Da.Fill(Dt);
-
-                var query = (from a in Dt.Rows.Cast<DataRow>()
-                             select a).ToList();
-
-                foreach (var item in query)
-                {
-                    listaCorrelativo.Add(new Entidades.Correlativo()
+                    Cnx.Open();
+                    using (SqlDataReader Dr = Cmd.ExecuteReader())
                     {
-                        IdCorrelativo = Convert.ToInt32(item[0].ToString()),
-                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                        IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
-                        NombreTabla = item[3].ToString(),
-                        Abreviatura = item[4].ToString(),
-                        Serie = item[5].ToString(),
-                        NroCorrelativo = Convert.ToInt32(item[6].ToString()),
-                        IdEstado = Convert.ToInt32(item[7].ToString())
-                    });
+                        while (Dr.Read())
+                        {
+                            lista.Add(new Entidades.Correlativo()
+                            {
+                                IdCorrelativo = Convert.ToInt32(Dr["IdCorrelativo"]),
+                                oEmpresa = new Entidades.Empresa()
+                                {
+                                    IdEmpresa = Convert.ToInt32(Dr["IdEmpresa"]),
+                                    RazonSocial = Dr["RazonSocial"].ToString()
+                                },
+                                oTipoDocumento = new Entidades.TipoDocumento()
+                                {
+                                    IdTipoDocumento = Convert.ToInt32(Dr["IdTipoDocumento"]),
+                                    NombreTipoDocumento = Dr["NombreTipoDocumento"].ToString()
+                                },
+                                NombreTabla = Dr["NombreTabla"].ToString(),
+                                Abreviatura = Dr["Abreviatura"].ToString(),
+                                Serie = Dr["Serie"].ToString(),
+                                NroCorrelativo = Convert.ToInt32(Dr["NroCorrelativo"]),
+                                oEstado = new Entidades.Estado()
+                                {
+                                    IdEstado = Convert.ToInt32(Dr["IdEstado"]),
+                                    NombreEstado = Dr["NombreEstado"].ToString()
+                                }
+                            });
+                        }
+                    }
                 }
             }
-            if(eCorrelativo.Abreviatura != string.Empty)
+            catch
             {
-                Cmd = new SqlCommand("dbo.sp_Correlativo_ObtenerCorrelativoPorAbreviatura", new SqlConnection(Cn));
-                Cmd.Parameters.AddWithValue("@Abreviatura", eCorrelativo.Abreviatura);
-                Cmd.CommandType = CommandType.StoredProcedure;
-                Da = new SqlDataAdapter(Cmd);
-                Da.Fill(Dt);
-
-                var query = (from a in Dt.Rows.Cast<DataRow>()
-                             select a).ToList();
-
-                foreach (var item in query)
-                {
-                    listaCorrelativo.Add(new Entidades.Correlativo()
-                    {
-                        IdCorrelativo = Convert.ToInt32(item[0].ToString()),
-                        IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                        IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
-                        NombreTabla = item[3].ToString(),
-                        Abreviatura = item[4].ToString(),
-                        Serie = item[5].ToString(),
-                        NroCorrelativo = Convert.ToInt32(item[6].ToString()),
-                        IdEstado = Convert.ToInt32(item[7].ToString())
-                    });
-                }
+                lista = new List<Entidades.Correlativo>();
             }
-            
-            return listaCorrelativo;
+
+            return lista;
         }
 
-        public string ConstruirCorrelativoDocumento(int IdCorrelativo)
+        public int Registrar(Entidades.Correlativo obj, out string Mensaje)
         {
-            Dt.Columns.Clear();
-            Dt.Rows.Clear();
-            string resultado = string.Empty;
+            int IdAutogenerado = 0;
 
-            Cmd = new SqlCommand("dbo.sp_Correlativo_ConstruirCorrelativoDocumento", new SqlConnection(Cn));
-            Cmd.Parameters.AddWithValue("@IdCorrelativo", IdCorrelativo);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Da = new SqlDataAdapter(Cmd);
-            Da.Fill(Dt);
-
-            if (Dt.Rows.Count > 0)
+            Mensaje = string.Empty;
+            try
             {
-                var q1 = (from c in Dt.Rows.Cast<DataRow>()
-                          select new
-                          {
-                              NroCorrelativo = Convert.ToInt32(c[0].ToString())
-                          }).FirstOrDefault();
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Correlativo_Registrar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("NombreTabla", obj.NombreTabla);
+                    Cmd.Parameters.AddWithValue("Abreviatura", obj.Abreviatura);
+                    Cmd.Parameters.AddWithValue("Serie", obj.Serie);
+                    Cmd.Parameters.AddWithValue("NroCorrelativo", obj.NroCorrelativo);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
 
-                int nroCorrelativo = q1.NroCorrelativo;
-                string ceros = "00000000";
-                int niz = ceros.Length - nroCorrelativo.ToString().Length;
-                resultado = string.Format("{0}{1}", Strings.Left(ceros, niz), nroCorrelativo.ToString());
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    IdAutogenerado = Convert.ToInt32(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return IdAutogenerado;
+        }
+
+        public bool Editar(Entidades.Correlativo obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Correlativo_Editar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdCorrelativo", obj.IdCorrelativo);
+                    Cmd.Parameters.AddWithValue("IdEmpresa", obj.oEmpresa.IdEmpresa);
+                    Cmd.Parameters.AddWithValue("IdTipoDocumento", obj.oTipoDocumento.IdTipoDocumento);
+                    Cmd.Parameters.AddWithValue("NombreTabla", obj.NombreTabla);
+                    Cmd.Parameters.AddWithValue("Abreviatura", obj.Abreviatura);
+                    Cmd.Parameters.AddWithValue("Serie", obj.Serie);
+                    Cmd.Parameters.AddWithValue("NroCorrelativo", obj.NroCorrelativo);
+                    Cmd.Parameters.AddWithValue("IdEstado", obj.oEstado.IdEstado);
+                    Cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    Cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+
+                    Cnx.Open();
+                    Cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(Cmd.Parameters["Resultado"].Value);
+                    Mensaje = Cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
             }
             return resultado;
         }
 
-        public string ConstruirCorrelativoArticulo(string codigo)
+        public bool Eliminar(int id, out string Mensaje)
         {
-            string resultado = string.Empty;
-            string correlativo = string.Empty;
+            bool resultado = false;
+            Mensaje = string.Empty;
 
-            for (int i = 0; i < codigo.Length; i++)
+            try
             {
-                string s = codigo.Substring(i, 1);
-                bool esNum = int.TryParse(s, out int n);
-                if (esNum == false)
-                    resultado += s;
+                using (SqlConnection Cnx = new SqlConnection(ConfigurationManager.ConnectionStrings["CadenaConexion"].ToString()))
+                {
+                    SqlCommand Cmd = new SqlCommand("sp_Correlativo_Eliminar", Cnx);
+                    Cmd.Parameters.AddWithValue("IdCorrelativo", id);
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    Cnx.Open();
+                    resultado = Cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
             }
-
-            var _correlativo = (from c in ListaCorrelativo()
-                                where c.Abreviatura.Equals(resultado)
-                                select c.NroCorrelativo).FirstOrDefault();
-
-            string ceros = "00000";
-            correlativo = resultado + ceros.PadLeft(ceros.Length - _correlativo.ToString().Length) + _correlativo.ToString();
-
-            return correlativo;
-        }
-
-        public string ObtenerAbreviatura(int IdTipoDocumento, string NombreTabla)
-        {
-            string resultado = string.Empty;
-
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-
-            Cmd = new SqlCommand("sp_Correlativo_ObtenerAbreviatura", new SqlConnection(Cn));
-            Cmd.Parameters.AddWithValue("@IdTipoDocumento", IdTipoDocumento);
-            Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Da = new SqlDataAdapter(Cmd);
-            Da.Fill(Dt);
-
-            if (Dt.Rows.Count > 0)
+            catch (Exception ex)
             {
-                var q1 = (from c in Dt.Rows.Cast<DataRow>()
-                          select new
-                          {
-                              Abreviatura = c[0].ToString()
-                          }).FirstOrDefault();
-
-                resultado = q1.Abreviatura;
+                resultado = false;
+                Mensaje = ex.Message;
             }
             return resultado;
         }
 
-        public ObservableCollection<Entidades.Correlativo> ObtenerSerie(string NombreTabla, string Abreviatura)
-        {
-            Dt.Rows.Clear();
-            Dt.Columns.Clear();
-            listaCorrelativo.Clear();
+        //public string ConstruirCorrelativoDocumento(int IdCorrelativo)
+        //{
+        //    Dt.Columns.Clear();
+        //    Dt.Rows.Clear();
+        //    string resultado = string.Empty;
 
-            Cmd = new SqlCommand("sp_Correlativo_ObtenerSerie", new SqlConnection(Cn));
-            Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
-            Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Da = new SqlDataAdapter(Cmd);
-            Da.Fill(Dt);
+        //    Cmd = new SqlCommand("dbo.sp_Correlativo_ConstruirCorrelativoDocumento", new SqlConnection(Cn));
+        //    Cmd.Parameters.AddWithValue("@IdCorrelativo", IdCorrelativo);
+        //    Cmd.CommandType = CommandType.StoredProcedure;
+        //    Da = new SqlDataAdapter(Cmd);
+        //    Da.Fill(Dt);
 
-            var query = (from a in Dt.Rows.Cast<DataRow>()
-                         select a).ToList();
+        //    if (Dt.Rows.Count > 0)
+        //    {
+        //        var q1 = (from c in Dt.Rows.Cast<DataRow>()
+        //                  select new
+        //                  {
+        //                      NroCorrelativo = Convert.ToInt32(c[0].ToString())
+        //                  }).FirstOrDefault();
 
-            foreach (var item in query)
-            {
-                listaCorrelativo.Add(new Entidades.Correlativo()
-                {
-                    IdCorrelativo = Convert.ToInt32(item[0].ToString()),
-                    IdEmpresa = Convert.ToInt32(item[1].ToString()),
-                    IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
-                    NombreTabla = item[3].ToString(),
-                    Abreviatura = item[4].ToString(),
-                    Serie = item[5].ToString(),
-                    NroCorrelativo = Convert.ToInt32(item[6].ToString()),
-                    IdEstado = Convert.ToInt32(item[7].ToString())
-                });
-            }
-            return listaCorrelativo;
-        }
+        //        int nroCorrelativo = q1.NroCorrelativo;
+        //        string ceros = "00000000";
+        //        int niz = ceros.Length - nroCorrelativo.ToString().Length;
+        //        resultado = string.Format("{0}{1}", Strings.Left(ceros, niz), nroCorrelativo.ToString());
+        //    }
+        //    return resultado;
+        //}
 
-        public void ActualizarCorrelativoArticulo(string NombreTabla, string Abreviatura)
-        {
-            Cnx = new SqlConnection(Cn);
-            Cmd = new SqlCommand("dbo.sp_Correlativo_ActualizarCorrelativoArticulo", Cnx);
-            Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
-            Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
-            Cmd.CommandType = CommandType.StoredProcedure;
-            Cnx.Open();
-            Cmd.ExecuteNonQuery();
-            Cnx.Close();
-        }
+        //public string ConstruirCorrelativoArticulo(string codigo)
+        //{
+        //    string resultado = string.Empty;
+        //    string correlativo = string.Empty;
+
+        //    for (int i = 0; i < codigo.Length; i++)
+        //    {
+        //        string s = codigo.Substring(i, 1);
+        //        bool esNum = int.TryParse(s, out int n);
+        //        if (esNum == false)
+        //            resultado += s;
+        //    }
+
+        //    var _correlativo = (from c in ListaCorrelativo()
+        //                        where c.Abreviatura.Equals(resultado)
+        //                        select c.NroCorrelativo).FirstOrDefault();
+
+        //    string ceros = "00000";
+        //    correlativo = resultado + ceros.PadLeft(ceros.Length - _correlativo.ToString().Length) + _correlativo.ToString();
+
+        //    return correlativo;
+        //}
+
+        //public string ObtenerAbreviatura(int IdTipoDocumento, string NombreTabla)
+        //{
+        //    string resultado = string.Empty;
+
+        //    Dt.Rows.Clear();
+        //    Dt.Columns.Clear();
+
+        //    Cmd = new SqlCommand("sp_Correlativo_ObtenerAbreviatura", new SqlConnection(Cn));
+        //    Cmd.Parameters.AddWithValue("@IdTipoDocumento", IdTipoDocumento);
+        //    Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
+        //    Cmd.CommandType = CommandType.StoredProcedure;
+        //    Da = new SqlDataAdapter(Cmd);
+        //    Da.Fill(Dt);
+
+        //    if (Dt.Rows.Count > 0)
+        //    {
+        //        var q1 = (from c in Dt.Rows.Cast<DataRow>()
+        //                  select new
+        //                  {
+        //                      Abreviatura = c[0].ToString()
+        //                  }).FirstOrDefault();
+
+        //        resultado = q1.Abreviatura;
+        //    }
+        //    return resultado;
+        //}
+
+        //public ObservableCollection<Entidades.Correlativo> ObtenerSerie(string NombreTabla, string Abreviatura)
+        //{
+        //    Dt.Rows.Clear();
+        //    Dt.Columns.Clear();
+        //    listaCorrelativo.Clear();
+
+        //    Cmd = new SqlCommand("sp_Correlativo_ObtenerSerie", new SqlConnection(Cn));
+        //    Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
+        //    Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
+        //    Cmd.CommandType = CommandType.StoredProcedure;
+        //    Da = new SqlDataAdapter(Cmd);
+        //    Da.Fill(Dt);
+
+        //    var query = (from a in Dt.Rows.Cast<DataRow>()
+        //                 select a).ToList();
+
+        //    foreach (var item in query)
+        //    {
+        //        listaCorrelativo.Add(new Entidades.Correlativo()
+        //        {
+        //            IdCorrelativo = Convert.ToInt32(item[0].ToString()),
+        //            IdEmpresa = Convert.ToInt32(item[1].ToString()),
+        //            IdTipoDocumento = Convert.ToInt32(item[2].ToString()),
+        //            NombreTabla = item[3].ToString(),
+        //            Abreviatura = item[4].ToString(),
+        //            Serie = item[5].ToString(),
+        //            NroCorrelativo = Convert.ToInt32(item[6].ToString()),
+        //            IdEstado = Convert.ToInt32(item[7].ToString())
+        //        });
+        //    }
+        //    return listaCorrelativo;
+        //}
+
+        //public void ActualizarCorrelativoArticulo(string NombreTabla, string Abreviatura)
+        //{
+        //    Cnx = new SqlConnection(Cn);
+        //    Cmd = new SqlCommand("dbo.sp_Correlativo_ActualizarCorrelativoArticulo", Cnx);
+        //    Cmd.Parameters.AddWithValue("@NombreTabla", NombreTabla);
+        //    Cmd.Parameters.AddWithValue("@Abreviatura", Abreviatura);
+        //    Cmd.CommandType = CommandType.StoredProcedure;
+        //    Cnx.Open();
+        //    Cmd.ExecuteNonQuery();
+        //    Cnx.Close();
+        //}
     }
 }

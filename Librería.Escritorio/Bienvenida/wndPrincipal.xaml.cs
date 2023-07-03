@@ -24,29 +24,29 @@ namespace Librería.Escritorio.Bienvenida
             InitializeComponent();
         }
 
-        private void BtnCompras_Click(object sender, RoutedEventArgs e)
-        {
-            oWindow = new Forms.Compras.wndCompra();
-            oWindow.Show();
-        }
+        //private void BtnCompras_Click(object sender, RoutedEventArgs e)
+        //{
+        //    oWindow = new Forms.Compras.wndCompra();
+        //    oWindow.Show();
+        //}
 
-        private void BtnVentas_Click(object sender, RoutedEventArgs e)
-        {
-            App.NombreTabla = "VENTA";
-            oWindow = new Forms.Ventas.wndVenta();
-            oWindow.Show();
-        }
+        //private void BtnVentas_Click(object sender, RoutedEventArgs e)
+        //{
+        //    App.NombreTabla = "VENTA";
+        //    oWindow = new Forms.Ventas.wndVenta();
+        //    oWindow.Show();
+        //}
 
-        private void MnuEmpresa_Click(object sender, RoutedEventArgs e)
-        {
-            oWindow = new Forms.Empresa.wndEmpresa();
-            oWindow.Show();
-        }
+        //private void MnuEmpresa_Click(object sender, RoutedEventArgs e)
+        //{
+        //    oWindow = new Forms.Empresa.wndEmpresa();
+        //    oWindow.Show();
+        //}
 
-        private void BtnInventario_Click(object sender, RoutedEventArgs e)
-        {
-            oWindow = new Forms.Inventario.wndMiInventario();
-            oWindow.Show();
-        }
+        //private void BtnInventario_Click(object sender, RoutedEventArgs e)
+        //{
+        //    oWindow = new Forms.Inventario.wndMiInventario();
+        //    oWindow.Show();
+        //}
     }
 }

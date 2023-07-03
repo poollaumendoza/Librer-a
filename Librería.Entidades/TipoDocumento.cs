@@ -12,9 +12,9 @@ namespace Librería.Entidades
 	public class TipoDocumento
 	{
 		public int IdTipoDocumento { get; set; }
-		public int IdClasificacionTipoDocumento { get; set; }
+		public ClasificacionTipoDocumento oClasificacionTipoDocumento { get; set; }
 		public string NombreTipoDocumento { get; set; }
-		public int IdEstado { get; set; }
+		public Estado oEstado { get; set; }
 	}
 }
 
