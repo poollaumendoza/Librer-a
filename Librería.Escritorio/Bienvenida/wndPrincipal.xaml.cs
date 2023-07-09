@@ -17,7 +17,7 @@ namespace Librería.Escritorio.Bienvenida
 {
     public partial class wndPrincipal : MetroWindow
     {
-        Window oWindow;
+        //Window oWindow;
 
         public wndPrincipal()
         {
